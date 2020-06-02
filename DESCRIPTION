@@ -11,7 +11,7 @@ Description: More about what it does (maybe more than one line)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.6.2)
+Depends: R (>= 3.6.0)
 Imports: 
     dplyr (>= 0.8.3),
     furrr (>= 0.1.0),
@@ -28,3 +28,8 @@ Imports:
     viridis (>= 0.5.1)
 URL: https://github.com/joshcullen/bayesmove
 BugReports: https://github.com/joshcullen/bayesmove/issues
+Suggests: 
+    covr,
+    testthat,
+    spelling
+Language: en-US
