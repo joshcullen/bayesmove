@@ -1,0 +1,63 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# bayesmove
+
+<!-- badges: start -->
+[![Travis build status](https://travis-ci.com/joshcullen/bayesmove.svg?branch=master)](https://travis-ci.com/joshcullen/bayesmove)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/joshcullen/bayesmove?branch=master&svg=true)](https://ci.appveyor.com/project/joshcullen/bayesmove)
+[![Codecov test coverage](https://codecov.io/gh/joshcullen/bayesmove/branch/master/graph/badge.svg)](https://codecov.io/gh/joshcullen/bayesmove?branch=master)
+<!-- badges: end -->
+
+The goal of bayesmove is to ...
+
+## Installation
+
+You can install the released version of bayesmove from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("bayesmove")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("joshcullen/bayesmove")
+```
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(bayesmove)
+## basic example code
+```
+
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+
+```{r cars}
+summary(cars)
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
+
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
