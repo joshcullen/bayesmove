@@ -4,7 +4,7 @@
 \alias{plot_heatmap}
 \title{Plot breakpoints over a time series heatmap of the movement variables}
 \usage{
-plot_heatmap(data, nbins, brkpts, title, legend, ...)
+plot_heatmap(data, nbins, brkpts, title, legend)
 }
 \arguments{
 \item{data}{A list where each element stores a data frame for a given animal
@@ -23,8 +23,6 @@ animal ID. This data frame is returned by \code{\link{get_breakpts}}.}
 the plot.}
 
 \item{legend}{logical. If \code{TRUE}, shows the legend for the heatmap.}
-
-\item{...}{Ignored.}
 }
 \value{
 A heatmap per animal ID that shows the value of each movement

@@ -26,7 +26,8 @@ Imports:
     tictoc (>= 1.0),
     tidyr (>= 1.0.0),
     viridis (>= 0.5.1),
-    magrittr
+    magrittr,
+    RcppArmadillo
 URL: https://github.com/joshcullen/bayesmove
 BugReports: https://github.com/joshcullen/bayesmove/issues
 Suggests: 
@@ -36,4 +37,5 @@ Suggests:
 Language: en-US
 RoxygenNote: 7.1.0
 LinkingTo: 
-    Rcpp
+    Rcpp,
+    RcppArmadillo

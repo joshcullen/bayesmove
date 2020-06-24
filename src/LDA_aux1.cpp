@@ -14,7 +14,7 @@ using namespace Rcpp;
 int cat1(double value, NumericVector prob) {
   int res=prob.length()-1;
   double probcum = 0;
-  
+
   for (int i = 0; i < prob.length(); i++) {
     probcum = probcum + prob(i);
     if (value < probcum) {
@@ -25,24 +25,36 @@ int cat1(double value, NumericVector prob) {
   return res;
 }
 
-//' This function samples z's from a categorical distribution
+//' Internal function that samples z's from a categorical distribution
+//'
+//' @param prob A numeric matrix.
+//' @param randu A numeric vector.
+//'
+//' @export
 // [[Rcpp::export]]
 IntegerVector rmultinom1(NumericMatrix prob, NumericVector randu) {
-  
+
   IntegerVector z(prob.nrow());
-  
+
   for(int i=0; i<prob.nrow();i++){
     z[i]=cat1(randu[i],prob(i,_));
   }
   return z;
 }
 
-//' This function samples z's from a multinomial distribution
+//' Internal function that samples z's from a multinomial distribution
+//'
+//' @param prob A numeric vector.
+//' @param n An integer.
+//' @param randu A numeric vector.
+//' @param nmaxclust An integer.
+//'
+//' @export
 // [[Rcpp::export]]
 IntegerVector rmultinom2(NumericVector prob, int n, NumericVector randu, int nmaxclust) {
   IntegerVector ZAgg(nmaxclust);
   int tmp;
-  
+
   for(int i=0; i<n;i++){
     tmp=cat1(randu[i],prob);
     ZAgg[tmp]=ZAgg[tmp]+1;
@@ -50,14 +62,24 @@ IntegerVector rmultinom2(NumericVector prob, int n, NumericVector randu, int nma
   return ZAgg;
 }
 
-//' This function samples z1 aggregate
+//' Internal function that samples z1 aggregate
+//'
+//' @param ntsegm An integer.
+//' @param b1 An integer.
+//' @param y1 An integer matrix.
+//' @param nmaxclust An integer.
+//' @param lphi1 A numeric matrix.
+//' @param ltheta A numeric matrix.
+//' @param zeroes A numeric vector.
+//'
+//' @export
 // [[Rcpp::export]]
 List SampleZAgg(int ntsegm,int b1,IntegerMatrix y1, int nmaxclust,
                 NumericMatrix lphi1, NumericMatrix ltheta,NumericVector zeroes){
   //convert array into arma::cube
   NumericVector vecArray=clone(zeroes);
   arma::cube Z1Agg(vecArray.begin(),ntsegm, b1, nmaxclust);
-  
+
   IntegerVector tmp(nmaxclust);
   NumericVector lprob(nmaxclust);
   NumericVector prob(nmaxclust);
@@ -71,7 +93,7 @@ List SampleZAgg(int ntsegm,int b1,IntegerMatrix y1, int nmaxclust,
         lprob=lprob-max(lprob);
         prob=exp(lprob);
         prob=prob/sum(prob);
-        
+
         //sample from multinomial and store results
         tmp=rmultinom2(prob,y1(i,j),runif(y1(i,j)),nmaxclust);
         for (int k=0; k<nmaxclust; k++){
@@ -81,20 +103,26 @@ List SampleZAgg(int ntsegm,int b1,IntegerMatrix y1, int nmaxclust,
     }
   }
   List L = List::create(Named("Z1Agg") =Z1Agg);
-  
+
   return(L);
 }
 
-//' This function calculates the inverted cumsum
+//' Internal function that calculates the inverted cumsum
+//'
+//' @param ntsegm An integer.
+//' @param nmaxclust An integer.
+//' @param z An integer matrix.
+//'
+//' @export
 // [[Rcpp::export]]
 IntegerMatrix CumSumInv(int ntsegm, int nmaxclust, IntegerMatrix z){
   IntegerMatrix res(ntsegm,z.ncol());
   IntegerVector soma(ntsegm);
-  
+
   for (int j=z.ncol()-1; j> -1; j--){
     if (j==z.ncol()-1){
       soma=z(_,j);
-    }            
+    }
     if (j!=z.ncol()-1){
       soma=soma+z(_,j);
     }

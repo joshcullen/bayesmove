@@ -73,7 +73,6 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #'   rounding.
 #' @param tol numeric. A single tolerance value on which to round any \code{int}
 #'   that were specified.
-#' @param ... Ignored
 #'
 #' @return A data frame where \code{dt} and \code{date} are both adjusted based
 #'   upon the rounding of time intervals according to the specified tolerance.
@@ -97,7 +96,7 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #'                         int = 3600, tol = 20)
 #'
 #' @export
-round_track_time=function(dat, id, dt, date, int, tol, ...) {
+round_track_time=function(dat, id, dt, date, int, tol) {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
@@ -127,7 +126,7 @@ round_track_time=function(dat, id, dt, date, int, tol, ...) {
     }
     dat[[i]]$dt<- tmp[,1]
     dat[[i]]$date<- tmp[,2] %>%
-      as.POSIXct(origin = '1970-01-01', tz = "UTC")
+      as.POSIXct(origin = '1970-01-01')
   }
 
   dat<- dplyr::bind_rows(dat)
@@ -226,11 +225,10 @@ filter_time=function(dat.list, dt, tstep) {
 #'
 #' @examples
 #'
-#' @export
 behav_seg_image=function(dat, nbins) {
 
   dat<- dat[,-1]  #remove id col
-  behav.list<- map2(list(dat), nbins, ~matrix(0, nrow = nrow(.x), ncol = .y))
+  behav.list<- purrr::map2(list(dat), nbins, ~matrix(0, nrow = nrow(.x), ncol = .y))
   for (i in 1:length(behav.list)) {
     for (j in 1:nrow(dat)){
       behav.list[[i]][j,dat[,i][j]]=1
@@ -264,7 +262,6 @@ behav_seg_image=function(dat, nbins) {
 #'
 #' @examples
 #'
-#' @export
 assign_tseg_internal=function(dat, brkpts){
 
   tmp<- which(unique(dat$id) == brkpts$id)
@@ -311,8 +308,8 @@ assign_tseg_internal=function(dat, brkpts){
 #' @export
 assign_tseg=function(dat, brkpts){
 
-  dat.out<- map(dat, assign_tseg_internal, brkpts = brkpts) %>%
-    bind_rows()
+  dat.out<- purrr::map(dat, assign_tseg_internal, brkpts = brkpts) %>%
+    dplyr::bind_rows()
 
   dat.out
 }
@@ -460,14 +457,13 @@ traceplot=function(data, type) {
 #'
 #' @examples
 #'
-#' @export
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {
     MAP.est<- dat[-1] %>%
       order(decreasing = T) %>%
       subset(. > nburn) %>%
-      first()
+      dplyr::first()
   } else {
     MAP.est<- which.max(dat[-1])
   }
@@ -535,7 +531,7 @@ get_breakpts=function(dat, MAP.est) {
   names(tmp)<- MAP.est
   max.length<- max(sapply(tmp, length))
   tmp<- lapply(tmp, function(x) { c(x, rep(NA, max.length-length(x)))}) %>%
-    bind_rows() %>%
+    dplyr::bind_rows() %>%
     t() %>%
     data.frame()
 
@@ -569,22 +565,21 @@ get_breakpts=function(dat, MAP.est) {
 #'
 #' @examples
 #'
-#' @export
 plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 
   #transform into pres/abs matrix
   behav.heat<- behav_seg_image(data, nbins)
 
   #convert to long form
-  behav.heat.long<- map2(behav.heat, as.list(names(behav.heat)), ~{.x %>%
+  behav.heat.long<- purrr::map2(behav.heat, as.list(names(behav.heat)), ~{.x %>%
       data.frame() %>%
-      pivot_longer(., cols = 1:ncol(.), names_to = "bin", values_to = "value") %>%
-      mutate(time = rep(1:nrow(data), each = length(unique(bin))),
-             param = rep(.y, nrow(.)))}
+      tidyr::pivot_longer(., cols = 1:ncol(.), names_to = "bin", values_to = "value") %>%
+      dplyr::mutate(time = rep(1:nrow(data), each = length(unique(bin))),
+             var = rep(.y, nrow(.)))}
   ) %>%
-    bind_rows() %>%
-    mutate_at("value", factor) %>%
-    mutate_at("bin", parse_number)
+    dplyr::bind_rows() %>%
+    dplyr::mutate_at("value", factor) %>%
+    dplyr::mutate_at("bin", parse_number)
 
   levels(behav.heat.long$value)<- c("Unoccupied","Occupied")
 
@@ -624,7 +619,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
   print(
     ggplot(behav.heat.long, aes(x=time, y=as.character(bin), fill=value)) +
       geom_tile() +
-      facet_wrap(~param, scales = 'free', nrow = 2) +
+      facet_wrap(~var, scales = 'free', nrow = 2) +
       scale_fill_viridis_d('') +
       scale_y_discrete(expand = c(0,0)) +
       scale_x_continuous(expand = c(0,0)) +
@@ -658,7 +653,6 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' @param title logical. If \code{TRUE}, includes the animal ID as the title of
 #'   the plot.
 #' @param legend logical. If \code{TRUE}, shows the legend for the heatmap.
-#' @param ... Ignored.
 #'
 #' @return A heatmap per animal ID that shows the value of each movement
 #'   variable over time (as discretized into bins) and is overlayed by the
@@ -668,10 +662,10 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' @examples
 #'
 #' @export
-plot_heatmap=function(data, nbins, brkpts, title, legend, ...) {
+plot_heatmap=function(data, nbins, brkpts, title, legend) {
 
   par(ask = TRUE)
-  map(data, ~plot_heatmap_behav(., nbins = nbins, brkpts = brkpts, title = title,
+  purrr::map(data, ~plot_heatmap_behav(., nbins = nbins, brkpts = brkpts, title = title,
                                 legend = legend))
   par(ask = FALSE)
 
@@ -697,12 +691,11 @@ plot_heatmap=function(data, nbins, brkpts, title, legend, ...) {
 #'
 #' @examples
 #'
-#' @export
 prep_data_internal=function(dat, coord.names) {
 
   #change names of coords to 'x' and 'y'
   dat<- dat %>%
-    rename(x = coord.names[1], y = coord.names[2])
+    dplyr::rename(x = coord.names[1], y = coord.names[2])
 
   #calculate step length
   step<- sqrt((diff(dat[,"x"]))^2 + (diff(dat[,"y"]))^2)
@@ -750,7 +743,7 @@ prep_data_internal=function(dat, coord.names) {
 #' @export
 prep_data=function(dat, coord.names, id) {
 
-  map(df_to_list(dat = dat, ind = id),
+  purrr::map(df_to_list(dat = dat, ind = id),
       ~prep_data_internal(., coord.names = coord.names)) %>%
-    bind_rows()
+    dplyr::bind_rows()
 }
