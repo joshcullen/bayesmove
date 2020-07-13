@@ -345,7 +345,6 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #'
 #' @examples
 #' \donttest{
-#' ## DON'T RUN
 #' #load original data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA)
 #'
