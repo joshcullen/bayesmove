@@ -24,7 +24,12 @@ Once observations from all animal IDs have been assigned to time segments, these
 
 ```{r load data, message=FALSE}
 library(bayesmove)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(lubridate)
 library(wesanderson)
 
 # Load data

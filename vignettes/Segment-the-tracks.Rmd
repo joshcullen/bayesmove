@@ -25,7 +25,12 @@ At this stage, only observations at a single time step have been retained and mo
 
 ```{r load data, message=FALSE}
 library(bayesmove)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(lubridate)
 library(furrr)
 
 # Load data
