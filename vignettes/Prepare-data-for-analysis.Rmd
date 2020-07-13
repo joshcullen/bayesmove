@@ -1,0 +1,262 @@
+---
+title: "Prepare data for analysis"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Prepare data for analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7,
+  fig.retina=2
+  )
+```
+
+## Introduction
+
+In order to estimate behavioral states from telemetry (and biologging data) using this non-parametric Bayesian framework, the data must be formatted in a certain way to run properly. This especially applies to the initial analysis of the raw data by the segmentation model. This tutorial will walk through the different steps of preparing the raw telemetry data for analysis by the models within `bayesmove`.
+
+
+## But first...
+
+Before we begin in earnest, the practitioner must make sure the data have been cleaned. This includes the removal of duplicate observations and sorting the observations in consecutive order per animal ID. At a minimum, an object of class `data.frame` with columns for animal ID, date, x coordinate (e.g., longitude, Easting), and y coordinate (e.g., latitude, Northing) must be included.
+
+
+## Calculating step lengths, turning angles, and time steps
+
+In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time step between succesive osbervations since only those at the primary time step of interest will be retained for further analysis. 
+
+First, let's take a look at what the data should look like before calculating these movement variables:
+
+```{r load data, message=FALSE}
+library(bayesmove)
+library(tidyverse)  #to use functions for data wrangling and visualization
+library(viridis)  #to use color palettes
+
+# Load data
+data(tracks)
+
+# Check data structure
+head(tracks)
+
+str(tracks)
+```
+
+```{r plot tracks, echo=FALSE, fig.height=7}
+
+# Plot tracks
+ggplot(data = tracks %>%
+         group_by(id) %>%
+         slice(2:n()) %>%
+         ungroup(), aes(x,y)) +
+  geom_path(color = "gray75") +
+  geom_point(pch = 21, size = 2.5, alpha = 0.7) +
+  geom_point(data = tracks %>%
+               group_by(id) %>%
+               slice(which(row_number() == 1)) %>%
+               ungroup(), aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
+  geom_point(data = tracks %>%
+               group_by(id) %>%
+               slice(which(row_number() == n())) %>%
+               ungroup(), aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
+  scale_fill_viridis_d("Behavior") +
+  theme_bw() +
+  theme(axis.title = element_text(size = 16)) +
+  guides(fill = guide_legend(label.theme = element_text(size = 12),
+                             title.theme = element_text(size = 14))) +
+  facet_wrap(~ id, scales = "free")
+```
+
+
+We can see that 'date' is in a `POSIXct` format and that the x and y coordinates are stored as `numeric` variables. Techincally, the coordinates can be in a lat-lon format, but this will make interpretation of step lengths more difficult since they will be recorded in map units. Therefore, it is suggested that x and y coordinates are in a UTM projection where the unit of measure is meters. The 'id' column can be stored either as `character` or `factor`.
+
+
+Now, let's calculate step length, turning angle, and time step:
+
+```{r prep data}
+tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
+
+head(tracks)
+```
+
+
+The new tracks data frame has three new columns ('step', 'angle', and 'dt'), which store the data for step lengths, turning angles, and time steps, respectively. Since this example uses coordinates that are considered to be in a UTM projection, step lengths are reported in meters. Turning angles are reported in radians and time steps are reported in seconds. Alternatively, these measures can also be calculated using functions from other R packages, such as `adehabitatLT`.
+
+
+## Round times and filter observations
+
+Next, we want to filter the data so that we only retain data for a given time step (or interval). Let's look at a distribution of the time steps that were just calculated:
+
+```{r, echo=FALSE, fig.align='center'}
+hist(tracks$dt, main = "Time Steps (s)")
+```
+
+
+Based on this histogram, it appears that 3600 s (1 hour) is likely the primary time step, where some observations slightly deviate from this exact interval. I will now round all time steps (dt) and dates to reflect this rounding of times within a given tolerance window. In this example, I will choose 3 minutes (180 s) as the tolerance on which to round observations close to the primary time interval (3600 s).
+
+```{r round times}
+tracks<- round_track_time(dat = tracks, id = "id", date = "date", dt = "dt", int = 3600,
+                 tol = 180, time.zone = "UTC")
+
+head(tracks)
+
+# How many different time steps?
+n_distinct(tracks$dt)
+
+# How many observations of each time step?
+hist(tracks$dt, main = "Rounded Time Steps (s)")
+```
+
+
+It looks like nearly all observations had a time step within the tolerance limit. Now the dataset needs to be filtered to only include observations where `dt == 3600`.
+
+```{r filter time steps}
+# Create list from data frame
+tracks.list<- df_to_list(dat = tracks, ind = "id")
+
+# Filter observations
+tracks_filt.list<- filter_time(dat.list = tracks.list, dt = "dt", tstep = 3600)
+
+# View sample of results
+head(tracks_filt.list[[3]])
+
+# Check that only observations at 1 hour time steps are retained per ID
+purrr::map(tracks_filt.list, ~n_distinct(.$dt))
+```
+
+
+There are also two new columns that have been added to the data frame of each ID: 'obs' and 'time1'. The 'obs' column holds the number of the observation before the data were filtered, whereas 'time1' stores the number of the observation after filtering. This is important since the 'obs' column will allow the merging of results from this model with that of the original data and the 'time1' column will be used to segment the tracks.
+
+
+## Discretize movement variables
+
+The unique feature of this modeling framework is that it does not rely upon standard parametric density functions that are used in nearly every other model that estimates behavior. This is expected to reduce any constraints posed by the selection of a given parametric density function and allow for greater model flexibility. However, this does require the user to define the number of bins for each variable and how they will be discretized.
+
+Let's first take a look at how step lengths and turning angles are distributed:
+
+```{r, warning=FALSE, echo=FALSE}
+ggplot(tracks, aes(x = step)) +
+  geom_density(fill = "lightblue") +
+  theme_bw() +
+  labs(y="Density", x="Step Length (m)")
+
+ggplot(tracks, aes(x = angle)) +
+  geom_density(fill = "indianred") +
+  theme_bw() +
+  labs(y="Density", x="Turning Angle (rad)")
+```
+
+
+We can see that step lengths are highly right-skewed whereas turning angles are a little more balanced despite having peaks at $-\pi, 0$, and $\pi$ radians. These distributions will inform how we discretize these variables.
+
+An example is included below for the discretization of step lengths and turning angles, but this can be performed in many different ways.
+
+```{r define bin limits}
+# Define bin number and limits for turning angles
+angle.bin.lims=seq(from=-pi, to=pi, by=pi/4)  #8 bins
+
+# Define bin number and limits for step lengths
+max.dist=max(tracks[tracks$dt == 3600,]$step, na.rm = T)
+dist.bin.lims=quantile(tracks[tracks$dt == 3600,]$step, c(0,0.25,0.50,0.75,0.90), na.rm=T)
+dist.bin.lims=c(dist.bin.lims, max.dist)  #5 bins
+
+angle.bin.lims
+
+dist.bin.lims
+```
+
+
+Bins were defined in different ways for each movement variable due to their inherent properties. Step lengths were broken into 5 bins (6 limits) using quantiles, which assisted in creating a more balanced distribution of bins since step lengths are typically right-skewed. Only step lengths that were observed at the primary time interval (3600 s; 1 h) were used to calculate quantiles. Since turning angles are already relatively balanced, these were separated into 8 bins (9 limits) of equal width centered at 0 radians (from $-\pi$ to $\pi$). The following code shows how to use these limits to discretize the data:
+
+```{r discretize vars}
+# Assign bins to observations
+tracks_disc.list<- map(tracks_filt.list,
+                       discrete_move_var,
+                       lims = list(dist.bin.lims, angle.bin.lims),
+                 varIn = c("step", "angle"),
+                 varOut = c("SL", "TA"))
+```
+
+
+The plots below show the limits used to define the bins for each continuous variable, as well as what these distributions look like after discretization. First, step lengths will be shown:
+
+```{r, echo=FALSE, warning=FALSE}
+##Viz limits on continuous vars
+tracks.df<- bind_rows(tracks_disc.list)
+
+#plot continuous SL distrib w/ limits
+ggplot(tracks.df, aes(x=step)) +
+  geom_density(fill = "lightblue") +
+  geom_vline(xintercept = dist.bin.lims, linetype = "dashed") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12)) +
+  labs(x = "Step Length (m)", y = "Density")
+
+
+##Viz discretization of params
+
+#only retain id and discretized step length (SL) and turning angle (TA) columns
+tracks.df2 <- map(tracks_disc.list,
+                  subset,
+                  select = c(id, SL, TA)) %>%
+  bind_rows() %>%
+  gather(key, value,-id)
+
+param.prop<- tracks.df2 %>%
+  group_by(key, value) %>%
+  summarise(n=n()) %>%
+  mutate(prop=n/nrow(tracks.df)) %>%
+  ungroup()  #if don't ungroup after grouping, ggforce won't work
+
+param.prop<- param.prop[-14,]
+param.prop[1:5, "value"]<- ((diff(dist.bin.lims)/2) + dist.bin.lims[1:5])
+param.prop[6:13, "value"]<- (diff(angle.bin.lims)/2) + angle.bin.lims[1:8]
+
+
+library(ggforce)
+#plot of discretized distrib
+ggplot(data = param.prop %>% filter(key == "SL"), aes(value, prop)) +
+  geom_bar(stat = "identity", width = (diff(dist.bin.lims)-0.025),
+           fill = "lightblue", color = "black") +
+  facet_zoom(xlim = c(0,3)) +
+  labs(x = "Step Length", y = "Proportion") +
+  theme_bw() +
+  theme(panel.grid = element_blank(), axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12))
+
+```
+
+
+And next the plots for turning angles:
+
+```{r, echo=FALSE, warning=FALSE}
+
+#plot of continuous distrib with limits
+ggplot(tracks.df, aes(x=angle)) +
+  geom_density(fill = "indianred") +
+  geom_vline(xintercept = angle.bin.lims, linetype = "dashed") +
+  theme_bw() +
+  theme(panel.grid = element_blank(), axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12)) +
+  labs(x = "Turning Angle (rad)", y = "Density")
+
+#plot of discretized distrib
+ggplot(data = param.prop %>% filter(key == "TA"), aes(value, prop)) +
+  geom_bar(stat = "identity", fill = "indianred", color = "black") +
+  labs(x = "Turning Angle (radians)", y = "Proportion") +
+  theme_bw() +
+  scale_x_continuous(breaks = c(-pi, -pi/2, 0, pi/2, pi),
+                     labels = expression(-pi, -pi/2, 0, pi/2, pi)) +
+  theme(panel.grid = element_blank(), axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12))
+```
+
+
+The data are now in the proper format to be analyzed by the segmentation model within `bayesmove`. While these bin limits are suggested as default settings, they are by no means the only way to discretize the data. This may require trial and error after viewing results from the segmentation model.

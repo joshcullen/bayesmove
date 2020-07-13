@@ -2,15 +2,17 @@
 % Please edit documentation in R/segmentation_helper_functions.R
 \name{prep_data_internal}
 \alias{prep_data_internal}
-\title{Internal function to calculate step lengths and turning angles}
+\title{Internal function to calculate step lengths, turning angles, and time steps}
 \usage{
 prep_data_internal(dat, coord.names)
 }
 \arguments{
 \item{dat}{A data frame that contains the columns associated with the x and y
-coordinates. For easier interpretation of the model results, it is
-recommended that coordinates be stored after UTM projection (meters) as
-opposed to unprojected in decimal degrees (map units).}
+coordinates as well as the date-time. For easier interpretation of the
+model results, it is recommended that coordinates be stored after UTM
+projection (meters) as opposed to unprojected in decimal degrees (map
+units). Date-time should be of class \code{POSIXct} and be labeled
+\emph{date} within the data frame.}
 
 \item{coord.names}{character. A vector of the column names under which the
 coordinates are stored. The name for the x coordinate should be listed
@@ -18,12 +20,10 @@ first and the name for the y coordinate second.}
 }
 \value{
 A data frame where all original data are returned and new columns are
-  added for step length (\code{step}) and turning angle (\code{angle}).
+  added for step length (\code{step}), turning angle (\code{angle}), and time
+  step (\code{dt}).
 }
 \description{
-An internal function that calculates step lengths and turning angles for a
-given animal ID.
-}
-\examples{
-
+An internal function that calculates step lengths, turning angles, and time
+steps for a given animal ID.
 }

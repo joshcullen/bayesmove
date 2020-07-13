@@ -31,6 +31,3 @@ A heatmap for each movement variable showing the bins assigned to
 \description{
 An internal function for plotting the results of the segmentation model.
 }
-\examples{
-
-}

@@ -35,6 +35,3 @@ This is RJMCMC algorithm that drives the proposal and selection of
 breakpoints for the data based on the difference in log marginal likelihood.
 This function is called within \code{\link{behav_gibbs_sampler}}.
 }
-\examples{
-
-}

@@ -28,6 +28,3 @@ This function samples the latent \emph{v} parameter within the Gibbs sampler.
 Calls on the \code{CumSumInv} function written in C++. Not for calling
 directly by users.
 }
-\examples{
-
-}

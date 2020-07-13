@@ -24,6 +24,3 @@ A list where each element stores the presence-absence matrix for each
 Transforms vectors of bin numbers into full matrices for plotting as a
 heatmap.
 }
-\examples{
-
-}

@@ -2,16 +2,17 @@
 % Please edit documentation in R/segmentation_helper_functions.R
 \name{prep_data}
 \alias{prep_data}
-\title{Calculate step lengths and turning angles from coordinates}
+\title{Calculate step lengths, turning angles, and time steps}
 \usage{
 prep_data(dat, coord.names, id)
 }
 \arguments{
-\item{dat}{A data frame that contains a column for animal IDs and the columns
-associated with the x and y coordinates. For easier interpretation of the
-model results, it is recommended that coordinates be stored after UTM
-projection (meters) as opposed to unprojected in decimal degrees (map
-units).}
+\item{dat}{A data frame that contains a column for animal IDs, the columns
+associated with the x and y coordinates, and a column for the date. For
+easier interpretation of the model results, it is recommended that
+coordinates be stored after UTM projection (meters) as opposed to
+unprojected in decimal degrees (map units). Date-time should be of class
+\code{POSIXct} and be labeled \emph{date} within the data frame.}
 
 \item{coord.names}{character. A vector of the column names under which the
 coordinates are stored. The name for the x coordinate should be listed
@@ -21,15 +22,28 @@ first and the name for the y coordinate second.}
 }
 \value{
 A data frame where all original data are returned and new columns are
-  added for step length (\code{step}) and turning angle (\code{angle}).
+  added for step length (\code{step}), turning angle (\code{angle}), and time
+  step (\code{dt}). Names for coordinates are changed to \code{x} and
+  \code{y}. Units for step length depend on the projection of the
+  coordinates, turning angles are returned in radians, and time steps are
+  returned in seconds.
 }
 \description{
 Calculates step lengths and turning angles based on coordinates for each
-animal ID. Provides a self-contained method to calculate these variables
-without needing to rely on other R packages (e.g., \code{adehabitatLT}).
-However, functions from other packages can also be used to perform this step
-in data preparation.
+animal ID and calculates time steps based on the date-time. Provides a
+self-contained method to calculate these variables without needing to rely on
+other R packages (e.g., \code{adehabitatLT}). However, functions from other
+packages can also be used to perform this step in data preparation.
 }
 \examples{
+#simulate data
+lon<- c(1,1,3,4,4,5,7,9,10,13)
+lat<- c(2,1,2,2,3,5,8,1,1,2)
+date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 10)
+date<- date + lubridate::seconds(runif(length(date), -300, 300))  #introduce noise
+dat<- data.frame(id = 1, date, lon, lat)
+
+#run function
+dat1<- prep_data(dat = dat, coord.names = c("lon","lat"), id = "id")
 
 }

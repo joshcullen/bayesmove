@@ -17,6 +17,8 @@
 #' @return A data frame with new columns of discretized variables as labeled by
 #'   \code{varOut}.
 #'
+#' @import dplyr
+#'
 #' @examples
 #' #simulate data
 #' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
@@ -96,7 +98,7 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #'                         int = 3600, tol = 20)
 #'
 #' @export
-round_track_time=function(dat, id, dt, date, int, tol) {
+round_track_time=function(dat, id, dt, date, int, tol, time.zone) {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
@@ -126,7 +128,7 @@ round_track_time=function(dat, id, dt, date, int, tol) {
     }
     dat[[i]]$dt<- tmp[,1]
     dat[[i]]$date<- tmp[,2] %>%
-      as.POSIXct(origin = '1970-01-01')
+      as.POSIXct(origin = '1970-01-01', tz = time.zone)
   }
 
   dat<- dplyr::bind_rows(dat)
@@ -223,8 +225,8 @@ filter_time=function(dat.list, dt, tstep) {
 #'   of the movement variables.
 #'
 #'
-#' @examples
 #'
+#' @export
 behav_seg_image=function(dat, nbins) {
 
   dat<- dat[,-1]  #remove id col
@@ -260,8 +262,8 @@ behav_seg_image=function(dat, nbins) {
 #'   breakpoints.
 #'
 #'
-#' @examples
 #'
+#' @export
 assign_tseg_internal=function(dat, brkpts){
 
   tmp<- which(unique(dat$id) == brkpts$id)
@@ -273,7 +275,7 @@ assign_tseg_internal=function(dat, brkpts){
   n<- length(breakpt1)
   res<- matrix(NA,nrow(dat),1)
   for (i in 2:n){
-    ind<- which(breakpt1[i-1] <= dat$time1 & dat$time1 < breakpt1[i])
+    ind<- which(breakpt1[i-1] < dat$time1 & dat$time1 <= breakpt1[i])
     res[ind,]<- i-1
   }
 
@@ -304,6 +306,32 @@ assign_tseg_internal=function(dat, brkpts){
 #'
 #'
 #' @examples
+#' #simulate data
+#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
+#' angle<- runif(1000, -pi, pi)
+#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
+#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
+#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
+#' dt<- c(dt, NA)
+#' id<- rep(1:10, each = 100)
+#'
+#' #simulate breakpoints
+#' brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
+#' brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
+#' brkpts<- data.frame(id = 1:10, brkpts)
+#'
+#' #create data frame
+#' dat<- data.frame(id, date, dt, step, angle)
+#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600, tol = 15)
+#'
+#' #create list
+#' dat.list<- df_to_list(dat = dat, ind = "id")
+#'
+#' #filter by primary time step
+#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#'
+#' #run function
+#' dat1<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
 #'
 #' @export
 assign_tseg=function(dat, brkpts){
@@ -419,18 +447,29 @@ find_breaks=function(dat, ind) {
 #'
 #'
 #' @examples
+#' #simulate data
+#' ngibbs<- 100
+#' y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
+#' dat<- matrix(c(1, y), 1, 101)
+#' dat<- data.frame(dat)
+#' names(dat)[1]<- "id"
+#'
+#' #run function
+#' traceplot(data = dat, type = "LML")
+#'
 #'
 #' @export
 traceplot=function(data, type) {
 
-  identity<- rownames(data)
+  identity<- data$id
 
   ifelse(length(identity) == 1, par(mfrow=c(1,1)),
          ifelse(length(identity) == 2, par(mfrow=c(1,2)), par(mfrow=c(2,2))))
 
   for (i in 1:length(identity)) {
     par(ask=TRUE)
-    plot(x=1:ngibbs, y=data[i,-1], type = "l", xlab = "Iteration",
+    plot(x=1:ngibbs, y=data[i,-1], type = "l",
+         xlab = "Iteration",
          ylab = ifelse(type == "nbrks", "# of Breakpoints",
                        ifelse(type == "LML","Log Marginal Likelihood",
                               stop("Need to select one of 'nbrks' or 'LML' for plotting"))),
@@ -455,8 +494,8 @@ traceplot=function(data, type) {
 #'   holds the MAP estimate.
 #'
 #'
-#' @examples
 #'
+#' @export
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {
@@ -488,6 +527,15 @@ get_MAP_internal=function(dat, nburn) {
 #'
 #'
 #' @examples
+#' #simulate data
+#' ngibbs<- 100
+#' y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
+#' dat<- matrix(c(1, y), 1, 101)
+#' dat<- data.frame(dat)
+#' names(dat)[1]<- "id"
+#'
+#' #run function
+#' MAP.est<- get_MAP(dat = dat, nburn = ngibbs/2)
 #'
 #' @export
 get_MAP=function(dat, nburn) {
@@ -518,6 +566,16 @@ get_MAP=function(dat, nburn) {
 #'
 #'
 #' @examples
+#' #simulate data
+#' id1 = id2 = id3 = list(4, c(2,4), 4, 4, c(4,8), c(4,8,17), c(4,8,17),
+#'                        c(4,8,20), c(4,8,20,25), c(5,8,20,25))
+#' dat.list<- list(id1 = id1, id2 = id2, id3 = id3)
+#'
+#' MAP.est<- c(5, 8, 9)
+#'
+#'
+#' #run function
+#' dat1<- get_breakpts(dat = dat.list, MAP.est = MAP.est)
 #'
 #' @export
 get_breakpts=function(dat, MAP.est) {
@@ -563,8 +621,8 @@ get_breakpts=function(dat, MAP.est) {
 #'   each observation over time that is overlayed by the extracted breakpoints.
 #'
 #'
-#' @examples
 #'
+#' @export
 plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 
   #transform into pres/abs matrix
@@ -579,7 +637,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
   ) %>%
     dplyr::bind_rows() %>%
     dplyr::mutate_at("value", factor) %>%
-    dplyr::mutate_at("bin", parse_number)
+    dplyr::mutate_at("bin", readr::parse_number)
 
   levels(behav.heat.long$value)<- c("Unoccupied","Occupied")
 
@@ -623,8 +681,8 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
       scale_fill_viridis_d('') +
       scale_y_discrete(expand = c(0,0)) +
       scale_x_continuous(expand = c(0,0)) +
-      geom_vline(data = breakpt, aes(xintercept = breaks - 0.5), color = viridis(n=9)[7],
-                 size = 0.6, alpha = 1) +
+      geom_vline(data = breakpt, aes(xintercept = breaks - 0.5),
+                 color = viridis::viridis(n=9)[7], size = 0.6, alpha = 1) +
       labs(x = "\nTime", y = "Bin\n") +
       ggtitle(paste(unique(data$id))) +
       theme_bw() +
@@ -658,8 +716,54 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #'   variable over time (as discretized into bins) and is overlayed by the
 #'   extracted breakpoints.
 #'
+#' @import ggplot2
 #'
 #' @examples
+#'
+#' #simulate data
+#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
+#' angle<- runif(1000, -pi, pi)
+#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
+#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
+#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
+#' dt<- c(dt, NA)
+#' var<- rep(sample(c(1,2), 100, replace = TRUE), each = 10)
+#' id<- rep(1:10, each = 100)
+#'
+#'
+#' #create data frame and round time
+#' dat<- data.frame(id, date, dt, step, angle, var)
+#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
+#'                        int = 3600, tol = 15)
+#'
+#'
+#' #define limits for each bin
+#' dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
+#' angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)  #8 bins
+#'
+#' #discretize step and angle
+#' dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
+#'                          varIn = c("step", "angle"),
+#'                          varOut = c("SL","TA"))
+#'
+#'
+#' #create list and filter by primary time step
+#' dat.list<- df_to_list(dat = dat1, ind = "id")
+#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#' dat.list.filt1<- lapply(dat.list.filt,
+#'                         function(x) subset(x, select = c(id, SL, TA)))
+#'
+#'
+#' #simulate breakpoints
+#' brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
+#' brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
+#' brkpts<- data.frame(id = 1:10, brkpts)
+#'
+#'
+#' #run function
+#' plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
+#'              title = TRUE, legend = TRUE)
+#'
 #'
 #' @export
 plot_heatmap=function(data, nbins, brkpts, title, legend) {
@@ -672,25 +776,28 @@ plot_heatmap=function(data, nbins, brkpts, title, legend) {
 }
 #------------------------------------------------
 
-#' Internal function to calculate step lengths and turning angles
+#' Internal function to calculate step lengths, turning angles, and time steps
 #'
-#' An internal function that calculates step lengths and turning angles for a
-#' given animal ID.
+#' An internal function that calculates step lengths, turning angles, and time
+#' steps for a given animal ID.
 #'
 #' @param dat A data frame that contains the columns associated with the x and y
-#'   coordinates. For easier interpretation of the model results, it is
-#'   recommended that coordinates be stored after UTM projection (meters) as
-#'   opposed to unprojected in decimal degrees (map units).
+#'   coordinates as well as the date-time. For easier interpretation of the
+#'   model results, it is recommended that coordinates be stored after UTM
+#'   projection (meters) as opposed to unprojected in decimal degrees (map
+#'   units). Date-time should be of class \code{POSIXct} and be labeled
+#'   \emph{date} within the data frame.
 #' @param coord.names character. A vector of the column names under which the
 #'   coordinates are stored. The name for the x coordinate should be listed
 #'   first and the name for the y coordinate second.
 #'
 #' @return A data frame where all original data are returned and new columns are
-#'   added for step length (\code{step}) and turning angle (\code{angle}).
+#'   added for step length (\code{step}), turning angle (\code{angle}), and time
+#'   step (\code{dt}).
 #'
 #'
-#' @examples
 #'
+#' @export
 prep_data_internal=function(dat, coord.names) {
 
   #change names of coords to 'x' and 'y'
@@ -712,38 +819,62 @@ prep_data_internal=function(dat, coord.names) {
                  ifelse(angle < -pi, 2*pi + angle, angle))
   dat$angle<- c(NA, angle)
 
+  #calculate time steps
+  dt<- difftime(dat$date, dplyr::lag(dat$date, 1), units = "secs") %>%
+    na.omit() %>%
+    as.numeric() %>%
+    round()
+  dat$dt<- c(dt, NA)
+
   dat
 }
 #------------------------------------------------
 
-#' Calculate step lengths and turning angles from coordinates
+#' Calculate step lengths, turning angles, and time steps
 #'
 #' Calculates step lengths and turning angles based on coordinates for each
-#' animal ID. Provides a self-contained method to calculate these variables
-#' without needing to rely on other R packages (e.g., \code{adehabitatLT}).
-#' However, functions from other packages can also be used to perform this step
-#' in data preparation.
+#' animal ID and calculates time steps based on the date-time. Provides a
+#' self-contained method to calculate these variables without needing to rely on
+#' other R packages (e.g., \code{adehabitatLT}). However, functions from other
+#' packages can also be used to perform this step in data preparation.
 #'
-#' @param dat A data frame that contains a column for animal IDs and the columns
-#'   associated with the x and y coordinates. For easier interpretation of the
-#'   model results, it is recommended that coordinates be stored after UTM
-#'   projection (meters) as opposed to unprojected in decimal degrees (map
-#'   units).
+#' @param dat A data frame that contains a column for animal IDs, the columns
+#'   associated with the x and y coordinates, and a column for the date. For
+#'   easier interpretation of the model results, it is recommended that
+#'   coordinates be stored after UTM projection (meters) as opposed to
+#'   unprojected in decimal degrees (map units). Date-time should be of class
+#'   \code{POSIXct} and be labeled \emph{date} within the data frame.
 #' @param coord.names character. A vector of the column names under which the
 #'   coordinates are stored. The name for the x coordinate should be listed
 #'   first and the name for the y coordinate second.
 #' @param id character. The name of the column storing the animal IDs.
 #'
 #' @return A data frame where all original data are returned and new columns are
-#'   added for step length (\code{step}) and turning angle (\code{angle}).
+#'   added for step length (\code{step}), turning angle (\code{angle}), and time
+#'   step (\code{dt}). Names for coordinates are changed to \code{x} and
+#'   \code{y}. Units for step length depend on the projection of the
+#'   coordinates, turning angles are returned in radians, and time steps are
+#'   returned in seconds.
 #'
 #'
 #' @examples
+#' #simulate data
+#' lon<- c(1,1,3,4,4,5,7,9,10,13)
+#' lat<- c(2,1,2,2,3,5,8,1,1,2)
+#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 10)
+#' date<- date + lubridate::seconds(runif(length(date), -300, 300))  #introduce noise
+#' dat<- data.frame(id = 1, date, lon, lat)
+#'
+#' #run function
+#' dat1<- prep_data(dat = dat, coord.names = c("lon","lat"), id = "id")
 #'
 #' @export
 prep_data=function(dat, coord.names, id) {
 
   purrr::map(df_to_list(dat = dat, ind = id),
       ~prep_data_internal(., coord.names = coord.names)) %>%
-    dplyr::bind_rows()
+    dplyr::bind_rows() %>%
+    mutate_at(c("step","angle"), ~round(., 3))
+
+
 }

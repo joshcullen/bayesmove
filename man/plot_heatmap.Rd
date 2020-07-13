@@ -38,4 +38,49 @@ analysis.
 }
 \examples{
 
+#simulate data
+step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
+angle<- runif(1000, -pi, pi)
+date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
+date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
+dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
+dt<- c(dt, NA)
+var<- rep(sample(c(1,2), 100, replace = TRUE), each = 10)
+id<- rep(1:10, each = 100)
+
+
+#create data frame and round time
+dat<- data.frame(id, date, dt, step, angle, var)
+dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
+                       int = 3600, tol = 15)
+
+
+#define limits for each bin
+dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
+angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)  #8 bins
+
+#discretize step and angle
+dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
+                         varIn = c("step", "angle"),
+                         varOut = c("SL","TA"))
+
+
+#create list and filter by primary time step
+dat.list<- df_to_list(dat = dat1, ind = "id")
+dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+dat.list.filt1<- lapply(dat.list.filt,
+                        function(x) subset(x, select = c(id, SL, TA)))
+
+
+#simulate breakpoints
+brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
+brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
+brkpts<- data.frame(id = 1:10, brkpts)
+
+
+#run function
+plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
+             title = TRUE, legend = TRUE)
+
+
 }

@@ -35,6 +35,3 @@ sampler for each iteration of the MCMC chain. It is called by
 \code{\link{segment_behavior}} to run the RJMCMC on all animal IDs
 simultaneously.
 }
-\examples{
-
-}

@@ -4,7 +4,7 @@
 \alias{expand_behavior}
 \title{Expand behavior estimates from time segments to observations}
 \usage{
-expand_behavior(dat, theta.estim, nobs)
+expand_behavior(dat, theta.estim, obs, nbehav, behav.names, behav.order)
 }
 \arguments{
 \item{dat}{A data frame of the animal ID, time segment labels, and all other
@@ -16,10 +16,19 @@ proportions of each behavioral state as separate columns. Animal ID and
 time segment columns must be labeled \emph{id} and \emph{tseg},
 respectively.}
 
-\item{nobs}{A data frame containing the animal ID, time segment, and number
-of observations recorded within a given time segment. Animal ID, time
-segment, and sample size columns must be labeled \emph{id}, \emph{tseg},
-and \emph{n}, respectively.}
+\item{obs}{A data frame summarizing the number of observations within each
+bin per movement variable that is returned by
+\code{\link{summarize_tsegs}}.}
+
+\item{nbehav}{numeric. The number of behavioral states that will be retained
+in 1 to nmaxclust.}
+
+\item{behav.names}{character. A vector of names to label each state (in
+order).}
+
+\item{behav.order}{numeric. A vector that identifies the order in which the
+user would like to rearrange the behavioral states. If satisfied with order
+returned by the LDA model, this still must be specified.}
 }
 \value{
 A new data frame that expands behavior proportions for each
@@ -30,5 +39,27 @@ A new data frame that expands behavior proportions for each
 Expand behavior estimates from time segments to observations
 }
 \examples{
+\donttest{
+## DON'T RUN
+#create data frame
+dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
+
+#summarize data by time segment
+obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
+
+#cluster data with LDA
+res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
+                       nburn = 500, nmaxclust = 7, ndata.types = 2)
+
+#Extract proportions of behaviors per time segment
+theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
+
+#Create augmented matrix by replicating rows (tsegs) according to obs per tseg
+theta.estim2<- expand_behavior(dat = dat, theta.estim = theta.estim, obs = obs,
+                               nbehav = 3, behav.names = c("Encamped","ARS","Transit"),
+                               behav.order = c(1,2,3))
+}
+
+
 
 }

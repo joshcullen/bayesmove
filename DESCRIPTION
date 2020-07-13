@@ -2,12 +2,15 @@ Package: bayesmove
 Type: Package
 Title: Non-Parametric Bayesian Analyses of Animal Movement
 Version: 0.0.0.9000
-Authors@R: as.person(c(
-    "Joshua Cullen <joshcullen10@gmail.com> [aut, cre]", 
-    "Denis Valle <drvalle@ufl.edu> [aut]"
-  ))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+    person("Joshua", "Cullen", , "joshcullen10@gmail.com", role = c("aut", "cre"), 
+      comment = c(ORCID = "0000-0002-6935-9340")),
+    person("Denis", "Valle", role = c("aut")))
+Description: Methods for assessing animal movement from telemetry and biologging
+    data using non-parametric Bayesian methods. This includes features for pre-
+    processing and analysis of data, as well as the visualization of results
+    from the models. This framework does not rely on standard parametric density
+    functions, which provides flexibility during model fitting.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -27,15 +30,19 @@ Imports:
     tidyr (>= 1.0.0),
     viridis (>= 0.5.1),
     magrittr,
-    RcppArmadillo
+    RcppArmadillo,
+    future (>= 1.15.1)
 URL: https://github.com/joshcullen/bayesmove
 BugReports: https://github.com/joshcullen/bayesmove/issues
 Suggests: 
     covr,
     testthat,
-    spelling
+    spelling,
+    knitr,
+    rmarkdown
 Language: en-US
 RoxygenNote: 7.1.0
 LinkingTo: 
     Rcpp,
     RcppArmadillo
+VignetteBuilder: knitr

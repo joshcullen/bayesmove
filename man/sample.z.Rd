@@ -40,6 +40,3 @@ This function samples the latent \emph{z} parameter within the Gibbs sampler.
 Calls on the \code{SampleZAgg} function written in C++. Not for calling
 directly by users.
 }
-\examples{
-
-}

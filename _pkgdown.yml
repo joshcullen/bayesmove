@@ -1,0 +1,23 @@
+url: http://joshcullen.github.io/bayesmove
+navbar:
+  title: "bayesmove"
+  type: inverse
+  left:
+    - text: "Articles"
+      menu:
+      - text: "Prepare Data"
+        href: articles/Prepare-data-for-analysis.html
+      - text: "Segment the Tracks"
+        href: articles/Segment-the-tracks.html
+      - text: "Cluster Track Segments"
+        href: articles/Cluster-track-segments.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "News"
+      href: news/index.html
+  right:
+    - icon: fa-github
+      href: https://github.com/joshcullen/bayesmove
+template:
+  params:
+    ganalytics: UA-151357058-2

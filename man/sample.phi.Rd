@@ -29,6 +29,3 @@ A matrix of proportion estimates that characterize distributions
 Estimates values of \emph{phi} matrix for use in characterizing distributions
 of the movement variables. Not for calling directly by users.
 }
-\examples{
-
-}

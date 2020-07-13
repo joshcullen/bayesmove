@@ -27,6 +27,3 @@ These segments of observations will be used in the second stage of the model
 framework to perform mixed-membership clustering by Latent Dirichlet
 Allocation.
 }
-\examples{
-
-}

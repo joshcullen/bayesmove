@@ -21,6 +21,3 @@ A numeric value indicating the iteration after the burn-in phase that
 \description{
 Internal function to be used by a wrapper.
 }
-\examples{
-
-}

@@ -27,5 +27,15 @@ A data frame where breakpoints are returned per animal ID within each
 Extract breakpoints for each animal ID
 }
 \examples{
+#simulate data
+id1 = id2 = id3 = list(4, c(2,4), 4, 4, c(4,8), c(4,8,17), c(4,8,17),
+                       c(4,8,20), c(4,8,20,25), c(5,8,20,25))
+dat.list<- list(id1 = id1, id2 = id2, id3 = id3)
+
+MAP.est<- c(5, 8, 9)
+
+
+#run function
+dat1<- get_breakpts(dat = dat.list, MAP.est = MAP.est)
 
 }

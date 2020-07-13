@@ -35,4 +35,14 @@ of movement variable distribution for each behavior estimated.
 }
 \examples{
 
+\donttest{
+#cluster data with LDA
+res<- cluster_segments(dat = dat, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
+                       nburn = 500, nmaxclust = 7, ndata.types = 2)
+
+#run function
+behav.res<- get_behav_hist(dat = res, nburn = 500, ngibbs = 1000, nmaxclust = 7,
+                           var.names = c("Step Length","Turning Angle"))
+}
+
 }

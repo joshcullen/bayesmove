@@ -22,6 +22,3 @@ A matrix of proportion estimates that represent proportions of
 Calculates values of \emph{theta} matrix within Gibbs sampler. Not for calling
 directly by users.
 }
-\examples{
-
-}

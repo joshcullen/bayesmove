@@ -29,5 +29,31 @@ framework to perform mixed-membership clustering by Latent Dirichlet
 Allocation.
 }
 \examples{
+#simulate data
+step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
+angle<- runif(1000, -pi, pi)
+date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
+date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
+dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
+dt<- c(dt, NA)
+id<- rep(1:10, each = 100)
+
+#simulate breakpoints
+brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
+brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
+brkpts<- data.frame(id = 1:10, brkpts)
+
+#create data frame
+dat<- data.frame(id, date, dt, step, angle)
+dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600, tol = 15)
+
+#create list
+dat.list<- df_to_list(dat = dat, ind = "id")
+
+#filter by primary time step
+dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+
+#run function
+dat1<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
 
 }

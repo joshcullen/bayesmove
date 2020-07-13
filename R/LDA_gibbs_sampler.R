@@ -32,6 +32,18 @@
 #'
 #'
 #' @examples
+#' \donttest{
+#' ## DON'T RUN
+#' #create data frame
+#' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
+#'
+#' #summarize data by time segment
+#' obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
+#'
+#' #cluster data with LDA
+#' res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
+#'                        nburn = 500, nmaxclust = 7, ndata.types = 2)
+#'                        }
 #'
 #' @export
 cluster_segments=function(dat, gamma1, alpha, ngibbs, nmaxclust, nburn, ndata.types){
@@ -74,7 +86,7 @@ cluster_segments=function(dat, gamma1, alpha, ngibbs, nmaxclust, nburn, ndata.ty
   store.loglikel=rep(NA,1)
 
   #progress bar
-  pb <- progress_bar$new(
+  pb <- progress::progress_bar$new(
     format = " iteration (:current/:total) [:bar] :percent [Elapsed: :elapsed, Remaining: :eta]",
     total = ngibbs, clear = FALSE, width = 100)
 

@@ -18,19 +18,19 @@
 #'   breakpoints for a given animal ID.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 get_summary_stats=function(breakpt, dat, max.time, nbins, ndata.types){
 
-  breakpt1<- c(1,breakpt,max.time)
+  breakpt1<- c(1, breakpt, max.time)
   n<- length(breakpt1)
 
   #get summarized results
   res<- list()
   for (j in 1:ndata.types){
     #initialize matrix
-    res[[j]]<- matrix(0,n-1,nbins[j])
+    res[[j]]<- matrix(0, n-1, nbins[j])
 
     #get summary for each interval
     for (i in 2:n){
@@ -70,7 +70,7 @@ get_summary_stats=function(breakpt, dat, max.time, nbins, ndata.types){
 #'   set of breakpoints and the discretized data.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 log_marg_likel=function(alpha, summary.stats, nbins, ndata.types){
@@ -78,7 +78,7 @@ log_marg_likel=function(alpha, summary.stats, nbins, ndata.types){
   #get ratios
   probs<- rep(NA, ndata.types)
   for (i in 1:ndata.types){
-    lnum<- rowSums(lgamma(alpha+summary.stats[[i]]))
+    lnum<- rowSums(lgamma(alpha + summary.stats[[i]]))
     lden<- lgamma(nbins[i] * alpha+rowSums(summary.stats[[i]]))
     p2<- sum(lnum) - sum(lden)
     p1<- nrow(summary.stats[[i]]) * (lgamma(nbins[i] * alpha) - nbins[i] * lgamma(alpha))
@@ -113,7 +113,7 @@ log_marg_likel=function(alpha, summary.stats, nbins, ndata.types){
 #'   This is performed for each iteration of the MCMC algorithm.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 samp_move=function(breakpt, max.time, dat, alpha, nbins, ndata.types){

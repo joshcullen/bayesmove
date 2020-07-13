@@ -23,7 +23,7 @@
 #'   animal ID.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
@@ -108,33 +108,106 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #'
 #'
 #' @examples
+#' #simulate data
+#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
+#' angle<- runif(1000, -pi, pi)
+#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
+#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
+#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
+#' dt<- c(dt, NA)
+#' var<- rep(sample(c(1,2), 100, replace = TRUE), each = 10)
+#' id<- rep(1:10, each = 100)
+#'
+#'
+#' #create data frame and round time
+#' dat<- data.frame(id, date, dt, step, angle, var)
+#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
+#'                        int = 3600, tol = 15)
+#'
+#'
+#' #define limits for each bin
+#' dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
+#' angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)  #8 bins
+#'
+#' #discretize step and angle
+#' dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
+#'                          varIn = c("step", "angle"),
+#'                          varOut = c("SL","TA"))
+#'
+#'
+#' #create list and filter by primary time step
+#' dat.list<- df_to_list(dat = dat1, ind = "id")
+#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#'
+#'
+#' #find breakpoints to pre-specify by ID
+#' breaks<- lapply(dat.list.filt, find_breaks, ind = "var")
+#'
+#'
+#'
+#'
+#'
+#'
+#' #perform segmentation w/o pre-specifying breakpoints
+#' dat.list.filt1<- lapply(dat.list.filt,
+#'                         function(x) subset(x, select = c(id, SL, TA)))
+#' future::plan(future::multisession)
+#' dat.res1<- segment_behavior(data = dat.list.filt1, ngibbs = 1000, nbins = c(5,8),
+#'                             alpha = 1)
+#'
+#'
+#' #perform segmentation w/ pre-specifying breakpoints
+#' dat.list.filt2<- lapply(dat.list.filt,
+#'                         function(x) subset(x, select = c(id, SL, TA, var)))
+#' future::plan(future::multisession)
+#' dat.res2<- segment_behavior(data = dat.list.filt2, ngibbs = 1000, nbins = c(5,8,2),
+#'                             alpha = 1, breakpt = breaks)
+#'
+#' future::plan(future::sequential)
 #'
 #' @export
-segment_behavior=function(data, ngibbs, nbins, alpha, breakpt = map(names(data), ~ NULL)) {
+segment_behavior=function(data, ngibbs, nbins, alpha,
+                          breakpt = purrr::map(names(data), ~ NULL)) {
 
-  tic()  #start timer
-  mod<- future_map2(data, breakpt, ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
+  tictoc::tic()  #start timer
+  mod<- furrr::future_map2(data, breakpt,
+                           ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
                                                          alpha = alpha, breakpt = .y),
                    .progress = TRUE)
-  toc()  #provide elapsed time
+  tictoc::toc()  #provide elapsed time
 
 
-  brkpts<- map(mod, 1)  #create list of all sets breakpoints by ID
 
-  nbrks<- map_dfr(mod, 2) %>%
+
+  brkpts<- purrr::map(mod, 1)  #create list of all sets breakpoints by ID
+
+
+  nbrks<- purrr::map_dfr(mod, 2) %>%
     t() %>%
     data.frame()  #create DF of number of breakpoints by ID
   names(nbrks)<- c('id', paste0("Iter_",1:ngibbs))
+  nbrks<- nbrks %>%
+    dplyr::mutate_at(2:ncol(.), as.character) %>%
+    dplyr::mutate_at(2:ncol(.), as.numeric) %>%
+    dplyr::mutate_at("id", as.character)
 
-  LML<- map_dfr(mod, 3) %>%
+
+  LML<- purrr::map_dfr(mod, 3) %>%
     t() %>%
     data.frame()  #create DF of LML by ID
   names(LML)<- c('id', paste0("Iter_",1:ngibbs))
+  LML<- LML %>%
+    dplyr::mutate_at(2:ncol(.), as.character) %>%
+    dplyr::mutate_at(2:ncol(.), as.numeric) %>%
+    dplyr::mutate_at("id", as.character)
 
-  elapsed.time<- map_dfr(mod, 4) %>%
+
+  elapsed.time<- purrr::map_dfr(mod, 4) %>%
     t() %>%
     data.frame()  #create DF of elapsed time
   names(elapsed.time)<- "time"
+  elapsed.time<- elapsed.time %>%
+    dplyr::mutate_at("time", as.character)
 
 
   list(brkpts = brkpts, nbrks = nbrks, LML = LML, elapsed.time = elapsed.time)

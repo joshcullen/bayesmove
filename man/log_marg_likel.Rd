@@ -29,6 +29,3 @@ An internal function that is used to calculate the log marginal likelihood of
 models for the current and proposed sets of breakpoints. Called within
 \code{\link{samp_move}}.
 }
-\examples{
-
-}

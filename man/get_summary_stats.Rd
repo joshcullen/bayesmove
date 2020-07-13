@@ -30,6 +30,3 @@ An internal function that calculates the sufficient statistics to be used
 within the reversible-jump MCMC Gibbs sampler called by
 \code{link{samp_move}}.
 }
-\examples{
-
-}

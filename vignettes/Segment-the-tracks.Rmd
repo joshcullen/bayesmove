@@ -1,0 +1,150 @@
+---
+title: "Segment the tracks"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Segment the tracks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7,
+  fig.retina=2
+)
+```
+
+
+## Introduction
+
+At this stage, only observations at a single time step have been retained and movement variables (i.e., step lengths, turning angles) have been discretized to perform segmentation on each animal ID. These data are then used as input for the Bayesian segmentation model, which uses a reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate the breakpoints where values substantially change for the movement variables. To facilitate the parallel computation of this model (for each ID), the data must be stored as a list.
+
+
+```{r load data, message=FALSE}
+library(bayesmove)
+library(tidyverse)
+library(furrr)
+
+# Load data
+data(tracks.list)
+
+# Check data structure
+str(tracks.list)
+```
+
+
+Data for each animal ID are stored separately in each element of the list, where elements include a data frame of the data, including each discretized movement variable. Before the model can be run, each of the data frames within the list must only contain a column for the id, as well as the columns that store the discretized movement variables.
+
+```{r}
+# Only retain id and discretized step length (SL) and turning angle (TA) columns
+tracks.list2<- map(tracks.list,
+                   subset,
+                   select = c(id, SL, TA))
+```
+
+
+
+## Run the segmentation model
+
+```{r run model, results='hide'}
+set.seed(1)
+
+# Define hyperparameter for prior distribution
+alpha<- 1
+
+# Set number of iterations for the Gibbs sampler
+ngibbs<- 10000
+
+# Set the number of bins used to discretize each movement variable
+nbins<- c(5,8)
+
+
+plan(multisession)  #run all MCMC chains in parallel
+                    #refer to future::plan() for more details
+dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+                           alpha = alpha)
+```
+
+
+Now that each of the tracks have been segmented, we need to inspect the trace-plots for the log marginal likelihood to determine whether the model converged or not. Additionally, we can inspect a traceplot of the number of estimated breakpoints per iteration of the RJMCMC for each ID.
+
+```{r, eval=FALSE}
+# Trace-plots for the number of breakpoints per ID
+traceplot(data = dat.res$nbrks, type = "nbrks")
+```
+
+```{r nbrks traceplots, echo=FALSE, fig.width=3.25}
+par(mar=c(4.1,4.1,2,1))
+
+for (i in 1:nrow(dat.res$nbrks)) {
+  traceplot(data = dat.res$nbrks[i, ], type = "nbrks")
+}
+```
+
+
+```{r, eval=FALSE}
+# Trace-plots for the log marginal likelihood (LML) per ID
+traceplot(data = dat.res$LML, type = "LML")
+```
+
+```{r LML traceplots, echo=FALSE, fig.width=3.25}
+par(mar=c(4.1,4.1,2,1))
+
+for (i in 1:nrow(dat.res$LML)) {
+  traceplot(data = dat.res$LML[i, ], type = "LML")
+}
+```
+
+
+It appears that the models have converged based on the traceplots of the log marginal likelihoods for all IDs. If this was not the case, the model would need to be re-run with a greater number of iterations for `ngibbs`. It also appears that most IDs likely have 30-40 breakpoints, but the exact number and position of these breakpoints will be determined by selecting the *maximum a posteriori* (MAP) estimate for each animal ID. This is performed as follows:
+
+```{r MAP}
+# Determine MAP for selecting breakpoints
+MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+MAP.est
+
+brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
+
+# How many breakpoints estimated per ID?
+apply(brkpts[,-1], 1, function(x) length(purrr::discard(x, is.na)))
+```
+
+
+The object `MAP.est` is storing the iteration at which the MAP estimate occurs for each ID, whereas `brkpts` is a data frame that stores all of the breakpoints per ID. We can plot these breakpoints over the discretized movement variables to inspect how well this appears to match changes in these values.
+
+
+## Breakpoint visualization
+ The `bayesmove` package provides a number of functions to visualize the data, such as `traceplot()`. The `plot_heatmap()` function provides an easy method to visualize the breakpoints compared to the data and to determine whether the number and location of breakpoints appear to be appropriate. The number and position of breakpoints will depend on a number of factors, such as the number of observations per ID, the sampling interval of the biologging device, and the method by which movement variables were discretized. If the breakpoints do not appear to fit the data well, then the limits used to discretize the movement variables likely need to be modified and the model re-run.
+ 
+```{r, eval=FALSE}
+# Plot breakpoints over the data
+plot_heatmap(data = tracks.list2, nbins = nbins, brkpts = brkpts, title = TRUE, legend = TRUE)
+```
+
+```{r heatmaps, echo=FALSE, fig.align='center', fig.height=5}
+for (i in 1:length(tracks.list2)) {
+  plot_heatmap(data = tracks.list2[i], nbins = nbins, brkpts = brkpts, title = TRUE,
+               legend = TRUE)
+}
+```
+
+
+From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relativley homogeneous units of observations based on `SL` (step lengths) and `TA` (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each movement variable are shown on the y-axis.
+
+Now that the MAP estimates of the breakpoints have been identified and we are staisfied with the results, we will use these breakpoints to define time segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.
+
+
+## Assign time segments
+
+```{r}
+# Assign time segments to all observations by ID
+tracks.seg<- assign_tseg(dat = tracks.list, brkpts = brkpts)
+
+head(tracks.seg)
+```
+
+
+These segments will then be clustered in the next stage of this Bayesian framework: a mixed-membership Latent Dirichlet Allocation model.

@@ -25,7 +25,6 @@
 #'   the number of movement variables.
 #'
 #'
-#' @examples
 #'
 #' @export
 sample.z=function(ntsegm, nbins, y, nmaxclust, phi, ltheta, zeroes, ndata.types){
@@ -57,7 +56,7 @@ sample.z=function(ntsegm, nbins, y, nmaxclust, phi, ltheta, zeroes, ndata.types)
 #'   segments and possible states.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 sample.v=function(z.agg, gamma1, ntsegm, ndata.types, nmaxclust){
@@ -92,7 +91,7 @@ sample.v=function(z.agg, gamma1, ntsegm, ndata.types, nmaxclust){
 #'   different behavioral states per time segment.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 get.theta=function(v, nmaxclust, ntsegm){
@@ -126,7 +125,7 @@ get.theta=function(v, nmaxclust, ntsegm){
 #'   (bins) for each movement variable and possible behavioral state.
 #'
 #'
-#' @examples
+#'
 #'
 #' @export
 sample.phi=function(z.agg, alpha, nmaxclust, nbins, ndata.types){
@@ -135,7 +134,7 @@ sample.phi=function(z.agg, alpha, nmaxclust, nbins, ndata.types){
     soma=t(apply(z.agg[[j]],2:3,sum))
     tmp=matrix(NA,nmaxclust,nbins[j])
     for (i in 1:nmaxclust){
-      tmp[i,]=rdirichlet(1,soma[i,]+alpha)
+      tmp[i,]=MCMCpack::rdirichlet(1,soma[i,]+alpha)
     }
     phi[[j]]=tmp
   }

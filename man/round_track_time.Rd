@@ -4,7 +4,7 @@
 \alias{round_track_time}
 \title{Round time to nearest interval}
 \usage{
-round_track_time(dat, id, dt, date, int, tol)
+round_track_time(dat, id, dt, date, int, tol, time.zone)
 }
 \arguments{
 \item{dat}{A data frame that contains the sampling interval of the
