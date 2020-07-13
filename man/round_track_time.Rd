@@ -22,6 +22,9 @@ rounding.}
 
 \item{tol}{numeric. A single tolerance value on which to round any \code{int}
 that were specified.}
+
+\item{time.zone}{character. Specify the time zone for which the date-times
+were recorded.}
 }
 \value{
 A data frame where \code{dt} and \code{date} are both adjusted based
@@ -50,6 +53,6 @@ dat<- data.frame(id, date, dt, step, angle)
 
 #run function
 dat1<- round_track_time(dat = dat, id = "id", date = "date", dt = "dt",
-                        int = 3600, tol = 20)
+                        int = 3600, tol = 20, time.zone = "UTC")
 
 }

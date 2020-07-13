@@ -31,7 +31,8 @@ id<- rep(1:10, each = 100)
 
 #create data frame
 dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600, tol = 15)
+dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
+                       tol = 15, time.zone = "UTC")
 
 #run function
 dat.list<- df_to_list(dat = dat, ind = "id")

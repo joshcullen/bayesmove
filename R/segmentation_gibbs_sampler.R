@@ -122,7 +122,7 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #' #create data frame and round time
 #' dat<- data.frame(id, date, dt, step, angle, var)
 #' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
-#'                        int = 3600, tol = 15)
+#'                        int = 3600, tol = 15, time.zone = "UTC")
 #'
 #'
 #' #define limits for each bin

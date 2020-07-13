@@ -86,7 +86,7 @@ The trace-plot of the log likelihood has reached an asymptote, denoting that the
 
 ## Interpreting the results
 
-First, we will determine the optimal number of behavioral states by evaulating the proportions of time spent in each behavior across all time segments and IDs as stored within the `theta` matrix.
+First, we will determine the optimal number of behavioral states by evaluating the proportions of time spent in each behavior across all time segments and IDs as stored within the `theta` matrix.
 
 ```{r plot theta, fig.height=5}
 # Extract proportions of behaviors per time segment

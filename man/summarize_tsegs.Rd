@@ -23,7 +23,7 @@ A new data frame that contains the animal ID, time segment number,
   provided to \code{summarize_tsegs}.
 }
 \description{
-Pepares the data that has already been segmented for clustering by Latent
+Prepares the data that has already been segmented for clustering by Latent
 Dirichlet Allocation. This function summarizes the counts observed per
 movement variable bin within each time segment per animal ID.
 }
@@ -44,7 +44,8 @@ brkpts<- data.frame(id = 1:10, brkpts)
 
 #create data frame
 dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600, tol = 15)
+dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
+                       tol = 15, time.zone = "UTC")
 
 #define limits for each bin
 dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins

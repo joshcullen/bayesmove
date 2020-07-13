@@ -21,7 +21,7 @@ limitations of existing segmentation methods and state-space models.
 This framework allows the analysis of multiple telemetry and biologging
 data streams, which must be discretized into a set of bins before they
 can be analyzed. This package also includes features to check model
-convergence. Model ouput are often returned in a format that is
+convergence. Model output are often returned in a format that is
 `tidyverse`-friendly, which allows for easy visualization using
 `ggplot2`.
 

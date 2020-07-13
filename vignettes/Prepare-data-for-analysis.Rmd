@@ -29,7 +29,7 @@ Before we begin in earnest, the practitioner must make sure the data have been c
 
 ## Calculating step lengths, turning angles, and time steps
 
-In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time step between succesive osbervations since only those at the primary time step of interest will be retained for further analysis. 
+In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time step between successive observations since only those at the primary time step of interest will be retained for further analysis. 
 
 First, let's take a look at what the data should look like before calculating these movement variables:
 
@@ -73,7 +73,7 @@ ggplot(data = tracks %>%
 ```
 
 
-We can see that 'date' is in a `POSIXct` format and that the x and y coordinates are stored as `numeric` variables. Techincally, the coordinates can be in a lat-lon format, but this will make interpretation of step lengths more difficult since they will be recorded in map units. Therefore, it is suggested that x and y coordinates are in a UTM projection where the unit of measure is meters. The 'id' column can be stored either as `character` or `factor`.
+We can see that 'date' is in a `POSIXct` format and that the x and y coordinates are stored as `numeric` variables. Technically, the coordinates can be in a lat-lon format, but this will make interpretation of step lengths more difficult since they will be recorded in map units. Therefore, it is suggested that x and y coordinates are in a UTM projection where the unit of measure is meters. The 'id' column can be stored either as `character` or `factor`.
 
 
 Now, let's calculate step length, turning angle, and time step:

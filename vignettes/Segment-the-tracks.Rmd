@@ -132,9 +132,9 @@ for (i in 1:length(tracks.list2)) {
 ```
 
 
-From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relativley homogeneous units of observations based on `SL` (step lengths) and `TA` (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each movement variable are shown on the y-axis.
+From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on `SL` (step lengths) and `TA` (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each movement variable are shown on the y-axis.
 
-Now that the MAP estimates of the breakpoints have been identified and we are staisfied with the results, we will use these breakpoints to define time segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.
+Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define time segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.
 
 
 ## Assign time segments
