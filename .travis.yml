@@ -16,6 +16,7 @@ sudo: false
 cache: packages
 warnings_are_errors: false
 r_check_args: "--no-manual --timings"
+install: travis_wait mvn install
 
 notifications:
   email:
