@@ -30,7 +30,6 @@ library(purrr)
 library(tidyr)
 library(stringr)
 library(lubridate)
-library(wesanderson)
 
 # Load data
 data(tracks.seg)
@@ -258,9 +257,7 @@ ggplot() +
   geom_point(data = tracks4 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
-  scale_color_gradientn("Proportion\nEncamped",
-                       colors = wes_palette("Zissou1", 100, type = "continuous"),
-                       na.value = "grey50") +
+  scale_color_distiller("Proportion\nEncamped", palette = "Spectral", na.value = "grey50") +
   labs(x = "Easting", y = "Northing", title = "Encamped") +
   theme_bw() +
   theme(axis.title = element_text(size = 16),
@@ -278,9 +275,7 @@ ggplot() +
   geom_point(data = tracks4 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
-  scale_color_gradientn("Proportion\nARS",
-                       colors = wes_palette("Zissou1", 100, type = "continuous"),
-                       na.value = "grey50") +
+  scale_color_distiller("Proportion\nARS", palette = "Spectral", na.value = "grey50") +
   labs(x = "Easting", y = "Northing", title = "ARS") +
   theme_bw() +
   theme(axis.title = element_text(size = 16),
@@ -298,9 +293,7 @@ ggplot() +
   geom_point(data = tracks4 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
-  scale_color_gradientn("Proportion\nTransit",
-                       colors = wes_palette("Zissou1", 100, type = "continuous"),
-                       na.value = "grey50") +
+  scale_color_distiller("Proportion\nTransit", palette = "Spectral", na.value = "grey50") +
   labs(x = "Easting", y = "Northing", title = "Transit") +
   theme_bw() +
   theme(axis.title = element_text(size = 16),

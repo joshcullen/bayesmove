@@ -35,7 +35,7 @@ of movement variable distribution for each behavior estimated.
 }
 \examples{
 
-\donttest{
+\dontrun{
 #cluster data with LDA
 res<- cluster_segments(dat = dat, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
                        nburn = 500, nmaxclust = 7, ndata.types = 2)

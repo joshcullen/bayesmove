@@ -129,7 +129,7 @@ summarize_tsegs=function(dat, nbins){
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## DON'T RUN
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
@@ -181,7 +181,7 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #'
 #' @examples
 #'
-#' \donttest{
+#' \dontrun{
 #' #cluster data with LDA
 #' res<- cluster_segments(dat = dat, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 #'                        nburn = 500, nmaxclust = 7, ndata.types = 2)
@@ -241,7 +241,7 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## DON'T RUN
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
@@ -344,7 +344,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' #load original data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA)
 #'

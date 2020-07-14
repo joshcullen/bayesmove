@@ -41,7 +41,6 @@ library(purrr)
 library(tidyr)
 library(stringr)
 library(lubridate)
-library(viridis)  #to use color palettes
 
 # Load data
 data(tracks)

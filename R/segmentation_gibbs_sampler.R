@@ -108,7 +108,7 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' #simulate data
 #' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
 #' angle<- runif(1000, -pi, pi)

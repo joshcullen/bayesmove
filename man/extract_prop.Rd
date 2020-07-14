@@ -28,7 +28,7 @@ within time segments. These results can be explored to determine the optimal
 number of latent behavioral states.
 }
 \examples{
-\donttest{
+\dontrun{
 ## DON'T RUN
 #create data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)

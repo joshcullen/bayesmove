@@ -52,6 +52,7 @@ Otherwise, model will run sequentially by default if this is not set before
 running \code{segment_behavior}.
 }
 \examples{
+\dontrun{
 #simulate data
 step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
 angle<- runif(1000, -pi, pi)
@@ -108,5 +109,6 @@ dat.res2<- segment_behavior(data = dat.list.filt2, ngibbs = 1000, nbins = c(5,8,
                             alpha = 1, breakpt = breaks)
 
 future::plan(future::sequential)
+}
 
 }

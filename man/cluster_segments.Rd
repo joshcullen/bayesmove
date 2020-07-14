@@ -47,7 +47,7 @@ The LDA model provides behavior estimates for all animal IDs pooled together,
 providing population-level estimates of animal behavioral states.
 }
 \examples{
-\donttest{
+\dontrun{
 ## DON'T RUN
 #create data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)

@@ -38,8 +38,7 @@ A data frame of all animal IDs where columns (with names from
 Assign behavior estimates to observations
 }
 \examples{
-\donttest{
-## DON'T RUN
+\dontrun{
 #load original data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA)
 
