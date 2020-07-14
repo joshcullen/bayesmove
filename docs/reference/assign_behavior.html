@@ -186,30 +186,34 @@ order).</p></td>
   behavior estimates.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='co'>## DON'T RUN</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>#load original data frame</span>
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>id</span>, <span class='no'>date</span>, <span class='no'>dt</span>, <span class='no'>step</span>, <span class='no'>angle</span>, <span class='no'>SL</span>, <span class='no'>TA</span>)</div><div class='output co'>#&gt; <span class='error'>Error in data.frame(id, date, dt, step, angle, SL, TA): object 'id' not found</span></div><div class='input'>
+<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>id</span>, <span class='no'>date</span>, <span class='no'>dt</span>, <span class='no'>step</span>, <span class='no'>angle</span>, <span class='no'>SL</span>, <span class='no'>TA</span>)
+
 <span class='co'>#load list of segmented tracks</span>
 <span class='no'>dat.list</span><span class='kw'>&lt;-</span> <span class='fu'><a href='df_to_list.html'>df_to_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>id</span>, <span class='no'>date</span>, <span class='no'>dt</span>, <span class='no'>step</span>, <span class='no'>angle</span>, <span class='no'>SL</span>, <span class='no'>TA</span>, <span class='no'>obs</span>,
-                      <span class='no'>time1</span>, <span class='no'>tseg</span>))</div><div class='output co'>#&gt; <span class='error'>Error in data.frame(id, date, dt, step, angle, SL, TA, obs, time1, tseg): object 'id' not found</span></div><div class='input'>
+                      <span class='no'>time1</span>, <span class='no'>tseg</span>))
+
 <span class='co'>#summarize data by time segment</span>
-<span class='no'>obs</span><span class='kw'>&lt;-</span> <span class='fu'><a href='summarize_tsegs.html'>summarize_tsegs</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>nbins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>8</span>))</div><div class='output co'>#&gt; <span class='error'>Error in eval(lhs, parent, parent): object 'dat' not found</span></div><div class='input'>
+<span class='no'>obs</span><span class='kw'>&lt;-</span> <span class='fu'><a href='summarize_tsegs.html'>summarize_tsegs</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>nbins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>8</span>))
+
 <span class='co'>#cluster data with LDA</span>
 <span class='no'>res</span><span class='kw'>&lt;-</span> <span class='fu'><a href='cluster_segments.html'>cluster_segments</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>obs</span>, <span class='kw'>gamma1</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-                       <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>nmaxclust</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>ndata.types</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nrow(dat): object 'obs' not found</span></div><div class='input'>
+                       <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>nmaxclust</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>ndata.types</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+
 <span class='co'>#Extract proportions of behaviors per time segment</span>
-<span class='no'>theta.estim</span><span class='kw'>&lt;-</span> <span class='fu'><a href='extract_prop.html'>extract_prop</a></span>(<span class='kw'>res</span> <span class='kw'>=</span> <span class='no'>res</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>nmaxclust</span> <span class='kw'>=</span> <span class='fl'>7</span>)</div><div class='output co'>#&gt; <span class='error'>Error in extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7): object 'res' not found</span></div><div class='input'>
+<span class='no'>theta.estim</span><span class='kw'>&lt;-</span> <span class='fu'><a href='extract_prop.html'>extract_prop</a></span>(<span class='kw'>res</span> <span class='kw'>=</span> <span class='no'>res</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>nmaxclust</span> <span class='kw'>=</span> <span class='fl'>7</span>)
+
 <span class='co'>#Create augmented matrix by replicating rows (tsegs) according to obs per tseg</span>
 <span class='no'>theta.estim.long</span><span class='kw'>&lt;-</span> <span class='fu'><a href='expand_behavior.html'>expand_behavior</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>theta.estim</span> <span class='kw'>=</span> <span class='no'>theta.estim</span>, <span class='kw'>obs</span> <span class='kw'>=</span> <span class='no'>obs</span>,
                                <span class='kw'>nbehav</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>behav.names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Encamped"</span>,<span class='st'>"ARS"</span>,<span class='st'>"Transit"</span>),
-                               <span class='kw'>behav.order</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>))</div><div class='output co'>#&gt; <span class='error'>Error in apply(theta.estim[, 1:nbehav], 1, function(x) x/sum(x)): object 'theta.estim' not found</span></div><div class='input'>
+                               <span class='kw'>behav.order</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>))
+
 <span class='co'>#Run function</span>
 <span class='no'>dat.out</span><span class='kw'>&lt;-</span> <span class='fu'>assign_behavior</span>(<span class='kw'>dat.orig</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>dat.seg.list</span> <span class='kw'>=</span> <span class='no'>dat.list</span>,
                           <span class='kw'>theta.estim.long</span> <span class='kw'>=</span> <span class='no'>theta.estim.long</span>,
-                          <span class='kw'>behav.names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Encamped"</span>,<span class='st'>"ARS"</span>,<span class='st'>"Transit"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in assign_behavior(dat.orig = dat, dat.seg.list = dat.list, theta.estim.long = theta.estim.long,     behav.names = c("Encamped", "ARS", "Transit")): object 'dat.list' not found</span></div><div class='input'># }
-
-</div></pre>
+                          <span class='kw'>behav.names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Encamped"</span>,<span class='st'>"ARS"</span>,<span class='st'>"Transit"</span>))
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

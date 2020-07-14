@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>View trace-plots of output from Bayesian segmentation model — traceplot • bayesmove</title>
+<title>Simulated set of five tracks. — tracks • bayesmove</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="View trace-plots of output from Bayesian segmentation model — traceplot" />
-<meta property="og:description" content="Visualize trace-plots of the number of breakpoints estimated by the model as
-well as the log marginal likelihood (LML) for each animal ID." />
+<meta property="og:title" content="Simulated set of five tracks. — tracks" />
+<meta property="og:description" content="A dataset containing the IDs as well as x and y coordinates for five tracks
+of 5001 observations each (25,005 in total)." />
 
 
 
@@ -134,52 +134,28 @@ well as the log marginal likelihood (LML) for each animal ID." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>View trace-plots of output from Bayesian segmentation model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/joshcullen/bayesmove/blob/master/R/segmentation_helper_functions.R'><code>R/segmentation_helper_functions.R</code></a></small>
-    <div class="hidden name"><code>traceplot.Rd</code></div>
+    <h1>Simulated set of five tracks.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/joshcullen/bayesmove/blob/master/R/tracks.R'><code>R/tracks.R</code></a></small>
+    <div class="hidden name"><code>tracks.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Visualize trace-plots of the number of breakpoints estimated by the model as
-well as the log marginal likelihood (LML) for each animal ID.</p>
+    <p>A dataset containing the IDs as well as x and y coordinates for five tracks
+of 5001 observations each (25,005 in total).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>traceplot</span>(<span class='no'>data</span>, <span class='no'>type</span>)</pre>
+    <pre class="usage"><span class='no'>tracks</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>data</th>
-      <td><p>A data frame containing values at each iteration of the MCMC
-chain where each row holds data for a specific animal ID.</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>character. The type of data that are being plotted from the
-Bayesian segmentation model results. Takes either 'nbrks' for the number of
-breakpoints or 'LML' for the log marginal likelihood.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>Trace-plots for the number of breakpoints or the log marginal
-  likelihood are displayed for each of the animal IDs that were analyzed by
-  the segmentation model.</p>
+    <p>A data frame with 25005 rows and 4 variables:</p><dl'>
+<dt>id</dt><dd><p>ID
+  for each simulated track</p></dd> <dt>date</dt><dd><p>date, recorded as datetime</p></dd>
+  <dt>x</dt><dd><p>x coordinate of tracks</p></dd> <dt>y</dt><dd><p>y coordinate of tracks</p></dd> 
+</dl>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>#simulate data</span>
-<span class='no'>ngibbs</span><span class='kw'>&lt;-</span> <span class='fl'>1000</span>
-<span class='no'>y</span><span class='kw'>&lt;-</span> (-<span class='fl'>1000</span> * <span class='fl'>501</span>:<span class='fl'>1500</span>)/(-<span class='fl'>500</span> + <span class='fl'>501</span>:<span class='fl'>1500</span>) + <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>ngibbs</span>, <span class='fl'>0</span>, <span class='fl'>0.1</span>)
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='no'>y</span>), <span class='fl'>1</span>, <span class='fl'>1001</span>)
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>dat</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>dat</span>)[<span class='fl'>1</span>]<span class='kw'>&lt;-</span> <span class='st'>"id"</span>
 
-<span class='co'>#run function</span>
-<span class='fu'>traceplot</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"LML"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(x = 1:ngibbs, y = data[i, -1], type = "l", xlab = "Iteration",     ylab = ifelse(type == "nbrks", "# of Breakpoints", ifelse(type ==         "LML", "Log Marginal Likelihood", stop("Need to select one of 'nbrks' or 'LML' for plotting"))),     main = paste(identity[i])): object 'ngibbs' not found</span></div><div class='input'>
-
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
