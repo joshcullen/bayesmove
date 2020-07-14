@@ -726,6 +726,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #'
 #' @examples
 #'
+#' \dontrun{
 #' #simulate data
 #' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
 #' angle<- runif(1000, -pi, pi)
@@ -769,7 +770,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' #run function
 #' plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
 #'              title = TRUE, legend = TRUE)
-#'
+#'}
 #'
 #' @export
 plot_heatmap=function(data, nbins, brkpts, title, legend) {

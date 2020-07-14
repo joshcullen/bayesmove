@@ -224,12 +224,11 @@ param.prop[1:5, "value"]<- ((diff(dist.bin.lims)/2) + dist.bin.lims[1:5])
 param.prop[6:13, "value"]<- (diff(angle.bin.lims)/2) + angle.bin.lims[1:8]
 
 
-library(ggforce)
 #plot of discretized distrib
 ggplot(data = param.prop %>% filter(key == "SL"), aes(value, prop)) +
   geom_bar(stat = "identity", width = (diff(dist.bin.lims)-0.025),
            fill = "lightblue", color = "black") +
-  facet_zoom(xlim = c(0,3)) +
+  ggforce::facet_zoom(xlim = c(0,3)) +
   labs(x = "Step Length", y = "Proportion") +
   theme_bw() +
   theme(panel.grid = element_blank(), axis.title = element_text(size = 16),

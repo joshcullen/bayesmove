@@ -39,7 +39,8 @@ Suggests:
     testthat,
     spelling,
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggforce
 Language: en-US
 RoxygenNote: 7.1.0
 LinkingTo: 
