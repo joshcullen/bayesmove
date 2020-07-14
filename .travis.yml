@@ -11,17 +11,17 @@ matrix:
     after_success: travis_wait Rscript -e 'covr::codecov()'
   - r: devel
     os: linux
-  - script:
-      - travis_wait 30 R CMD build
-      os: linux
-    - script:
-      - travis_wait 30 R CMD build
-      os: osx
+
 
 sudo: false
 cache: packages
 warnings_are_errors: false
 r_check_args: "--no-manual --timings"
+
+script:
+  - |
+    R CMD build --no-build-vignettes .
+    travis_wait 20 R CMD check --no--vignettes bayesmove*tar.gz
 
 notifications:
   email:
