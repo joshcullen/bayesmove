@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bayesmove
+# bayesmove <a href="reference/figures/logo.png"><img align="right" width=35% src="man/figures/logo.png" style="padding-left: 10px"></a>
 
 <!-- badges: start -->
 

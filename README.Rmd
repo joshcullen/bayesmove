@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# bayesmove
+# bayesmove <a href="reference/figures/logo.png"><img align="right" width=35% src="man/figures/logo.png" style="padding-left: 10px"></a>
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.com/joshcullen/bayesmove.svg?branch=master)](https://travis-ci.com/joshcullen/bayesmove)
