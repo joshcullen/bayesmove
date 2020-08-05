@@ -39,7 +39,6 @@ library(dplyr)
 library(ggplot2)
 library(purrr)
 library(tidyr)
-library(stringr)
 library(lubridate)
 
 # Load data
@@ -145,12 +144,12 @@ Let's first take a look at how step lengths and turning angles are distributed:
 
 ```{r, warning=FALSE, echo=FALSE}
 ggplot(tracks, aes(x = step)) +
-  geom_density(fill = "lightblue") +
+  geom_density(fill = "lightblue", na.rm = T) +
   theme_bw() +
   labs(y="Density", x="Step Length (m)")
 
 ggplot(tracks, aes(x = angle)) +
-  geom_density(fill = "indianred") +
+  geom_density(fill = "indianred", na.rm = T) +
   theme_bw() +
   labs(y="Density", x="Turning Angle (rad)")
 ```
@@ -194,7 +193,7 @@ tracks.df<- bind_rows(tracks_disc.list)
 
 #plot continuous SL distrib w/ limits
 ggplot(tracks.df, aes(x=step)) +
-  geom_density(fill = "lightblue") +
+  geom_density(fill = "lightblue", na.rm = T) +
   geom_vline(xintercept = dist.bin.lims, linetype = "dashed") +
   theme_bw() +
   theme(panel.grid = element_blank(),
@@ -242,7 +241,7 @@ And next the plots for turning angles:
 
 #plot of continuous distrib with limits
 ggplot(tracks.df, aes(x=angle)) +
-  geom_density(fill = "indianred") +
+  geom_density(fill = "indianred", na.rm = T) +
   geom_vline(xintercept = angle.bin.lims, linetype = "dashed") +
   theme_bw() +
   theme(panel.grid = element_blank(), axis.title = element_text(size = 16),

@@ -167,6 +167,7 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #' future::plan(future::sequential)
 #' }
 #'
+#' @importFrom future "plan"
 #'
 #' @export
 segment_behavior=function(data, ngibbs, nbins, alpha,

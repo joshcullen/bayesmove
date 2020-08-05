@@ -111,5 +111,4 @@ dat.res2<- segment_behavior(data = dat.list.filt2, ngibbs = 1000, nbins = c(5,8,
 future::plan(future::sequential)
 }
 
-
 }

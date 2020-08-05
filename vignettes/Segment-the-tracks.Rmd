@@ -29,7 +29,6 @@ library(dplyr)
 library(ggplot2)
 library(purrr)
 library(tidyr)
-library(stringr)
 library(lubridate)
 library(furrr)
 
@@ -67,7 +66,7 @@ ngibbs<- 10000
 nbins<- c(5,8)
 
 
-plan(multisession)  #run all MCMC chains in parallel
+future::plan(multisession)  #run all MCMC chains in parallel
                     #refer to future::plan() for more details
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
