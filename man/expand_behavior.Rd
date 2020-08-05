@@ -40,7 +40,6 @@ Expand behavior estimates from time segments to observations
 }
 \examples{
 \dontrun{
-## DON'T RUN
 #create data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 
@@ -59,7 +58,6 @@ theta.estim2<- expand_behavior(dat = dat, theta.estim = theta.estim, obs = obs,
                                nbehav = 3, behav.names = c("Encamped","ARS","Transit"),
                                behav.order = c(1,2,3))
 }
-
 
 
 }

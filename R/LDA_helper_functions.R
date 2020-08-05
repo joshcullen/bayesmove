@@ -99,8 +99,8 @@ summarize_tsegs=function(dat, nbins){
                as.character(), ntseg)
     tseg<- 1:ntseg
     behav.res<- do.call(cbind.data.frame, mat.list) %>%
-      data.frame() %>%
-      cbind(id, tseg, .)
+      data.frame()
+    behav.res<- cbind(id, tseg, behav.res)
     behav.res$id<- as.character(behav.res$id)
     obs.list[[i]]<- behav.res
   }
@@ -130,7 +130,6 @@ summarize_tsegs=function(dat, nbins){
 #'
 #' @examples
 #' \dontrun{
-#' ## DON'T RUN
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 #'
@@ -145,12 +144,13 @@ summarize_tsegs=function(dat, nbins){
 #' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 #' }
 #'
+#'
 #' @export
 extract_prop=function(res, ngibbs, nburn, nmaxclust) {
   #Extract and plot proportions of behaviors per time segment
   theta.post<- res$theta[(nburn+1):ngibbs,]  #extract samples from posterior
-  theta.estim<- colMeans(theta.post) %>%
-    matrix(data = ., ncol = nmaxclust) #calc mean of posterior
+  theta.estim<- colMeans(theta.post)
+  theta.estim<- matrix(data = theta.estim, ncol = nmaxclust) #calc mean of posterior
 
   theta.estim
 }
@@ -191,6 +191,7 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #'                            var.names = c("Step Length","Turning Angle"))
 #' }
 #'
+#' @importFrom rlang .data
 #' @export
 get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 
@@ -203,8 +204,8 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 
     behav.list[[i]]<- data.frame(bin = 1:nrow(tmp1), tmp1) %>%
       dplyr::rename_at(dplyr::vars(tidyr::starts_with('X')), ~as.character(1:ncol(tmp1))) %>%
-      tidyr::pivot_longer(-bin, names_to = "behav", values_to = "prop") %>%
-      dplyr::arrange(behav) %>%
+      tidyr::pivot_longer(-.data$bin, names_to = "behav", values_to = "prop") %>%
+      dplyr::arrange(.data$behav) %>%
       dplyr::mutate(var = var.names[i])
   }
 
@@ -242,7 +243,6 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #'
 #' @examples
 #' \dontrun{
-#' ## DON'T RUN
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 #'
@@ -263,7 +263,7 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #' }
 #'
 #'
-#'
+#' @importFrom rlang .data
 #' @export
 expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order) {
 
@@ -275,10 +275,10 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
   names(theta.estim1)<- c("id", "tseg", behav.names)  #define behaviors
   nobs<- data.frame(id = obs$id, tseg = obs$tseg,
                     n = dat %>%
-                      dplyr::group_by(id, tseg) %>%
+                      dplyr::group_by(.data$id, .data$tseg) %>%
                       dplyr::tally() %>%
                       dplyr::ungroup() %>%
-                      dplyr::pull(n)) #calc obs per tseg using SL bins (more reliable than TA)
+                      dplyr::pull(.data$n))
 
 
   for (i in 1:nrow(theta.estim1)) {
@@ -304,13 +304,16 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
   #Change col classes to numeric besides ID
   ind1<- which(names(theta.estim2) != "id")
   theta.estim2<- theta.estim2 %>%
-    dplyr::mutate_at(names(theta.estim2)[ind1], as.numeric)
+    dplyr::mutate_at(names(theta.estim2)[ind1], as.numeric) %>%
+    dplyr::select(.data$id, .data$tseg, .data$time1, .data$date, dplyr::everything())
 
   #Change into long format
-  theta.estim.long<- tidyr::pivot_longer(theta.estim2, cols = c(-id, -tseg, -time1, -date),
-                                         names_to = "behavior", values_to = "prop") %>%
-    dplyr::mutate_at("behavior", ~factor(., levels = behav.names[behav.order])) %>%
-    dplyr::arrange(behavior) %>%
+  theta.estim.long<- tidyr::pivot_longer(theta.estim2, cols = -c(1:4),
+                                         names_to = "behavior", values_to = "prop")
+  theta.estim.long$behavior<- factor(theta.estim.long$behavior,
+                                     levels = behav.names[behav.order])
+  theta.estim.long<- theta.estim.long %>%
+    dplyr::arrange(.data$behavior) %>%
     dplyr::mutate_at("date", lubridate::as_datetime)
 
   theta.estim.long
@@ -373,15 +376,17 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #'                           behav.names = c("Encamped","ARS","Transit"))
 #' }
 #'
+#'
 #' @export
 assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) {
 
   for (i in 1:length(dat.seg.list)) {
     sub<- theta.estim.long[theta.estim.long$id == unique(dat.seg.list[[i]]$id),]
     sub<- sub %>%
-      dplyr::arrange(tseg, date, behavior) %>%
-      tidyr::pivot_wider(names_from = behavior, values_from = prop) %>%
-      dplyr::mutate(behav = behav.names[apply(.[,5:ncol(.)], 1, which.max)])
+      dplyr::arrange(.data$tseg, .data$date, .data$behavior) %>%
+      tidyr::pivot_wider(names_from = .data$behavior, values_from = .data$prop)
+    sub<- sub %>%
+      dplyr::mutate(behav = behav.names[apply(sub[,5:ncol(sub)], 1, which.max)])
 
 
     dat.seg.list[[i]]<- cbind(dat.seg.list[[i]], sub[,5:ncol(sub)])
@@ -393,7 +398,7 @@ assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) 
   dat.orig.list<- dat.orig.list[ind]
 
   #Add obs col to dat.orig.list
-  dat.orig.list1<- purrr::map(dat.orig.list, ~dplyr::mutate(., obs = 1:nrow(.)))
+  dat.orig.list1<- purrr::map(dat.orig.list, ~dplyr::mutate(.x, obs = 1:nrow(.x)))
 
   #Merge behav estimates w/ original data
   dat1<- purrr::map2(dat.orig.list1, dat.seg.list,

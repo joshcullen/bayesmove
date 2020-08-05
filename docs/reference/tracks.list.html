@@ -157,19 +157,24 @@ turning angles, as well as filtering observations at the primary time step.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A list with five elements, each containing a data frame with ~4700
+    <p>A list with three elements, each containing a data frame with ~4700
   rows and 11 variables:</p><dl'>
-<dt>id</dt><dd><p>ID for each simulated track</p></dd>
-  <dt>date</dt><dd><p>date, recorded as datetime</p></dd> <dt>x</dt><dd><p>x coordinate of tracks</p></dd>
-  <dt>y</dt><dd><p>y coordinate of tracks</p></dd> <dt>step</dt><dd><p>the step length calculated as
-  the distance between successive locations measured in units</p></dd>
-  <dt>angle</dt><dd><p>the relative turning angle measured in radians</p></dd> <dt>dt</dt><dd><p>the
-  time step or sampling interval between datetimes of successive
-  observations</p></dd> <dt>obs</dt><dd><p>the ordered number of observations per ID before
-  filtering for the primary time step</p></dd> <dt>time1</dt><dd><p>the ordered number of
-  observations per ID after filtering for the primary time step</p></dd>
+  <dt>id</dt><dd><p>ID for each simulated track</p></dd>
+  <dt>date</dt><dd><p>date, recorded as datetime</p></dd>
+  <dt>x</dt><dd><p>x coordinate of tracks</p></dd>
+  <dt>y</dt><dd><p>y coordinate of tracks</p></dd>
+  <dt>step</dt><dd><p>the step length calculated as the distance between successive locations
+  measured in units</p></dd>
+  <dt>angle</dt><dd><p>the relative turning angle measured in radians</p></dd>
+  <dt>dt</dt><dd><p>the time step or sampling interval between datetimes of successive
+  observations</p></dd>
+  <dt>obs</dt><dd><p>the ordered number of observations per ID before filtering for the primary
+  time step</p></dd>
+  <dt>time1</dt><dd><p>the ordered number of observations per ID after filtering for the primary
+  time step</p></dd>
   <dt>SL</dt><dd><p>discretized step lengths, separated into five bins</p></dd>
-  <dt>TA</dt><dd><p>discretized turning angles, separated into eight bins</p></dd> 
+  <dt>TA</dt><dd><p>discretized turning angles, separated into eight bins</p></dd>
+  
 </dl>
 
 

@@ -13,14 +13,14 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width=7,
-  fig.retina=2
+  fig.retina=1.5
 )
 ```
 
 
 ## Introduction
 
-Once observations from all animal IDs have been assigned to time segments, these can now be clustered to **(1)** estimate the optimal number of states, **(2)** characterize the state-specific distributions of movement variables, and **(3)** estimate the proportion of each behavior per time segment. This tutorial will show how to run the Latent Dirichlet Allocation (LDA) model, as well as how to interpret and visualize the results.
+Once observations from all animal IDs have been assigned to time segments, these can now be clustered to **(1)** estimate the optimal number of states, **(2)** characterize the state-specific distributions of data streams, and **(3)** estimate the proportion of each behavior per time segment. This tutorial will show how to run the Latent Dirichlet Allocation (LDA) model, as well as how to interpret and visualize the results.
 
 
 ```{r load data, message=FALSE}
@@ -53,7 +53,7 @@ head(obs)
 ```
 
 
-Based on this output, we can see that each row shows the observation counts per time segment. The column names beginning with `y` denote the movement variables, where `y1` is the first movement variable column (SL) and `y1.1` represents the first bin of the SL variable. The same follows for turning angles, which were discretized into 8  bins and are therefore described by `y2.1 - y2.8`. This data frame contains segment-level summaries for all IDs, which will be analyzed together. This approach assumes that all individuals exhibit a common repertoire of behaviors despite nuanced inter-individual differences. Therefore, it provides a measure of estimating population-level behavioral states as long as there are a substantial number of individuals analyzed. Now the data are in the proper format to be analyzed by the LDA model.
+Based on this output, we can see that each row shows the observation counts per time segment. The column names beginning with `y` denote the data streams, where `y1` is the first data stream column (SL) and `y1.1` represents the first bin of the SL variable. The same follows for turning angles, which were discretized into 8  bins and are therefore described by `y2.1 - y2.8`. This data frame contains segment-level summaries for all IDs, which will be analyzed together. This approach assumes that all individuals exhibit a common repertoire of behaviors despite nuanced inter-individual differences. Therefore, it provides a measure of estimating population-level behavioral states as long as there are a substantial number of individuals analyzed. Now the data are in the proper format to be analyzed by the LDA model.
 
 
 ## Run the LDA model
@@ -64,7 +64,7 @@ set.seed(1)
 # Prepare for Gibbs sampler
 ngibbs<- 1000  #number of MCMC iterations for Gibbs sampler
 nburn<- ngibbs/2  #number of iterations for burn-in
-nmaxclust<- max(nbins) - 1  #one fewer than max number of bins used for movement variables
+nmaxclust<- max(nbins) - 1  #one fewer than max number of bins used for data streams
 ndata.types<- length(nbins)  #number of data types
 
 # Priors
@@ -106,11 +106,9 @@ levels(theta.estim_df$behavior)<- 1:nmaxclust
 
 # Plot results
 ggplot(theta.estim_df, aes(behavior, prop)) +
-  geom_boxplot(aes(fill = behavior), alpha = 0.5, outlier.shape = NA) +
-  geom_jitter(aes(color = behavior), position = position_jitter(0.1), 
+  geom_boxplot(fill = "grey35", alpha = 0.5, outlier.shape = NA) +
+  geom_jitter(color = "grey35", position = position_jitter(0.1), 
               alpha = 0.3) +
-  scale_color_viridis_d("", guide = F) +
-  scale_fill_viridis_d("", guide = F) +
   labs(x="\nBehavior", y="Proportion of Total Behavior\n") +
   theme_bw() +
   theme(panel.grid = element_blank(),
@@ -130,7 +128,7 @@ cumsum(theta.means)
 ```
 
 
-These summary statistics show that the first three most common behavioral states account for 99.2% of all observations from all IDs on average. Based on the previous boxplot and these results, three states appear to be the optimal number of behaviors for this dataset. **It is recommended that the optimal number of states are defined as the fewest number of states that represent > 90% of observations on average (which is three in this example). This should be corroborated by an inspection of the state-dependent distributions for each movement variable to determine whether they make biological sense.**
+These summary statistics show that the first three most common behavioral states account for 99.6% of all observations from all IDs on average. Based on the previous boxplot and these results, three states appear to be the optimal number of behaviors for this dataset. **It is recommended that the optimal number of states are defined as the fewest number of states that represent > 90% of observations on average (which is three in this example). This should be corroborated by an inspection of the state-dependent distributions for each data stream to determine whether they make biological sense.**
 
 ```{r plot distribs, fig.height=7}
 # Extract bin estimates from phi matrix
@@ -147,7 +145,8 @@ ggplot(behav.res, aes(x = bin, y = prop, fill = as.factor(behav))) +
         axis.text.x.bottom = element_text(size = 12),
         strip.text = element_text(size = 14),
         strip.text.x = element_text(face = "bold")) +
-  scale_fill_viridis_d(guide = F) +
+  scale_fill_manual(values = c("#21908CFF","#440154FF","#FDE725FF",
+                               "grey35","grey35","grey35","grey35"), guide = FALSE) +
   scale_y_continuous(breaks = c(0.00, 0.50, 1.00)) +
   scale_x_continuous(breaks = 1:8) +
   facet_grid(behav ~ var, scales = "free_x")
@@ -224,11 +223,11 @@ ggplot() +
 ```
 
 
-Maps of dominant behaviors are shown for all IDs, as well as observations labeled as `NA` that were not analyzed by the Bayesian framework. These `NA` observations were not recorded at the primary time interval (1 h or 3600 s) and were therefore excluded before analysis. To explore these tracks in different ways, I will focus on a single track (id4).
+Maps of dominant behaviors are shown for all IDs, as well as observations labeled as `NA` that were not analyzed by the Bayesian framework. These `NA` observations were not recorded at the primary time interval (1 h or 3600 s) and were therefore excluded before analysis. To explore these tracks in different ways, I will focus on a single track (id3).
 
 ```{r map separate behavs, fig.height=5}
-# Map separate time segments for 'id4'
-tracks4<- tracks.out %>% filter(id == "id4")
+# Map separate time segments for 'id3'
+tracks4<- tracks.out %>% filter(id == "id3")
 
 # Dominant behavior
 ggplot() +

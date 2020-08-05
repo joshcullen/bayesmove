@@ -4,11 +4,13 @@
 \alias{traceplot}
 \title{View trace-plots of output from Bayesian segmentation model}
 \usage{
-traceplot(data, type)
+traceplot(data, ngibbs, type)
 }
 \arguments{
 \item{data}{A data frame containing values at each iteration of the MCMC
 chain where each row holds data for a specific animal ID.}
+
+\item{ngibbs}{numeric. The total number of iterations of the MCMC chain.}
 
 \item{type}{character. The type of data that are being plotted from the
 Bayesian segmentation model results. Takes either 'nbrks' for the number of
@@ -32,7 +34,6 @@ dat<- data.frame(dat)
 names(dat)[1]<- "id"
 
 #run function
-traceplot(data = dat, type = "LML")
-
+traceplot(data = dat, ngibbs = ngibbs, type = "LML")
 
 }

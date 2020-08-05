@@ -167,6 +167,7 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #' future::plan(future::sequential)
 #' }
 #'
+#'
 #' @export
 segment_behavior=function(data, ngibbs, nbins, alpha,
                           breakpt = purrr::map(names(data), ~ NULL)) {
@@ -187,20 +188,22 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   nbrks<- purrr::map_dfr(mod, 2) %>%
     t() %>%
     data.frame()  #create DF of number of breakpoints by ID
-  names(nbrks)<- c('id', paste0("Iter_",1:ngibbs))
+  names(nbrks)<- c('id', paste0("Iter_", 1:ngibbs))
+  ncol.nbrks<- ncol(nbrks)
   nbrks<- nbrks %>%
-    dplyr::mutate_at(2:ncol(.), as.character) %>%
-    dplyr::mutate_at(2:ncol(.), as.numeric) %>%
+    dplyr::mutate_at(2:ncol.nbrks, as.character) %>%
+    dplyr::mutate_at(2:ncol.nbrks, as.numeric) %>%
     dplyr::mutate_at("id", as.character)
 
 
   LML<- purrr::map_dfr(mod, 3) %>%
     t() %>%
     data.frame()  #create DF of LML by ID
-  names(LML)<- c('id', paste0("Iter_",1:ngibbs))
+  names(LML)<- c('id', paste0("Iter_", 1:ngibbs))
+  ncol.LML<- ncol(LML)
   LML<- LML %>%
-    dplyr::mutate_at(2:ncol(.), as.character) %>%
-    dplyr::mutate_at(2:ncol(.), as.numeric) %>%
+    dplyr::mutate_at(2:ncol.LML, as.character) %>%
+    dplyr::mutate_at(2:ncol.LML, as.numeric) %>%
     dplyr::mutate_at("id", as.character)
 
 

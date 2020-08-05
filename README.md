@@ -30,8 +30,8 @@ convergence. Model output are often returned in a format that is
 You can install **bayesmove** from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("joshcullen/bayesmove")
+# install.packages("remotes")
+remotes::install_github("joshcullen/bayesmove")
 ```
 
 This package is currently being prepared for submission to CRAN.

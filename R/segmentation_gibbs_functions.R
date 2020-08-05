@@ -114,7 +114,7 @@ log_marg_likel=function(alpha, summary.stats, nbins, ndata.types){
 #'
 #'
 #'
-#'
+#' @importFrom stats "runif"
 #' @export
 samp_move=function(breakpt, max.time, dat, alpha, nbins, ndata.types){
 

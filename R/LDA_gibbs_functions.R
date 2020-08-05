@@ -57,7 +57,7 @@ sample.z=function(ntsegm, nbins, y, nmaxclust, phi, ltheta, zeroes, ndata.types)
 #'
 #'
 #'
-#'
+#' @importFrom stats "rbeta"
 #' @export
 sample.v=function(z.agg, gamma1, ntsegm, ndata.types, nmaxclust){
   soma.fim=matrix(0,ntsegm,nmaxclust)

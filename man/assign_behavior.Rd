@@ -67,4 +67,5 @@ dat.out<- assign_behavior(dat.orig = dat, dat.seg.list = dat.list,
                           behav.names = c("Encamped","ARS","Transit"))
 }
 
+
 }

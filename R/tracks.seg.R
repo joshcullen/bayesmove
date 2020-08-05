@@ -3,17 +3,22 @@
 #' A dataset containing the filtered track data with time segments assigned to
 #' all observations on an individual basis.
 #'
-#' @format A data frame with 23470 rows and 12 variables: \describe{
-#'   \item{id}{ID for each simulated track} \item{date}{date, recorded as
-#'   datetime} \item{x}{x coordinate of tracks} \item{y}{y coordinate of tracks}
+#' @format A data frame with 14096 rows and 12 variables: \describe{
+#'   \item{id}{ID for each simulated track}
+#'   \item{date}{date, recorded as datetime}
+#'   \item{x}{x coordinate of tracks}
+#'   \item{y}{y coordinate of tracks}
 #'   \item{step}{the step length calculated as the distance between successive
-#'   locations measured in units} \item{angle}{the relative turning angle
-#'   measured in radians} \item{dt}{the time step or sampling interval between
-#'   datetimes of successive observations} \item{obs}{the ordered number of
-#'   observations per ID before filtering for the primary time step}
+#'   locations measured in units}
+#'   \item{angle}{the relative turning angle measured in radians}
+#'   \item{dt}{the time step or sampling interval between datetimes of successive observations}
+#'   \item{obs}{the ordered number of observations per ID before filtering for the
+#'   primary time step}
 #'   \item{time1}{the ordered number of observations per ID after filtering for
-#'   the primary time step} \item{SL}{discretized step lengths, separated into
-#'   five bins} \item{TA}{discretized turning angles, separated into eight bins}
-#'   \item{tseg}{time segment assigned to a given set of observations per ID} }
+#'   the primary time step}
+#'   \item{SL}{discretized step lengths, separated into five bins}
+#'   \item{TA}{discretized turning angles, separated into eight bins}
+#'   \item{tseg}{time segment assigned to a given set of observations per ID}
+#'   }
 #'
 "tracks.seg"

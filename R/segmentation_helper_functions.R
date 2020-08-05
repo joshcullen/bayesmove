@@ -111,7 +111,8 @@ round_track_time=function(dat, id, dt, date, int, tol, time.zone) {
         if (is.na(dat[[i]]$dt[j])) {
           tmp[j, 1:2]<- NA
         } else if (dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol)) {
-          tmp[j, 1:2]<- c(int, as.numeric(round(dat[[i]]$date[j], units = "hours")))
+          tmp[j, 1:2]<- c(int, as.numeric(round.POSIXt(dat[[i]]$date[j],
+                                                       units = "hours")))
         } else {
           tmp[j, 1:2]<- c(dat[[i]]$dt[j], dat[[i]]$date[j])
         }
@@ -122,7 +123,8 @@ round_track_time=function(dat, id, dt, date, int, tol, time.zone) {
           tmp[j, 1:2]<- NA
         } else if (sum(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol)) > 0) {
           ind<- which(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol))
-          tmp[j, 1:2]<- c(int[ind], as.numeric(round(dat[[i]]$date[j], units = "hours")))
+          tmp[j, 1:2]<- c(int[ind], as.numeric(round.POSIXt(dat[[i]]$date[j],
+                                                            units = "hours")))
         } else {
           tmp[j, 1:2]<- c(dat[[i]]$dt[j], dat[[i]]$date[j])
         }
@@ -180,6 +182,7 @@ round_track_time=function(dat, id, dt, date, int, tol, time.zone) {
 #' #run function
 #' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
 #'
+#' @importFrom rlang .data
 #' @export
 filter_time=function(dat.list, dt, tstep) {
 
@@ -202,9 +205,9 @@ filter_time=function(dat.list, dt, tstep) {
 
   for (i in 1:n) {
     behav.list[[i]]<- dat.list[[i]] %>%
-      dplyr::mutate(obs = 1:nrow(.)) %>%
+      dplyr::mutate(obs = 1:length(.data$id)) %>%
       dplyr::filter(dt == tstep) %>%
-      dplyr::mutate(time1 = 1:nrow(.))
+      dplyr::mutate(time1 = 1:length(.data$id))
   }
 
   behav.list
@@ -271,12 +274,12 @@ assign_tseg_internal=function(dat, brkpts){
 
   tmp<- which(unique(dat$id) == brkpts$id)
   breakpt<- brkpts[tmp,-1] %>%
-    purrr::discard(is.na) %>%
-    as.numeric(.[1,])
+    purrr::discard(is.na)
+  breakpt<- as.numeric(breakpt[1,])
 
-  breakpt1<- c(0,breakpt,Inf)
+  breakpt1<- c(0, breakpt, Inf)
   n<- length(breakpt1)
-  res<- matrix(NA,nrow(dat),1)
+  res<- matrix(NA, nrow(dat), 1)
   for (i in 2:n){
     ind<- which(breakpt1[i-1] < dat$time1 & dat$time1 <= breakpt1[i])
     res[ind,]<- i-1
@@ -443,6 +446,7 @@ find_breaks=function(dat, ind) {
 #'
 #' @param data A data frame containing values at each iteration of the MCMC
 #'   chain where each row holds data for a specific animal ID.
+#' @param ngibbs numeric. The total number of iterations of the MCMC chain.
 #' @param type character. The type of data that are being plotted from the
 #'   Bayesian segmentation model results. Takes either 'nbrks' for the number of
 #'   breakpoints or 'LML' for the log marginal likelihood.
@@ -461,11 +465,12 @@ find_breaks=function(dat, ind) {
 #' names(dat)[1]<- "id"
 #'
 #' #run function
-#' traceplot(data = dat, type = "LML")
+#' traceplot(data = dat, ngibbs = ngibbs, type = "LML")
 #'
-#'
+#' @importFrom graphics "par"
+#' @importFrom graphics "plot"
 #' @export
-traceplot=function(data, type) {
+traceplot=function(data, ngibbs, type) {
 
   identity<- data$id
 
@@ -500,14 +505,14 @@ traceplot=function(data, type) {
 #'   holds the MAP estimate.
 #'
 #'
-#'
+#' @importFrom rlang .data
 #' @export
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {
     MAP.est<- dat[-1] %>%
       order(decreasing = T) %>%
-      subset(. > nburn) %>%
+      subset(.data > nburn) %>%
       dplyr::first()
   } else {
     MAP.est<- which.max(dat[-1])
@@ -627,7 +632,7 @@ get_breakpts=function(dat, MAP.est) {
 #'   each observation over time that is overlayed by the extracted breakpoints.
 #'
 #'
-#'
+#' @importFrom rlang .data
 #' @export
 plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 
@@ -635,11 +640,13 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
   behav.heat<- behav_seg_image(data, nbins)
 
   #convert to long form
-  behav.heat.long<- purrr::map2(behav.heat, as.list(names(behav.heat)), ~{.x %>%
-      data.frame() %>%
-      tidyr::pivot_longer(., cols = 1:ncol(.), names_to = "bin", values_to = "value") %>%
-      dplyr::mutate(time = rep(1:nrow(data), each = length(unique(bin))),
-             var = rep(.y, nrow(.)))}
+  behav.heat.long<- purrr::map2(behav.heat, as.list(names(behav.heat)), ~{
+    tmp<- .x %>%
+      data.frame()
+    tmp %>%
+      tidyr::pivot_longer(cols = 1:ncol(tmp), names_to = "bin", values_to = "value") %>%
+      dplyr::mutate(time = rep(1:nrow(data), each = length(unique(.data$bin))),
+                    var = rep(.y, length(.data$bin)))}
   ) %>%
     dplyr::bind_rows() %>%
     dplyr::mutate_at("value", factor) %>%
@@ -681,13 +688,13 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
                               margin = margin(r = 15, unit = "pt")))))
 
   print(
-    ggplot(behav.heat.long, aes(x=time, y=as.character(bin), fill=value)) +
+    ggplot(behav.heat.long, aes(x=.data$time, y=as.character(.data$bin), fill=.data$value)) +
       geom_tile() +
-      facet_wrap(~var, scales = 'free', nrow = 2) +
+      facet_wrap(~.data$var, scales = 'free', nrow = 2) +
       scale_fill_viridis_d('') +
       scale_y_discrete(expand = c(0,0)) +
       scale_x_continuous(expand = c(0,0)) +
-      geom_vline(data = breakpt, aes(xintercept = breaks - 0.5),
+      geom_vline(data = breakpt, aes(xintercept = .data$breaks - 0.5),
                  color = viridis::viridis(n=9)[7], size = 0.6, alpha = 1) +
       labs(x = "\nTime", y = "Bin\n") +
       ggtitle(paste(unique(data$id))) +
@@ -724,6 +731,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #'
 #' @import ggplot2
 #'
+#' @importFrom graphics "par"
 #' @examples
 #'
 #' \dontrun{
@@ -803,7 +811,7 @@ plot_heatmap=function(data, nbins, brkpts, title, legend) {
 #'   step (\code{dt}).
 #'
 #'
-#'
+#' @importFrom stats "na.omit"
 #' @export
 prep_data_internal=function(dat, coord.names) {
 

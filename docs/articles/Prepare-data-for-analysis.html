@@ -97,7 +97,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Prepare data for analysis</h1>
             
-            <h4 class="date">17 July 2020</h4>
+            <h4 class="date">05 August 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Prepare-data-for-analysis.Rmd"><code>vignettes/Prepare-data-for-analysis.Rmd</code></a></small>
       <div class="hidden name"><code>Prepare-data-for-analysis.Rmd</code></div>
@@ -120,7 +120,7 @@
 <h2 class="hasAnchor">
 <a href="#calculating-step-lengths-turning-angles-and-time-steps" class="anchor"></a>Calculating step lengths, turning angles, and time steps</h2>
 <p>In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time step between successive observations since only those at the primary time step of interest will be retained for further analysis.</p>
-<p>First, let’s take a look at what the data should look like before calculating these movement variables:</p>
+<p>First, let’s take a look at what the data should look like before calculating these data streams:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bayesmove</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
@@ -143,7 +143,7 @@
 <span class="co">#&gt; 6 id1 2020-07-02 16:58:38 39.06810 26.4996352</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tracks</span>)
-<span class="co">#&gt; 'data.frame':    25005 obs. of  4 variables:</span>
+<span class="co">#&gt; 'data.frame':    15003 obs. of  4 variables:</span>
 <span class="co">#&gt;  $ id  : chr  "id1" "id1" "id1" "id1" ...</span>
 <span class="co">#&gt;  $ date: POSIXct, format: "2020-07-02 11:59:41" "2020-07-02 12:58:26" ...</span>
 <span class="co">#&gt;  $ x   : num  0 10.6 25.5 31.2 36.2 ...</span>
@@ -183,7 +183,7 @@
 
 <span class="co"># How many different time steps?</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span>(<span class="no">tracks</span>$<span class="no">dt</span>)
-<span class="co">#&gt; [1] 114</span>
+<span class="co">#&gt; [1] 112</span>
 
 <span class="co"># How many observations of each time step?</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span>(<span class="no">tracks</span>$<span class="no">dt</span>, <span class="kw">main</span> <span class="kw">=</span> <span class="st">"Rounded Time Steps (s)"</span>)</pre></body></html></div>
@@ -221,18 +221,12 @@
 <span class="co">#&gt; [1] 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $id3</span>
-<span class="co">#&gt; [1] 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $id4</span>
-<span class="co">#&gt; [1] 1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $id5</span>
 <span class="co">#&gt; [1] 1</span></pre></body></html></div>
 <p>There are also two new columns that have been added to the data frame of each ID: ‘obs’ and ‘time1’. The ‘obs’ column holds the number of the observation before the data were filtered, whereas ‘time1’ stores the number of the observation after filtering. This is important since the ‘obs’ column will allow the merging of results from this model with that of the original data and the ‘time1’ column will be used to segment the tracks.</p>
 </div>
-<div id="discretize-movement-variables" class="section level2">
+<div id="discretize-data-streams" class="section level2">
 <h2 class="hasAnchor">
-<a href="#discretize-movement-variables" class="anchor"></a>Discretize movement variables</h2>
+<a href="#discretize-data-streams" class="anchor"></a>Discretize data streams</h2>
 <p>The unique feature of this modeling framework is that it does not rely upon standard parametric density functions that are used in nearly every other model that estimates behavior. This is expected to reduce any constraints posed by the selection of a given parametric density function and allow for greater model flexibility. However, this does require the user to define the number of bins for each variable and how they will be discretized.</p>
 <p>Let’s first take a look at how step lengths and turning angles are distributed:</p>
 <p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-3-2.png" width="672"></p>
@@ -242,18 +236,17 @@
 <span class="no">angle.bin.lims</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="kw">from</span><span class="kw">=</span>-<span class="no">pi</span>, <span class="kw">to</span><span class="kw">=</span><span class="no">pi</span>, <span class="kw">by</span><span class="kw">=</span><span class="no">pi</span>/<span class="fl">4</span>)  <span class="co">#8 bins</span>
 
 <span class="co"># Define bin number and limits for step lengths</span>
-<span class="no">max.dist</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">tracks</span>[<span class="no">tracks</span>$<span class="no">dt</span> <span class="kw">==</span> <span class="fl">3600</span>,]$<span class="no">step</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="no">T</span>)
-<span class="no">dist.bin.lims</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">tracks</span>[<span class="no">tracks</span>$<span class="no">dt</span> <span class="kw">==</span> <span class="fl">3600</span>,]$<span class="no">step</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">0.25</span>,<span class="fl">0.50</span>,<span class="fl">0.75</span>,<span class="fl">0.90</span>), <span class="kw">na.rm</span><span class="kw">=</span><span class="no">T</span>)
-<span class="no">dist.bin.lims</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">dist.bin.lims</span>, <span class="no">max.dist</span>)  <span class="co">#5 bins</span>
+<span class="no">dist.bin.lims</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="no">tracks</span>[<span class="no">tracks</span>$<span class="no">dt</span> <span class="kw">==</span> <span class="fl">3600</span>,]$<span class="no">step</span>,
+                       <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">0.25</span>,<span class="fl">0.50</span>,<span class="fl">0.75</span>,<span class="fl">0.90</span>,<span class="fl">1</span>), <span class="kw">na.rm</span><span class="kw">=</span><span class="no">T</span>)  <span class="co">#5 bins</span>
 
 <span class="no">angle.bin.lims</span>
 <span class="co">#&gt; [1] -3.1415927 -2.3561945 -1.5707963 -0.7853982  0.0000000  0.7853982  1.5707963</span>
 <span class="co">#&gt; [8]  2.3561945  3.1415927</span>
 
 <span class="no">dist.bin.lims</span>
-<span class="co">#&gt;     0%    25%    50%    75%    90%        </span>
-<span class="co">#&gt;  0.000  0.075  1.075  5.274 10.511 25.252</span></pre></body></html></div>
-<p>Bins were defined in different ways for each movement variable due to their inherent properties. Step lengths were broken into 5 bins (6 limits) using quantiles, which assisted in creating a more balanced distribution of bins since step lengths are typically right-skewed. Only step lengths that were observed at the primary time interval (3600 s; 1 h) were used to calculate quantiles. Since turning angles are already relatively balanced, these were separated into 8 bins (9 limits) of equal width centered at 0 radians (from <span class="math inline">\(-\pi\)</span> to <span class="math inline">\(\pi\)</span>). The following code shows how to use these limits to discretize the data:</p>
+<span class="co">#&gt;       0%      25%      50%      75%      90%     100% </span>
+<span class="co">#&gt;  0.00000  0.10700  1.27900  5.73825 10.75250 25.25200</span></pre></body></html></div>
+<p>Bins were defined in different ways for each data stream due to their inherent properties. Step lengths were broken into 5 bins (6 limits) using quantiles, which assisted in creating a more balanced distribution of bins since step lengths are typically right-skewed. Only step lengths that were observed at the primary time interval (3600 s; 1 h) were used to calculate quantiles. Since turning angles are already relatively balanced, these were separated into 8 bins (9 limits) of equal width centered at 0 radians (from <span class="math inline">\(-\pi\)</span> to <span class="math inline">\(\pi\)</span>). The following code shows how to use these limits to discretize the data:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># Assign bins to observations</span>
 <span class="no">tracks_disc.list</span><span class="kw">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">tracks_filt.list</span>,
                        <span class="no">discrete_move_var</span>,

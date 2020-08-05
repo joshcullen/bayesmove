@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width=7,
-  fig.retina=2
+  fig.retina=1.5
   )
 ```
 
@@ -31,7 +31,7 @@ Before we begin in earnest, the practitioner must make sure the data have been c
 
 In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time step between successive observations since only those at the primary time step of interest will be retained for further analysis. 
 
-First, let's take a look at what the data should look like before calculating these movement variables:
+First, let's take a look at what the data should look like before calculating these data streams:
 
 ```{r load data, message=FALSE}
 library(bayesmove)
@@ -137,7 +137,7 @@ purrr::map(tracks_filt.list, ~n_distinct(.$dt))
 There are also two new columns that have been added to the data frame of each ID: 'obs' and 'time1'. The 'obs' column holds the number of the observation before the data were filtered, whereas 'time1' stores the number of the observation after filtering. This is important since the 'obs' column will allow the merging of results from this model with that of the original data and the 'time1' column will be used to segment the tracks.
 
 
-## Discretize movement variables
+## Discretize data streams
 
 The unique feature of this modeling framework is that it does not rely upon standard parametric density functions that are used in nearly every other model that estimates behavior. This is expected to reduce any constraints posed by the selection of a given parametric density function and allow for greater model flexibility. However, this does require the user to define the number of bins for each variable and how they will be discretized.
 
@@ -165,9 +165,8 @@ An example is included below for the discretization of step lengths and turning 
 angle.bin.lims=seq(from=-pi, to=pi, by=pi/4)  #8 bins
 
 # Define bin number and limits for step lengths
-max.dist=max(tracks[tracks$dt == 3600,]$step, na.rm = T)
-dist.bin.lims=quantile(tracks[tracks$dt == 3600,]$step, c(0,0.25,0.50,0.75,0.90), na.rm=T)
-dist.bin.lims=c(dist.bin.lims, max.dist)  #5 bins
+dist.bin.lims=quantile(tracks[tracks$dt == 3600,]$step,
+                       c(0,0.25,0.50,0.75,0.90,1), na.rm=T)  #5 bins
 
 angle.bin.lims
 
@@ -175,7 +174,7 @@ dist.bin.lims
 ```
 
 
-Bins were defined in different ways for each movement variable due to their inherent properties. Step lengths were broken into 5 bins (6 limits) using quantiles, which assisted in creating a more balanced distribution of bins since step lengths are typically right-skewed. Only step lengths that were observed at the primary time interval (3600 s; 1 h) were used to calculate quantiles. Since turning angles are already relatively balanced, these were separated into 8 bins (9 limits) of equal width centered at 0 radians (from $-\pi$ to $\pi$). The following code shows how to use these limits to discretize the data:
+Bins were defined in different ways for each data stream due to their inherent properties. Step lengths were broken into 5 bins (6 limits) using quantiles, which assisted in creating a more balanced distribution of bins since step lengths are typically right-skewed. Only step lengths that were observed at the primary time interval (3600 s; 1 h) were used to calculate quantiles. Since turning angles are already relatively balanced, these were separated into 8 bins (9 limits) of equal width centered at 0 radians (from $-\pi$ to $\pi$). The following code shows how to use these limits to discretize the data:
 
 ```{r discretize vars}
 # Assign bins to observations

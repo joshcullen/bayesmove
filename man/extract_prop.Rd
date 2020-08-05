@@ -29,7 +29,6 @@ number of latent behavioral states.
 }
 \examples{
 \dontrun{
-## DON'T RUN
 #create data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 
@@ -43,5 +42,6 @@ res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 #Extract proportions of behaviors per time segment
 theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 }
+
 
 }
