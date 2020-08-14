@@ -76,7 +76,7 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #' @param tol numeric. A single tolerance value on which to round any \code{int}
 #'   that were specified.
 #' @param time.zone character. Specify the time zone for which the date-times
-#'   were recorded.
+#'   were recorded. Set to UTC by default.
 #'
 #' @return A data frame where \code{dt} and \code{date} are both adjusted based
 #'   upon the rounding of time intervals according to the specified tolerance.
@@ -100,7 +100,7 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #'                         int = 3600, tol = 20, time.zone = "UTC")
 #'
 #' @export
-round_track_time=function(dat, id, dt, date, int, tol, time.zone) {
+round_track_time=function(dat, id, dt, date, int, tol, time.zone = "UTC") {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
@@ -539,9 +539,9 @@ get_MAP_internal=function(dat, nburn) {
 #'
 #' @examples
 #' #simulate data
-#' ngibbs<- 100
+#' ngibbs<- 1000
 #' y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
-#' dat<- matrix(c(1, y), 1, 101)
+#' dat<- matrix(c(1, y), 1, 1001)
 #' dat<- data.frame(dat)
 #' names(dat)[1]<- "id"
 #'
@@ -552,7 +552,7 @@ get_MAP_internal=function(dat, nburn) {
 get_MAP=function(dat, nburn) {
   MAP.est<- vector()
   for (i in 1:nrow(dat)) {
-    MAP.est[i]<- get_MAP_internal(dat[i,-1], nburn)
+    MAP.est[i]<- get_MAP_internal(dat[i,], nburn)
   }
 
   MAP.est
@@ -652,7 +652,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
     dplyr::mutate_at("value", factor) %>%
     dplyr::mutate_at("bin", readr::parse_number)
 
-  levels(behav.heat.long$value)<- c("Unoccupied","Occupied")
+  levels(behav.heat.long$value)<- c("Unused","Used")
 
   #index brkpts for particular id
   ind<- which(unique(data$id) == brkpts$id)

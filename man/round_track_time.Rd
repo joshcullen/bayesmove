@@ -4,7 +4,7 @@
 \alias{round_track_time}
 \title{Round time to nearest interval}
 \usage{
-round_track_time(dat, id, dt, date, int, tol, time.zone)
+round_track_time(dat, id, dt, date, int, tol, time.zone = "UTC")
 }
 \arguments{
 \item{dat}{A data frame that contains the sampling interval of the
@@ -24,7 +24,7 @@ rounding.}
 that were specified.}
 
 \item{time.zone}{character. Specify the time zone for which the date-times
-were recorded.}
+were recorded. Set to UTC by default.}
 }
 \value{
 A data frame where \code{dt} and \code{date} are both adjusted based

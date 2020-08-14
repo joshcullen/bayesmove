@@ -8,8 +8,9 @@ expand_behavior(dat, theta.estim, obs, nbehav, behav.names, behav.order)
 }
 \arguments{
 \item{dat}{A data frame of the animal ID, time segment labels, and all other
-data per observation. Animal ID and time segment columns must be labeled
-\emph{id} and \emph{tseg}, respectively.}
+data per observation. Animal ID, date, time segment, and observation number
+columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and \emph{time1},
+respectively.}
 
 \item{theta.estim}{A data frame containing the animal ID, time segment, and
 proportions of each behavioral state as separate columns. Animal ID and

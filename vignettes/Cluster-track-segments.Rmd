@@ -226,16 +226,16 @@ Maps of dominant behaviors are shown for all IDs, as well as observations labele
 
 ```{r map separate behavs, fig.height=5}
 # Map separate time segments for 'id3'
-tracks4<- tracks.out %>% filter(id == "id3")
+tracks3<- tracks.out %>% filter(id == "id3")
 
 # Dominant behavior
 ggplot() +
-  geom_path(data = tracks4, aes(x=x, y=y), color="gray60", size=0.25) +
-  geom_point(data = tracks4, aes(x, y, fill=behav), size=1.5, pch=21, alpha=0.7) +
-  geom_point(data = tracks4 %>%
+  geom_path(data = tracks3, aes(x=x, y=y), color="gray60", size=0.25) +
+  geom_point(data = tracks3, aes(x, y, fill=behav), size=1.5, pch=21, alpha=0.7) +
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
-  geom_point(data = tracks4 %>%
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
   scale_fill_viridis_d("Behavior", na.value = "grey50") +
@@ -249,11 +249,11 @@ ggplot() +
   facet_wrap(~id, scales = "free")
 # Proportion encamped
 ggplot() +
-  geom_path(data = tracks4, aes(x, y, color = Encamped), size=0.5, alpha=0.7) +
-  geom_point(data = tracks4 %>%
+  geom_path(data = tracks3, aes(x, y, color = Encamped), size=0.5, alpha=0.7) +
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
-  geom_point(data = tracks4 %>%
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
   scale_color_distiller("Proportion\nEncamped", palette = "Spectral", na.value = "grey50") +
@@ -267,11 +267,11 @@ ggplot() +
   facet_wrap(~id, scales = "free")
 # Proportion ARS
 ggplot() +
-  geom_path(data = tracks4, aes(x, y, color = ARS), size=0.5, alpha=0.7) +
-  geom_point(data = tracks4 %>%
+  geom_path(data = tracks3, aes(x, y, color = ARS), size=0.5, alpha=0.7) +
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
-  geom_point(data = tracks4 %>%
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
   scale_color_distiller("Proportion\nARS", palette = "Spectral", na.value = "grey50") +
@@ -285,11 +285,11 @@ ggplot() +
   facet_wrap(~id, scales = "free")
 # Proportion transit
 ggplot() +
-  geom_path(data = tracks4, aes(x, y, color = Transit), size=0.5, alpha=0.7) +
-  geom_point(data = tracks4 %>%
+  geom_path(data = tracks3, aes(x, y, color = Transit), size=0.5, alpha=0.7) +
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
-  geom_point(data = tracks4 %>%
+  geom_point(data = tracks3 %>%
                slice(which(row_number() == n())),
              aes(x, y), color = "red", pch = 24, size = 3, stroke = 1.25) +
   scale_color_distiller("Proportion\nTransit", palette = "Spectral", na.value = "grey50") +

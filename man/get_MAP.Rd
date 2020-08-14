@@ -24,9 +24,9 @@ on which to assign time segments to the observations of each animal ID.
 }
 \examples{
 #simulate data
-ngibbs<- 100
+ngibbs<- 1000
 y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
-dat<- matrix(c(1, y), 1, 101)
+dat<- matrix(c(1, y), 1, 1001)
 dat<- data.frame(dat)
 names(dat)[1]<- "id"
 
