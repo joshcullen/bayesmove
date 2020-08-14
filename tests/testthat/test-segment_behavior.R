@@ -1,5 +1,9 @@
 test_that("segmentation model can effectively segment a dataset and return results", {
 
+  skip_on_appveyor()
+  skip_on_travis()
+  skip_on_cran()
+
   #simulate data
   step<- rgamma(500, c(1, 2.5, 10), c(1, 1, 1))
   angle<- runif(500, -pi, pi)
