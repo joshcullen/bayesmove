@@ -187,9 +187,9 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
 
 
   nbrks<- purrr::map_dfr(mod, 2) %>%
-    t() %>%
-    as.data.frame()  #create DF of number of breakpoints by ID
-  names(nbrks)<- c('id', paste0("Iter_", 1:ngibbs))
+    t()
+  colnames(nbrks)<- c('id', paste0("Iter_", 1:ngibbs))
+  nbrks<- as.data.frame(nbrks)  #create DF of number of breakpoints by ID
   ncol.nbrks<- ncol(nbrks)
   nbrks<- nbrks %>%
     dplyr::mutate_at(2:ncol.nbrks, as.character) %>%
@@ -198,9 +198,9 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
 
 
   LML<- purrr::map_dfr(mod, 3) %>%
-    t() %>%
-    as.data.frame()  #create DF of LML by ID
-  names(LML)<- c('id', paste0("Iter_", 1:ngibbs))
+    t()
+  colnames(LML)<- c('id', paste0("Iter_", 1:ngibbs))
+  LML<- as.data.frame(LML)  #create DF of LML by ID
   ncol.LML<- ncol(LML)
   LML<- LML %>%
     dplyr::mutate_at(2:ncol.LML, as.character) %>%
@@ -209,9 +209,9 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
 
 
   elapsed.time<- purrr::map_dfr(mod, 4) %>%
-    t() %>%
-    as.data.frame()  #create DF of elapsed time
-  names(elapsed.time)<- "time"
+    t()
+  colnames(elapsed.time)<- "time"
+  elapsed.time<- as.data.frame(elapsed.time)  #create DF of elapsed time
   elapsed.time<- elapsed.time %>%
     dplyr::mutate_at("time", as.character)
 
