@@ -100,7 +100,7 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #'                         int = 3600, tol = 20, time.zone = "UTC")
 #'
 #' @export
-round_track_time=function(dat, id, dt, date, int, tol, time.zone = "UTC") {
+round_track_time = function(dat, id, dt, date, int, tol, time.zone = "UTC") {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
@@ -110,9 +110,9 @@ round_track_time=function(dat, id, dt, date, int, tol, time.zone = "UTC") {
       for (j in 1:nrow(dat[[i]])) {
         if (is.na(dat[[i]]$dt[j])) {
           tmp[j, 1:2]<- NA
-        } else if (dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol)) {
-          tmp[j, 1:2]<- c(int, as.numeric(round.POSIXt(dat[[i]]$date[j],
-                                                       units = "hours")))
+        } else if (dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol) &
+                   dat[[i]]$dt[j] != int) {
+          tmp[j, 1:2]<- c(int, dat[[i]]$date[j] - (dat[[i]]$dt[j] - int))
         } else {
           tmp[j, 1:2]<- c(dat[[i]]$dt[j], dat[[i]]$date[j])
         }
@@ -121,10 +121,11 @@ round_track_time=function(dat, id, dt, date, int, tol, time.zone = "UTC") {
       for (j in 1:nrow(dat[[i]])) {
         if (is.na(dat[[i]]$dt[j])) {
           tmp[j, 1:2]<- NA
-        } else if (sum(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol)) > 0) {
-          ind<- which(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol))
-          tmp[j, 1:2]<- c(int[ind], as.numeric(round.POSIXt(dat[[i]]$date[j],
-                                                            units = "hours")))
+        } else if (sum(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol) &
+                       dat[[i]]$dt[j] != int) > 0) {
+          ind<- which(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol) &
+                        dat[[i]]$dt[j] != int)
+          tmp[j, 1:2]<- c(int[ind], dat[[i]]$date[j] - (dat[[i]]$dt[j] - int))
         } else {
           tmp[j, 1:2]<- c(dat[[i]]$dt[j], dat[[i]]$date[j])
         }
