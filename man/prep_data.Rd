@@ -12,7 +12,7 @@ associated with the x and y coordinates, and a column for the date. For
 easier interpretation of the model results, it is recommended that
 coordinates be stored after UTM projection (meters) as opposed to
 unprojected in decimal degrees (map units). Date-time should be of class
-\code{POSIXct} and be labeled \emph{date} within the data frame.}
+\code{POSIXct} and be labeled \code{date} within the data frame.}
 
 \item{coord.names}{character. A vector of the column names under which the
 coordinates are stored. The name for the x coordinate should be listed

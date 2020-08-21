@@ -13,8 +13,7 @@ test_that("in POSIXct format and only changed date and dt", {
   dat<- data.frame(id, date, dt, step, angle)
 
   #run function
-  dat1<- round_track_time(dat = dat, id = "id", date = "date", dt = "dt",
-                          int = 3600, tol = 20, time.zone = "UTC")
+  dat1<- round_track_time(dat = dat, id = "id", int = 3600, tol = 20, time.zone = "UTC")
 
   expect_is(dat1, "data.frame")
   expect_is(dat1$date, "POSIXct")

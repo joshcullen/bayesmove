@@ -49,7 +49,7 @@
 <meta property="og:title" content="Find the maximum a posteriori (MAP) estimate of the MCMC chain — get_MAP" />
 <meta property="og:description" content="Identify the MCMC iteration that holds the MAP estimate. This will be used to
 inform get_breakpts as to which breakpoints should be retained
-on which to assign time segments to the observations of each animal ID." />
+on which to assign track segments to the observations of each animal ID." />
 <meta property="og:image" content="http://joshcullen.github.io/bayesmove/logo.png" />
 
 
@@ -151,7 +151,7 @@ on which to assign time segments to the observations of each animal ID." />
     <div class="ref-description">
     <p>Identify the MCMC iteration that holds the MAP estimate. This will be used to
 inform <code><a href='get_breakpts.html'>get_breakpts</a></code> as to which breakpoints should be retained
-on which to assign time segments to the observations of each animal ID.</p>
+on which to assign track segments to the observations of each animal ID.</p>
     </div>
 
     <pre class="usage"><span class='fu'>get_MAP</span>(<span class='no'>dat</span>, <span class='no'>nburn</span>)</pre>
@@ -178,9 +178,10 @@ estimate will be identified.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#simulate data</span>
-<span class='no'>ngibbs</span><span class='kw'>&lt;-</span> <span class='fl'>100</span>
+<span class='no'>ngibbs</span><span class='kw'>&lt;-</span> <span class='fl'>1000</span>
 <span class='no'>y</span><span class='kw'>&lt;-</span> (-<span class='fl'>1000</span> * <span class='fl'>501</span>:<span class='fl'>1500</span>)/(-<span class='fl'>500</span> + <span class='fl'>501</span>:<span class='fl'>1500</span>) + <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>ngibbs</span>, <span class='fl'>0</span>, <span class='fl'>0.1</span>)
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='no'>y</span>), <span class='fl'>1</span>, <span class='fl'>101</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: data length [1001] is not a sub-multiple or multiple of the number of columns [101]</span></div><div class='input'><span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>dat</span>)
+<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='no'>y</span>), <span class='fl'>1</span>, <span class='fl'>1001</span>)
+<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>dat</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>dat</span>)[<span class='fl'>1</span>]<span class='kw'>&lt;-</span> <span class='st'>"id"</span>
 
 <span class='co'>#run function</span>

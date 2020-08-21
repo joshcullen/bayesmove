@@ -27,9 +27,9 @@ In order to estimate behavioral states from telemetry (and biologging data) usin
 Before we begin in earnest, the practitioner must make sure the data have been cleaned. This includes the removal of duplicate observations and sorting the observations in consecutive order per animal ID. At a minimum, an object of class `data.frame` with columns for animal ID, date, x coordinate (e.g., longitude, Easting), and y coordinate (e.g., latitude, Northing) must be included.
 
 
-## Calculating step lengths, turning angles, and time steps
+## Calculating step lengths, turning angles, and time intervals
 
-In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time step between successive observations since only those at the primary time step of interest will be retained for further analysis. 
+In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time interval between successive observations since only those at the primary time interval of interest will be retained for further analysis. 
 
 First, let's take a look at what the data should look like before calculating these data streams:
 
@@ -50,7 +50,7 @@ head(tracks)
 str(tracks)
 ```
 
-```{r plot tracks, echo=FALSE, fig.height=7}
+```{r plot tracks, echo=FALSE, fig.height=4}
 
 # Plot tracks
 ggplot(data = tracks %>%
@@ -79,7 +79,7 @@ ggplot(data = tracks %>%
 We can see that 'date' is in a `POSIXct` format and that the x and y coordinates are stored as `numeric` variables. Technically, the coordinates can be in a lat-lon format, but this will make interpretation of step lengths more difficult since they will be recorded in map units. Therefore, it is suggested that x and y coordinates are in a UTM projection where the unit of measure is meters. The 'id' column can be stored either as `character` or `factor`.
 
 
-Now, let's calculate step length, turning angle, and time step:
+Now, let's calculate step length, turning angle, and time interval:
 
 ```{r prep data}
 tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
@@ -88,47 +88,46 @@ head(tracks)
 ```
 
 
-The new tracks data frame has three new columns ('step', 'angle', and 'dt'), which store the data for step lengths, turning angles, and time steps, respectively. Since this example uses coordinates that are considered to be in a UTM projection, step lengths are reported in meters. Turning angles are reported in radians and time steps are reported in seconds. Alternatively, these measures can also be calculated using functions from other R packages, such as `adehabitatLT`.
+The new tracks data frame has three new columns ('step', 'angle', and 'dt'), which store the data for step lengths, turning angles, and time intervals, respectively. Since this example uses coordinates that are considered to be in a UTM projection, step lengths are reported in meters. Turning angles are reported in radians and time intervals are reported in seconds. Alternatively, these measures can also be calculated using functions from other R packages, such as `adehabitatLT`.
 
 
 ## Round times and filter observations
 
-Next, we want to filter the data so that we only retain data for a given time step (or interval). Let's look at a distribution of the time steps that were just calculated:
+Next, we want to filter the data so that we only retain data for a given time interval (or step). Let's look at a distribution of the time intervals that were just calculated:
 
 ```{r, echo=FALSE, fig.align='center'}
-hist(tracks$dt, main = "Time Steps (s)")
+hist(tracks$dt, main = "Time intervals (s)")
 ```
 
 
-Based on this histogram, it appears that 3600 s (1 hour) is likely the primary time step, where some observations slightly deviate from this exact interval. I will now round all time steps (dt) and dates to reflect this rounding of times within a given tolerance window. In this example, I will choose 3 minutes (180 s) as the tolerance on which to round observations close to the primary time interval (3600 s).
+Based on this histogram, it appears that 3600 s (1 hour) is likely the primary time interval, where some observations slightly deviate from this exact interval. I will now round all time intervals (dt) and dates to reflect this rounding of times within a given tolerance window. In this example, I will choose 3 minutes (180 s) as the tolerance on which to round observations close to the primary time interval (3600 s).
 
 ```{r round times}
-tracks<- round_track_time(dat = tracks, id = "id", date = "date", dt = "dt", int = 3600,
-                 tol = 180, time.zone = "UTC")
+tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 
 head(tracks)
 
-# How many different time steps?
+# How many different time intervals?
 n_distinct(tracks$dt)
 
-# How many observations of each time step?
-hist(tracks$dt, main = "Rounded Time Steps (s)")
+# How many observations of each time interval?
+hist(tracks$dt, main = "Rounded Time Intervals (s)")
 ```
 
 
-It looks like nearly all observations had a time step within the tolerance limit. Now the dataset needs to be filtered to only include observations where `dt == 3600`.
+It looks like nearly all observations had a time interval within the tolerance limit. Now the dataset needs to be filtered to only include observations where `dt == 3600`.
 
-```{r filter time steps}
+```{r filter time intervals}
 # Create list from data frame
 tracks.list<- df_to_list(dat = tracks, ind = "id")
 
 # Filter observations
-tracks_filt.list<- filter_time(dat.list = tracks.list, dt = "dt", tstep = 3600)
+tracks_filt.list<- filter_time(dat.list = tracks.list, int = 3600)
 
 # View sample of results
 head(tracks_filt.list[[3]])
 
-# Check that only observations at 1 hour time steps are retained per ID
+# Check that only observations at 1 hour time intervals are retained per ID
 purrr::map(tracks_filt.list, ~n_distinct(.$dt))
 ```
 

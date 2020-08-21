@@ -2,7 +2,7 @@
 % Please edit documentation in R/LDA_helper_functions.R
 \name{extract_prop}
 \alias{extract_prop}
-\title{Extract behavior proportion estimates for each time segment}
+\title{Extract behavior proportion estimates for each track segment}
 \usage{
 extract_prop(res, ngibbs, nburn, nmaxclust)
 }
@@ -20,11 +20,11 @@ clusters to test.}
 }
 \value{
 A matrix that stores the proportions of each state/cluster (columns)
-  per time segment (rows).
+  per track segment (rows).
 }
 \description{
 Calculates the mean of the posterior for the proportions of each behavior
-within time segments. These results can be explored to determine the optimal
+within track segments. These results can be explored to determine the optimal
 number of latent behavioral states.
 }
 \examples{
@@ -32,14 +32,14 @@ number of latent behavioral states.
 #create data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 
-#summarize data by time segment
+#summarize data by track segment
 obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
 
 #cluster data with LDA
 res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
                        nburn = 500, nmaxclust = 7, ndata.types = 2)
 
-#Extract proportions of behaviors per time segment
+#Extract proportions of behaviors per track segment
 theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 }
 

@@ -63,20 +63,20 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #' time intervals, but only using a single tolerance value. This function
 #' prepares the data to be analyzed by \code{\link{segment_behavior}}, which
 #' requires that all time intervals exactly match the primary time interval when
-#' analyzing step lengths and turning angles.
+#' analyzing step lengths and turning angles. Columns storing the time intervals
+#' and dates must be labeled \code{dt} and \code{date}, respectively, where
+#' dates are of class \code{POSIXct}.
 #'
 #' @param dat A data frame that contains the sampling interval of the
 #'   observations.
 #' @param id character. The name of the column storing the animal IDs.
-#' @param dt character. The name of the column storing the time intervals.
-#' @param date character. The name of the column storing the dates that are of
-#'   class \code{POSIXct}.
 #' @param int numeric. A vector of the time interval(s) of on which to perform
 #'   rounding.
 #' @param tol numeric. A single tolerance value on which to round any \code{int}
 #'   that were specified.
 #' @param time.zone character. Specify the time zone for which the date-times
-#'   were recorded. Set to UTC by default.
+#'   were recorded. Set to UTC by default. Refer to \code{base::OlsonNames} to view
+#'   all possible time zones.
 #'
 #' @return A data frame where \code{dt} and \code{date} are both adjusted based
 #'   upon the rounding of time intervals according to the specified tolerance.
@@ -96,11 +96,10 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #' dat<- data.frame(id, date, dt, step, angle)
 #'
 #' #run function
-#' dat1<- round_track_time(dat = dat, id = "id", date = "date", dt = "dt",
-#'                         int = 3600, tol = 20, time.zone = "UTC")
+#' dat1<- round_track_time(dat = dat, id = "id", int = 3600, tol = 20, time.zone = "UTC")
 #'
 #' @export
-round_track_time = function(dat, id, dt, date, int, tol, time.zone = "UTC") {
+round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
@@ -148,15 +147,15 @@ round_track_time = function(dat, id, dt, date, int, tol, time.zone = "UTC") {
 #' is one or fewer observations at this time interval. This function works
 #' closely with \code{\link{round_track_time}} to only retain observations
 #' sampled at a regular time interval, which is important for analyzing step
-#' lengths and turning angles.
+#' lengths and turning angles. Column storing the time intervals must be labeled
+#' \code{dt}.
 #'
 #' @param dat.list A list of data associated with each animal ID where names of
 #'   list elements are the ID names.
-#' @param dt character. The name of the column storing the time intervals.
-#' @param tstep numeric. The time interval of interest.
+#' @param int numeric. The time interval of interest.
 #'
 #' @return A list where observations for each animal ID (element) has been
-#'   filtered for \code{tstep}. Two columns (\code{obs} and \code{time1}) are
+#'   filtered for \code{int}. Two columns (\code{obs} and \code{time1}) are
 #'   added for each list element (ID), which store the original observation
 #'   number before filtering and the new observation number after filtering,
 #'   respectively.
@@ -174,24 +173,23 @@ round_track_time = function(dat, id, dt, date, int, tol, time.zone = "UTC") {
 #'
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-#'                        tol = 15, time.zone = "UTC")
+#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
 #' #create list
 #' dat.list<- df_to_list(dat = dat, ind = "id")
 #'
 #' #run function
-#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 #'
 #' @importFrom rlang .data
 #' @export
-filter_time=function(dat.list, dt, tstep) {
+filter_time=function(dat.list, int) {
 
   id<- names(dat.list)
 
   cond<- matrix(0, length(dat.list), 1)
-  for (i in 1:length(dat.list)) {  #don't include IDs w <= 1 obs of dt == tstep
-    cond[i,]<- if(nrow(dat.list[[i]][dat.list[[i]]$dt == tstep,]) > 1) {
+  for (i in 1:length(dat.list)) {  #don't include IDs w <= 1 obs of dt == int
+    cond[i,]<- if(nrow(dat.list[[i]][dat.list[[i]]$dt == int,]) > 1) {
       1
     } else {
       0
@@ -207,7 +205,7 @@ filter_time=function(dat.list, dt, tstep) {
   for (i in 1:n) {
     behav.list[[i]]<- dat.list[[i]] %>%
       dplyr::mutate(obs = 1:length(.data$id)) %>%
-      dplyr::filter(dt == tstep) %>%
+      dplyr::filter(.data$dt == int) %>%
       dplyr::mutate(time1 = 1:length(.data$id))
   }
 
@@ -330,14 +328,13 @@ assign_tseg_internal=function(dat, brkpts){
 #'
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-#'                        tol = 15, time.zone = "UTC")
+#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
 #' #create list
 #' dat.list<- df_to_list(dat = dat, ind = "id")
 #'
 #' #filter by primary time step
-#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 #'
 #' #run function
 #' dat1<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
@@ -376,8 +373,7 @@ assign_tseg=function(dat, brkpts){
 #'
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-#'                        tol = 15, time.zone = "UTC")
+#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
 #' #run function
 #' dat.list<- df_to_list(dat = dat, ind = "id")
@@ -527,7 +523,7 @@ get_MAP_internal=function(dat, nburn) {
 #'
 #' Identify the MCMC iteration that holds the MAP estimate. This will be used to
 #' inform \code{\link{get_breakpts}} as to which breakpoints should be retained
-#' on which to assign time segments to the observations of each animal ID.
+#' on which to assign track segments to the observations of each animal ID.
 #'
 #' @param dat A data frame where each row holds the log marginal likelihood
 #'   values at each iteration of the MCMC chain.
@@ -749,8 +745,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #'
 #' #create data frame and round time
 #' dat<- data.frame(id, date, dt, step, angle, var)
-#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
-#'                        int = 3600, tol = 15, time.zone = "UTC")
+#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
 #'
 #' #define limits for each bin
@@ -765,7 +760,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #'
 #' #create list and filter by primary time step
 #' dat.list<- df_to_list(dat = dat1, ind = "id")
-#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 #' dat.list.filt1<- lapply(dat.list.filt,
 #'                         function(x) subset(x, select = c(id, SL, TA)))
 #'
@@ -802,7 +797,7 @@ plot_heatmap=function(data, nbins, brkpts, title, legend) {
 #'   model results, it is recommended that coordinates be stored after UTM
 #'   projection (meters) as opposed to unprojected in decimal degrees (map
 #'   units). Date-time should be of class \code{POSIXct} and be labeled
-#'   \emph{date} within the data frame.
+#'   \code{date} within the data frame.
 #' @param coord.names character. A vector of the column names under which the
 #'   coordinates are stored. The name for the x coordinate should be listed
 #'   first and the name for the y coordinate second.
@@ -859,7 +854,7 @@ prep_data_internal=function(dat, coord.names) {
 #'   easier interpretation of the model results, it is recommended that
 #'   coordinates be stored after UTM projection (meters) as opposed to
 #'   unprojected in decimal degrees (map units). Date-time should be of class
-#'   \code{POSIXct} and be labeled \emph{date} within the data frame.
+#'   \code{POSIXct} and be labeled \code{date} within the data frame.
 #' @param coord.names character. A vector of the column names under which the
 #'   coordinates are stored. The name for the x coordinate should be listed
 #'   first and the name for the y coordinate second.

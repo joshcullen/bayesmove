@@ -1,11 +1,11 @@
 
-#' Summarize observations within bins per time segment
+#' Summarize observations within bins per track segment
 #'
 #' Prepares the data that has already been segmented for clustering by Latent
 #' Dirichlet Allocation. This function summarizes the counts observed per
-#' movement variable bin within each time segment per animal ID.
+#' movement variable bin within each track segment per animal ID.
 #'
-#' @param dat A data frame of \strong{only} the animal ID, time segment number,
+#' @param dat A data frame of \strong{only} the animal ID, track segment number,
 #'   and the discretized data for each movement variable. Animal ID and time
 #'   segment must be the first two columns of this data frame. This should be a
 #'   simplified form of the output from \code{\link{assign_tseg}}.
@@ -13,7 +13,7 @@
 #'   movement variable. These must be in the same order as the columns within
 #'   \code{dat}.
 #'
-#' @return A new data frame that contains the animal ID, time segment number,
+#' @return A new data frame that contains the animal ID, track segment number,
 #'   and the counts per bin for each movement variable. The names for each of
 #'   these bins are labeled according to the order in which the variables were
 #'   provided to \code{summarize_tsegs}.
@@ -36,8 +36,7 @@
 #'
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-#'                        tol = 15, time.zone = "UTC")
+#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
 #' #define limits for each bin
 #' dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
@@ -52,9 +51,9 @@
 #' dat.list<- df_to_list(dat = dat1, ind = "id")
 #'
 #' #filter by primary time step
-#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 #'
-#' #assign time segments
+#' #assign track segments
 #' dat2<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
 #' dat2<- dat2[,c("id","tseg","SL","TA")]
 #'
@@ -110,10 +109,10 @@ summarize_tsegs=function(dat, nbins){
 }
 #------------------------------------------------
 
-#' Extract behavior proportion estimates for each time segment
+#' Extract behavior proportion estimates for each track segment
 #'
 #' Calculates the mean of the posterior for the proportions of each behavior
-#' within time segments. These results can be explored to determine the optimal
+#' within track segments. These results can be explored to determine the optimal
 #' number of latent behavioral states.
 #'
 #' @param res A list of results returned by \code{\link{cluster_segments}}.
@@ -125,7 +124,7 @@ summarize_tsegs=function(dat, nbins){
 #'   clusters to test.
 #'
 #' @return A matrix that stores the proportions of each state/cluster (columns)
-#'   per time segment (rows).
+#'   per track segment (rows).
 #'
 #'
 #' @examples
@@ -133,21 +132,21 @@ summarize_tsegs=function(dat, nbins){
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 #'
-#' #summarize data by time segment
+#' #summarize data by track segment
 #' obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
 #'
 #' #cluster data with LDA
 #' res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 #'                        nburn = 500, nmaxclust = 7, ndata.types = 2)
 #'
-#' #Extract proportions of behaviors per time segment
+#' #Extract proportions of behaviors per track segment
 #' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 #' }
 #'
 #'
 #' @export
 extract_prop=function(res, ngibbs, nburn, nmaxclust) {
-  #Extract and plot proportions of behaviors per time segment
+  #Extract and plot proportions of behaviors per track segment
   theta.post<- res$theta[(nburn+1):ngibbs,]  #extract samples from posterior
   theta.estim<- colMeans(theta.post)
   theta.estim<- matrix(data = theta.estim, ncol = nmaxclust) #calc mean of posterior
@@ -216,15 +215,15 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 }
 #------------------------------------------------
 
-#' Expand behavior estimates from time segments to observations
+#' Expand behavior estimates from track segments to observations
 #'
-#' @param dat A data frame of the animal ID, time segment labels, and all other
-#'   data per observation. Animal ID, date, time segment, and observation number
+#' @param dat A data frame of the animal ID, track segment labels, and all other
+#'   data per observation. Animal ID, date, track segment, and observation number
 #'   columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and \emph{time1},
 #'   respectively.
-#' @param theta.estim A data frame containing the animal ID, time segment, and
+#' @param theta.estim A data frame containing the animal ID, track segment, and
 #'   proportions of each behavioral state as separate columns. Animal ID and
-#'   time segment columns must be labeled \emph{id} and \emph{tseg},
+#'   track segment columns must be labeled \emph{id} and \emph{tseg},
 #'   respectively.
 #' @param obs A data frame summarizing the number of observations within each
 #'   bin per movement variable that is returned by
@@ -238,7 +237,7 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #'   returned by the LDA model, this still must be specified.
 #'
 #' @return A new data frame that expands behavior proportions for each
-#'   observation within all time segments, including the columns labeled
+#'   observation within all track segments, including the columns labeled
 #'   \emph{time1} and \emph{date} from the original \code{dat} data frame.
 #'
 #'
@@ -247,14 +246,14 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #' #create data frame
 #' dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 #'
-#' #summarize data by time segment
+#' #summarize data by track segment
 #' obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
 #'
 #' #cluster data with LDA
 #' res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 #'                        nburn = 500, nmaxclust = 7, ndata.types = 2)
 #'
-#' #Extract proportions of behaviors per time segment
+#' #Extract proportions of behaviors per track segment
 #' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 #'
 #' #Create augmented matrix by replicating rows (tsegs) according to obs per tseg
@@ -268,7 +267,7 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #' @export
 expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order) {
 
-  #Assign behaviors (via theta) to each time segment
+  #Assign behaviors (via theta) to each track segment
   theta.estim1<- apply(theta.estim[,1:nbehav], 1, function(x) x/sum(x)) %>%
     t()  #normalize probs for only first 3 behaviors being used
   theta.estim1<- data.frame(id = obs$id, tseg = obs$tseg, theta.estim1)
@@ -332,7 +331,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #'   Must have columns \code{obs} and \code{time1} generated by
 #'   \code{\link{filter_time}}.
 #' @param theta.estim.long A data frame in long format where each observation
-#'   (\emph{time1}) of each time segment (\emph{tseg}) of each animal ID
+#'   (\emph{time1}) of each track segment (\emph{tseg}) of each animal ID
 #'   (\emph{id}) has separate rows for behavior proportion estimates per state.
 #'   Columns for behavior and proportion estimates should be labeled
 #'   \emph{behavior} and \emph{prop}, respectively. Date (in POSIXct format)
@@ -343,7 +342,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #' @return A data frame of all animal IDs where columns (with names from
 #'   \code{behav.names}) include proportions of each behavioral state per
 #'   observation, as well as a column that stores the dominant behavior within a
-#'   given time segment for which the observation belongs (\code{behav}). This
+#'   given track segment for which the observation belongs (\code{behav}). This
 #'   is merged with the original data frame \code{dat.orig}, so any observations
 #'   that were excluded (not at primary time interval) will show \code{NA} for
 #'   behavior estimates.
@@ -358,14 +357,14 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #' dat.list<- df_to_list(data.frame(id, date, dt, step, angle, SL, TA, obs,
 #'                       time1, tseg))
 #'
-#' #summarize data by time segment
+#' #summarize data by track segment
 #' obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
 #'
 #' #cluster data with LDA
 #' res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 #'                        nburn = 500, nmaxclust = 7, ndata.types = 2)
 #'
-#' #Extract proportions of behaviors per time segment
+#' #Extract proportions of behaviors per track segment
 #' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 #'
 #' #Create augmented matrix by replicating rows (tsegs) according to obs per tseg

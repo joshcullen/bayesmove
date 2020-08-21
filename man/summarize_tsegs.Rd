@@ -2,12 +2,12 @@
 % Please edit documentation in R/LDA_helper_functions.R
 \name{summarize_tsegs}
 \alias{summarize_tsegs}
-\title{Summarize observations within bins per time segment}
+\title{Summarize observations within bins per track segment}
 \usage{
 summarize_tsegs(dat, nbins)
 }
 \arguments{
-\item{dat}{A data frame of \strong{only} the animal ID, time segment number,
+\item{dat}{A data frame of \strong{only} the animal ID, track segment number,
 and the discretized data for each movement variable. Animal ID and time
 segment must be the first two columns of this data frame. This should be a
 simplified form of the output from \code{\link{assign_tseg}}.}
@@ -17,7 +17,7 @@ movement variable. These must be in the same order as the columns within
 \code{dat}.}
 }
 \value{
-A new data frame that contains the animal ID, time segment number,
+A new data frame that contains the animal ID, track segment number,
   and the counts per bin for each movement variable. The names for each of
   these bins are labeled according to the order in which the variables were
   provided to \code{summarize_tsegs}.
@@ -25,7 +25,7 @@ A new data frame that contains the animal ID, time segment number,
 \description{
 Prepares the data that has already been segmented for clustering by Latent
 Dirichlet Allocation. This function summarizes the counts observed per
-movement variable bin within each time segment per animal ID.
+movement variable bin within each track segment per animal ID.
 }
 \examples{
 #simulate data
@@ -44,8 +44,7 @@ brkpts<- data.frame(id = 1:10, brkpts)
 
 #create data frame
 dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-                       tol = 15, time.zone = "UTC")
+dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 
 #define limits for each bin
 dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
@@ -60,9 +59,9 @@ dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
 dat.list<- df_to_list(dat = dat1, ind = "id")
 
 #filter by primary time step
-dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 
-#assign time segments
+#assign track segments
 dat2<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
 dat2<- dat2[,c("id","tseg","SL","TA")]
 

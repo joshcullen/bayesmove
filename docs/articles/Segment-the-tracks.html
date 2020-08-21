@@ -97,7 +97,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Segment the tracks</h1>
             
-            <h4 class="date">06 August 2020</h4>
+            <h4 class="date">21 August 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Segment-the-tracks.Rmd"><code>vignettes/Segment-the-tracks.Rmd</code></a></small>
       <div class="hidden name"><code>Segment-the-tracks.Rmd</code></div>
@@ -109,7 +109,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>At this stage, only observations at a single time step have been retained and data streams (i.e., step lengths, turning angles) have been discretized to perform segmentation on each animal ID. These data are then used as input for the Bayesian segmentation model, which uses a reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate the breakpoints where values substantially change for the data streams. To facilitate the parallel computation of this model (for each ID), the data must be stored as a list.</p>
+<p>At this stage, only observations at a single time interval have been retained and data streams (i.e., step lengths, turning angles) have been discretized to perform segmentation on each animal ID. These data are then used as input for the Bayesian segmentation model, which uses a reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate the breakpoints where values substantially change for the data streams. To facilitate the parallel computation of this model (for each ID), the data must be stored as a list.</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bayesmove</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
@@ -196,14 +196,14 @@
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># Determine MAP for selecting breakpoints</span>
 <span class="no">MAP.est</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat.res</span>$<span class="no">LML</span>, <span class="kw">nburn</span> <span class="kw">=</span> <span class="fl">5000</span>)
 <span class="no">MAP.est</span>
-<span class="co">#&gt; [1] 9860 9555 9977</span>
+<span class="co">#&gt; [1] 9770 9140 9299</span>
 
 <span class="no">brkpts</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat.res</span>$<span class="no">brkpts</span>, <span class="kw">MAP.est</span> <span class="kw">=</span> <span class="no">MAP.est</span>)
 
 <span class="co"># How many breakpoints estimated per ID?</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">brkpts</span>[,-<span class="fl">1</span>], <span class="fl">1</span>, <span class="kw">function</span>(<span class="no">x</span>) <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="kw pkg">purrr</span><span class="kw ns">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span>(<span class="no">x</span>, <span class="no">is.na</span>)))
-<span class="co">#&gt; 9860 9555 9977 </span>
-<span class="co">#&gt;   33   50   35</span></pre></body></html></div>
+<span class="co">#&gt; 9770 9140 9299 </span>
+<span class="co">#&gt;   38   45   35</span></pre></body></html></div>
 <p>The object <code>MAP.est</code> is storing the iteration at which the MAP estimate occurs for each ID, whereas <code>brkpts</code> is a data frame that stores all of the breakpoints per ID. We can plot these breakpoints over the discretized data streams to inspect how well this appears to match changes in these values.</p>
 </div>
 <div id="breakpoint-visualization" class="section level2">
@@ -214,12 +214,12 @@
 <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks.list2</span>, <span class="kw">nbins</span> <span class="kw">=</span> <span class="no">nbins</span>, <span class="kw">brkpts</span> <span class="kw">=</span> <span class="no">brkpts</span>, <span class="kw">title</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">legend</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p><img src="Segment-the-tracks_files/figure-html/heatmaps-1.png" width="672" style="display: block; margin: auto;"><img src="Segment-the-tracks_files/figure-html/heatmaps-2.png" width="672" style="display: block; margin: auto;"><img src="Segment-the-tracks_files/figure-html/heatmaps-3.png" width="672" style="display: block; margin: auto;"></p>
 <p>From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on <code>SL</code> (step lengths) and <code>TA</code> (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each data stream are shown on the y-axis.</p>
-<p>Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define time segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.</p>
+<p>Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define track segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.</p>
 </div>
-<div id="assign-time-segments" class="section level2">
+<div id="assign-track-segments" class="section level2">
 <h2 class="hasAnchor">
-<a href="#assign-time-segments" class="anchor"></a>Assign time segments</h2>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># Assign time segments to all observations by ID</span>
+<a href="#assign-track-segments" class="anchor"></a>Assign track segments</h2>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># Assign track segments to all observations by ID</span>
 <span class="no">tracks.seg</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">tracks.list</span>, <span class="kw">brkpts</span> <span class="kw">=</span> <span class="no">brkpts</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tracks.seg</span>)

@@ -2,19 +2,19 @@
 % Please edit documentation in R/LDA_helper_functions.R
 \name{expand_behavior}
 \alias{expand_behavior}
-\title{Expand behavior estimates from time segments to observations}
+\title{Expand behavior estimates from track segments to observations}
 \usage{
 expand_behavior(dat, theta.estim, obs, nbehav, behav.names, behav.order)
 }
 \arguments{
-\item{dat}{A data frame of the animal ID, time segment labels, and all other
-data per observation. Animal ID, date, time segment, and observation number
+\item{dat}{A data frame of the animal ID, track segment labels, and all other
+data per observation. Animal ID, date, track segment, and observation number
 columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and \emph{time1},
 respectively.}
 
-\item{theta.estim}{A data frame containing the animal ID, time segment, and
+\item{theta.estim}{A data frame containing the animal ID, track segment, and
 proportions of each behavioral state as separate columns. Animal ID and
-time segment columns must be labeled \emph{id} and \emph{tseg},
+track segment columns must be labeled \emph{id} and \emph{tseg},
 respectively.}
 
 \item{obs}{A data frame summarizing the number of observations within each
@@ -33,25 +33,25 @@ returned by the LDA model, this still must be specified.}
 }
 \value{
 A new data frame that expands behavior proportions for each
-  observation within all time segments, including the columns labeled
+  observation within all track segments, including the columns labeled
   \emph{time1} and \emph{date} from the original \code{dat} data frame.
 }
 \description{
-Expand behavior estimates from time segments to observations
+Expand behavior estimates from track segments to observations
 }
 \examples{
 \dontrun{
 #create data frame
 dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
 
-#summarize data by time segment
+#summarize data by track segment
 obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
 
 #cluster data with LDA
 res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
                        nburn = 500, nmaxclust = 7, ndata.types = 2)
 
-#Extract proportions of behaviors per time segment
+#Extract proportions of behaviors per track segment
 theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 
 #Create augmented matrix by replicating rows (tsegs) according to obs per tseg

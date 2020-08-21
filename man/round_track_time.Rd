@@ -4,18 +4,13 @@
 \alias{round_track_time}
 \title{Round time to nearest interval}
 \usage{
-round_track_time(dat, id, dt, date, int, tol, time.zone = "UTC")
+round_track_time(dat, id, int, tol, time.zone = "UTC")
 }
 \arguments{
 \item{dat}{A data frame that contains the sampling interval of the
 observations.}
 
 \item{id}{character. The name of the column storing the animal IDs.}
-
-\item{dt}{character. The name of the column storing the time intervals.}
-
-\item{date}{character. The name of the column storing the dates that are of
-class \code{POSIXct}.}
 
 \item{int}{numeric. A vector of the time interval(s) of on which to perform
 rounding.}
@@ -24,7 +19,8 @@ rounding.}
 that were specified.}
 
 \item{time.zone}{character. Specify the time zone for which the date-times
-were recorded. Set to UTC by default.}
+were recorded. Set to UTC by default. Refer to \code{base::OlsonNames} to view
+all possible time zones.}
 }
 \value{
 A data frame where \code{dt} and \code{date} are both adjusted based
@@ -36,7 +32,9 @@ of interest (e.g., 240 s instead of 300 s). This can be performed on multiple
 time intervals, but only using a single tolerance value. This function
 prepares the data to be analyzed by \code{\link{segment_behavior}}, which
 requires that all time intervals exactly match the primary time interval when
-analyzing step lengths and turning angles.
+analyzing step lengths and turning angles. Columns storing the time intervals
+and dates must be labeled \code{dt} and \code{date}, respectively, where
+dates are of class \code{POSIXct}.
 }
 \examples{
 #simulate data
@@ -52,7 +50,6 @@ id<- rep(1:10, each = 100)
 dat<- data.frame(id, date, dt, step, angle)
 
 #run function
-dat1<- round_track_time(dat = dat, id = "id", date = "date", dt = "dt",
-                        int = 3600, tol = 20, time.zone = "UTC")
+dat1<- round_track_time(dat = dat, id = "id", int = 3600, tol = 20, time.zone = "UTC")
 
 }

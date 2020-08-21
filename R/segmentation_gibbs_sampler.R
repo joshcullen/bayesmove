@@ -122,8 +122,7 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #'
 #' #create data frame and round time
 #' dat<- data.frame(id, date, dt, step, angle, var)
-#' dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
-#'                        int = 3600, tol = 15, time.zone = "UTC")
+#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
 #'
 #' #define limits for each bin
@@ -138,7 +137,7 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #'
 #' #create list and filter by primary time step
 #' dat.list<- df_to_list(dat = dat1, ind = "id")
-#' dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 #'
 #'
 #' #find breakpoints to pre-specify by ID

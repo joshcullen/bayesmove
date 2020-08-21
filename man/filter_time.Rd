@@ -4,19 +4,17 @@
 \alias{filter_time}
 \title{Filter observations for time interval of interest}
 \usage{
-filter_time(dat.list, dt, tstep)
+filter_time(dat.list, int)
 }
 \arguments{
 \item{dat.list}{A list of data associated with each animal ID where names of
 list elements are the ID names.}
 
-\item{dt}{character. The name of the column storing the time intervals.}
-
-\item{tstep}{numeric. The time interval of interest.}
+\item{int}{numeric. The time interval of interest.}
 }
 \value{
 A list where observations for each animal ID (element) has been
-  filtered for \code{tstep}. Two columns (\code{obs} and \code{time1}) are
+  filtered for \code{int}. Two columns (\code{obs} and \code{time1}) are
   added for each list element (ID), which store the original observation
   number before filtering and the new observation number after filtering,
   respectively.
@@ -27,7 +25,8 @@ all others. This function also removes entire IDs from the dataset when there
 is one or fewer observations at this time interval. This function works
 closely with \code{\link{round_track_time}} to only retain observations
 sampled at a regular time interval, which is important for analyzing step
-lengths and turning angles.
+lengths and turning angles. Column storing the time intervals must be labeled
+\code{dt}.
 }
 \examples{
 #simulate data
@@ -41,13 +40,12 @@ id<- rep(1:10, each = 100)
 
 #create data frame
 dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-                       tol = 15, time.zone = "UTC")
+dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 
 #create list
 dat.list<- df_to_list(dat = dat, ind = "id")
 
 #run function
-dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 
 }

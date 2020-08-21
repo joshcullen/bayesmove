@@ -20,7 +20,7 @@ A numeric vector of iterations at which the MAP estimate was found
 \description{
 Identify the MCMC iteration that holds the MAP estimate. This will be used to
 inform \code{\link{get_breakpts}} as to which breakpoints should be retained
-on which to assign time segments to the observations of each animal ID.
+on which to assign track segments to the observations of each animal ID.
 }
 \examples{
 #simulate data

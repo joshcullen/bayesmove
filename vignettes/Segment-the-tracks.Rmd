@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-At this stage, only observations at a single time step have been retained and data streams (i.e., step lengths, turning angles) have been discretized to perform segmentation on each animal ID. These data are then used as input for the Bayesian segmentation model, which uses a reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate the breakpoints where values substantially change for the data streams. To facilitate the parallel computation of this model (for each ID), the data must be stored as a list.
+At this stage, only observations at a single time interval have been retained and data streams (i.e., step lengths, turning angles) have been discretized to perform segmentation on each animal ID. These data are then used as input for the Bayesian segmentation model, which uses a reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate the breakpoints where values substantially change for the data streams. To facilitate the parallel computation of this model (for each ID), the data must be stored as a list.
 
 
 ```{r load data, message=FALSE}
@@ -138,13 +138,13 @@ for (i in 1:length(tracks.list2)) {
 
 From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on `SL` (step lengths) and `TA` (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each data stream are shown on the y-axis.
 
-Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define time segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.
+Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define track segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.
 
 
-## Assign time segments
+## Assign track segments
 
 ```{r}
-# Assign time segments to all observations by ID
+# Assign track segments to all observations by ID
 tracks.seg<- assign_tseg(dat = tracks.list, brkpts = brkpts)
 
 head(tracks.seg)

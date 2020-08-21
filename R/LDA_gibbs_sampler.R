@@ -113,7 +113,6 @@ cluster_segments=function(dat, gamma1, alpha, ngibbs, nmaxclust, nburn, ndata.ty
     v=sample.v(z.agg=z.agg, gamma1=gamma1,
                ntsegm=ntsegm, ndata.types=ndata.types, nmaxclust=nmaxclust)
     theta=get.theta(v=v, nmaxclust=nmaxclust, ntsegm=ntsegm)
-    # theta=theta.true
 
     phi=sample.phi(z.agg=z.agg, alpha=alpha, nmaxclust=nmaxclust,
                    nbins=nbins, ndata.types=ndata.types)

@@ -1,8 +1,8 @@
 test_that("segmentation model can effectively segment a dataset and return results", {
 
-  skip_on_appveyor()
-  skip_on_travis()
-  skip_on_cran()
+  # skip_on_appveyor()
+  # skip_on_travis()
+  # skip_on_cran()
 
   #simulate data
   step<- rgamma(500, c(1, 2.5, 10), c(1, 1, 1))
@@ -11,13 +11,12 @@ test_that("segmentation model can effectively segment a dataset and return resul
   date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
   dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
   dt<- c(dt, NA)
-  id<- rep(1, 500)
+  id<- rep(paste0("id", 1), 500)
 
 
   #create data frame and round time
   dat<- data.frame(id, date, dt, step, angle)
-  dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date",
-                         int = 3600, tol = 15, time.zone = "UTC")
+  dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 
 
   #define limits for each bin
@@ -32,7 +31,7 @@ test_that("segmentation model can effectively segment a dataset and return resul
 
   #create list and filter by primary time step
   dat.list<- df_to_list(dat = dat1, ind = "id")
-  dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+  dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 
 
   #perform segmentation w/o pre-specifying breakpoints
@@ -44,7 +43,7 @@ test_that("segmentation model can effectively segment a dataset and return resul
   expect_length(dat.res1, 4)
   expect_type(dat.res1, "list")
   expect_type(dat.res1$brkpts, "list")
-  expect_length(dat.res1$brkpts$`1`, 1000)
+  expect_length(dat.res1$brkpts$id1, 1000)
   expect_s3_class(dat.res1$nbrks, "data.frame")
   expect_s3_class(dat.res1$LML, "data.frame")
   expect_s3_class(dat.res1$elapsed.time, "data.frame")

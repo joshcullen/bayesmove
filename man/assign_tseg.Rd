@@ -46,14 +46,13 @@ brkpts<- data.frame(id = 1:10, brkpts)
 
 #create data frame
 dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", dt = "dt", date = "date", int = 3600,
-                       tol = 15, time.zone = "UTC")
+dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 
 #create list
 dat.list<- df_to_list(dat = dat, ind = "id")
 
 #filter by primary time step
-dat.list.filt<- filter_time(dat.list = dat.list, dt = "dt", tstep = 3600)
+dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
 
 #run function
 dat1<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)

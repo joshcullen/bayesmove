@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract behavior proportion estimates for each time segment — extract_prop • bayesmove</title>
+<title>Extract behavior proportion estimates for each track segment — extract_prop • bayesmove</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Extract behavior proportion estimates for each time segment — extract_prop" />
+<meta property="og:title" content="Extract behavior proportion estimates for each track segment — extract_prop" />
 <meta property="og:description" content="Calculates the mean of the posterior for the proportions of each behavior
-within time segments. These results can be explored to determine the optimal
+within track segments. These results can be explored to determine the optimal
 number of latent behavioral states." />
 <meta property="og:image" content="http://joshcullen.github.io/bayesmove/logo.png" />
 
@@ -143,14 +143,14 @@ number of latent behavioral states." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract behavior proportion estimates for each time segment</h1>
+    <h1>Extract behavior proportion estimates for each track segment</h1>
     <small class="dont-index">Source: <a href='https://github.com/joshcullen/bayesmove/blob/master/R/LDA_helper_functions.R'><code>R/LDA_helper_functions.R</code></a></small>
     <div class="hidden name"><code>extract_prop.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Calculates the mean of the posterior for the proportions of each behavior
-within time segments. These results can be explored to determine the optimal
+within track segments. These results can be explored to determine the optimal
 number of latent behavioral states.</p>
     </div>
 
@@ -183,21 +183,21 @@ clusters to test.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A matrix that stores the proportions of each state/cluster (columns)
-  per time segment (rows).</p>
+  per track segment (rows).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>#create data frame</span>
 <span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>id</span>, <span class='no'>date</span>, <span class='no'>dt</span>, <span class='no'>step</span>, <span class='no'>angle</span>, <span class='no'>SL</span>, <span class='no'>TA</span>, <span class='no'>tseg</span>)
 
-<span class='co'>#summarize data by time segment</span>
+<span class='co'>#summarize data by track segment</span>
 <span class='no'>obs</span><span class='kw'>&lt;-</span> <span class='fu'><a href='summarize_tsegs.html'>summarize_tsegs</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>nbins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>8</span>))
 
 <span class='co'>#cluster data with LDA</span>
 <span class='no'>res</span><span class='kw'>&lt;-</span> <span class='fu'><a href='cluster_segments.html'>cluster_segments</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>obs</span>, <span class='kw'>gamma1</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
                        <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>nmaxclust</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>ndata.types</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 
-<span class='co'>#Extract proportions of behaviors per time segment</span>
+<span class='co'>#Extract proportions of behaviors per track segment</span>
 <span class='no'>theta.estim</span><span class='kw'>&lt;-</span> <span class='fu'>extract_prop</span>(<span class='kw'>res</span> <span class='kw'>=</span> <span class='no'>res</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>nmaxclust</span> <span class='kw'>=</span> <span class='fl'>7</span>)
 }</div></pre>
   </div>
