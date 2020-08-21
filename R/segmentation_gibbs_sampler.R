@@ -187,7 +187,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
 
   nbrks<- purrr::map_dfr(mod, 2) %>%
     unlist() %>%
-    matrix(., nrow = length(mod), ncol = (ngibbs + 1), byrow = T) %>%
+    matrix(.data, nrow = length(mod), ncol = (ngibbs + 1), byrow = T) %>%
     data.frame()  #create DF of number of breakpoints by ID
   names(nbrks)<- c('id', paste0("Iter_", 1:ngibbs))
   ncol.nbrks<- ncol(nbrks)
@@ -199,7 +199,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
 
   LML<- purrr::map_dfr(mod, 3) %>%
     unlist() %>%
-    matrix(., nrow = length(mod), ncol = (ngibbs + 1), byrow = T) %>%
+    matrix(.data, nrow = length(mod), ncol = (ngibbs + 1), byrow = T) %>%
     data.frame()  #create DF of LML by ID
   names(LML)<- c('id', paste0("Iter_", 1:ngibbs))
   ncol.LML<- ncol(LML)
