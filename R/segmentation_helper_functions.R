@@ -502,15 +502,14 @@ traceplot=function(data, ngibbs, type) {
 #'   holds the MAP estimate.
 #'
 #'
-#' @importFrom rlang .data
+#'
 #' @export
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {
     MAP.est<- dat[-1] %>%
-      order(decreasing = T) %>%
-      subset(.data > nburn) %>%
-      dplyr::first()
+      order(decreasing = T)
+    MAP.est<- MAP.est[MAP.est > nburn][1]
   } else {
     MAP.est<- which.max(dat[-1])
   }

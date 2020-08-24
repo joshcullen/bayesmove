@@ -8,14 +8,13 @@ expand_behavior(dat, theta.estim, obs, nbehav, behav.names, behav.order)
 }
 \arguments{
 \item{dat}{A data frame of the animal ID, track segment labels, and all other
-data per observation. Animal ID, date, track segment, and observation number
-columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and \emph{time1},
-respectively.}
+data per observation. Animal ID, date, track segment, and observation
+number columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and
+\emph{time1}, respectively.}
 
-\item{theta.estim}{A data frame containing the animal ID, track segment, and
-proportions of each behavioral state as separate columns. Animal ID and
-track segment columns must be labeled \emph{id} and \emph{tseg},
-respectively.}
+\item{theta.estim}{A matrix (returned by \code{\link{extract_prop}})
+containing the proportions of each behavioral state as separate columns for
+each track segment (rows).}
 
 \item{obs}{A data frame summarizing the number of observations within each
 bin per movement variable that is returned by

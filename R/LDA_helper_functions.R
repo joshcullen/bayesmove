@@ -218,13 +218,12 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 #' Expand behavior estimates from track segments to observations
 #'
 #' @param dat A data frame of the animal ID, track segment labels, and all other
-#'   data per observation. Animal ID, date, track segment, and observation number
-#'   columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and \emph{time1},
-#'   respectively.
-#' @param theta.estim A data frame containing the animal ID, track segment, and
-#'   proportions of each behavioral state as separate columns. Animal ID and
-#'   track segment columns must be labeled \emph{id} and \emph{tseg},
-#'   respectively.
+#'   data per observation. Animal ID, date, track segment, and observation
+#'   number columns must be labeled \emph{id}, \emph{date}, \emph{tseg}, and
+#'   \emph{time1}, respectively.
+#' @param theta.estim A matrix (returned by \code{\link{extract_prop}})
+#'   containing the proportions of each behavioral state as separate columns for
+#'   each track segment (rows).
 #' @param obs A data frame summarizing the number of observations within each
 #'   bin per movement variable that is returned by
 #'   \code{\link{summarize_tsegs}}.
