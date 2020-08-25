@@ -593,7 +593,7 @@ get_breakpts=function(dat, MAP.est) {
     tmp[[i]]<- dat[[i]][[ind]]
   }
 
-  names(tmp)<- MAP.est
+  names(tmp)<- names(dat)
   max.length<- max(sapply(tmp, length))
   tmp<- lapply(tmp, function(x) { c(x, rep(NA, max.length-length(x)))}) %>%
     dplyr::bind_rows() %>%
