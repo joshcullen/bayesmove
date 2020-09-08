@@ -234,15 +234,16 @@ filter_time=function(dat.list, int) {
 #' @export
 behav_seg_image=function(dat, nbins) {
 
-  dat<- dat[,-1]  #remove id col
-  behav.list<- purrr::map2(list(dat), nbins, ~matrix(0, nrow = nrow(.x), ncol = .y))
+  dat1<- data.frame(dat[,-1])  #remove id col
+  names(dat1)<- names(dat)[-1]
+  behav.list<- purrr::map2(list(dat1), nbins, ~matrix(0, nrow = nrow(.x), ncol = .y))
   for (i in 1:length(behav.list)) {
-    for (j in 1:nrow(dat)){
-      behav.list[[i]][j,dat[,i][j]]=1
+    for (j in 1:nrow(dat1)){
+      behav.list[[i]][j,dat1[,i][j]]=1
     }
   }
 
-  names(behav.list)<- names(dat)
+  names(behav.list)<- names(dat1)
   behav.list
 }
 #---------------------------------------
@@ -383,11 +384,15 @@ assign_tseg=function(dat, brkpts){
 df_to_list=function(dat, ind) {
   id<- dat %>%
     dplyr::pull(ind) %>%
-    unique()
+    unique() %>%
+    as.character()  #change to character in case of factors
 
   n=length(id)
   dat.list<- vector("list", n)
   names(dat.list)<- id
+
+  dat<- data.frame(dat)  #make sure as data.frame, not tibble
+  dat[,ind]<- as.character(dat[,ind])  #change to character in case of factors
 
   for (i in 1:length(id)) {
     tmp<- which(dat[,ind] == id[i])
