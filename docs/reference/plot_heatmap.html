@@ -94,7 +94,7 @@ analysis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -214,8 +214,7 @@ the plot.</p></td>
 
 <span class='co'>#create data frame and round time</span>
 <span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>id</span>, <span class='no'>date</span>, <span class='no'>dt</span>, <span class='no'>step</span>, <span class='no'>angle</span>, <span class='no'>var</span>)
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='round_track_time.html'>round_track_time</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dt</span> <span class='kw'>=</span> <span class='st'>"dt"</span>, <span class='kw'>date</span> <span class='kw'>=</span> <span class='st'>"date"</span>,
-                       <span class='kw'>int</span> <span class='kw'>=</span> <span class='fl'>3600</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>time.zone</span> <span class='kw'>=</span> <span class='st'>"UTC"</span>)
+<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='round_track_time.html'>round_track_time</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>int</span> <span class='kw'>=</span> <span class='fl'>3600</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>time.zone</span> <span class='kw'>=</span> <span class='st'>"UTC"</span>)
 
 
 <span class='co'>#define limits for each bin</span>

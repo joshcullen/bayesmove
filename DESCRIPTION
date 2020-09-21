@@ -1,11 +1,11 @@
 Package: bayesmove
 Type: Package
 Title: Non-Parametric Bayesian Analyses of Animal Movement
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: c(
-    person("Joshua", "Cullen", , "joshcullen10@gmail.com", role = c("aut", "cre"), 
+    person("Joshua", "Cullen", , "joshcullen10@gmail.com", role = c("aut", "cre", "cph"), 
       comment = c(ORCID = "0000-0002-6935-9340")),
-    person("Denis", "Valle", role = c("aut")))
+    person("Denis", "Valle", role = c("aut", "cph")))
 Description: Methods for assessing animal movement from telemetry and biologging
     data using non-parametric Bayesian methods. This includes features for pre-
     processing and analysis of data, as well as the visualization of results

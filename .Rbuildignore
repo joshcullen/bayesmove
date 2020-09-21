@@ -11,3 +11,4 @@
 ^pkgdown$
 ^\.github$
 ^logo\.png$
+^cran-comments\.md$

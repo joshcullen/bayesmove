@@ -14,6 +14,6 @@ citEntry(entry = "Manual",
   textVersion  =
   paste("Cullen JA, Valle DR (2020).",
         "bayesmove: Non-Parametric Bayesian Analysis of Animal Movement.",
-        "R Package version 0.0.0.9000.",
+        "R Package version 0.1.0.",
         "URL https://joshcullen.github.io/bayesmove/.")
 )

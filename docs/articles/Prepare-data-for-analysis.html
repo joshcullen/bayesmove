@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Prepare data for analysis</h1>
             
-            <h4 class="date">21 August 2020</h4>
+            <h4 class="date">21 September 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Prepare-data-for-analysis.Rmd"><code>vignettes/Prepare-data-for-analysis.Rmd</code></a></small>
       <div class="hidden name"><code>Prepare-data-for-analysis.Rmd</code></div>
@@ -252,7 +252,9 @@
                  <span class="kw">varIn</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"step"</span>, <span class="st">"angle"</span>),
                  <span class="kw">varOut</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SL"</span>, <span class="st">"TA"</span>))</pre></body></html></div>
 <p>The plots below show the limits used to define the bins for each continuous variable, as well as what these distributions look like after discretization. First, step lengths will be shown:</p>
-<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-4-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-4-2.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<pre><code>#&gt; `summarise()` regrouping output by 'key' (override with `.groups` argument)</code></pre>
+<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-4-2.png" width="672"></p>
 <p>And next the plots for turning angles:</p>
 <p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-5-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-5-2.png" width="672"></p>
 <p>The data are now in the proper format to be analyzed by the segmentation model within <code>bayesmove</code>. While these bin limits are suggested as default settings, they are by no means the only way to discretize the data. This may require trial and error after viewing results from the segmentation model.</p>
