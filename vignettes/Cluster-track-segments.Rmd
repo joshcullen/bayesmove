@@ -1,11 +1,6 @@
 ---
 title: "Cluster track segments"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Cluster track segments}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -13,7 +8,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width=7,
-  fig.retina=1.5
+  fig.retina=2
 )
 ```
 
@@ -57,7 +52,7 @@ Based on this output, we can see that each row shows the observation counts per 
 
 ## Run the LDA model
 
-```{r run LDA model, results='hide'}
+```{r run LDA model, results='hide', message = FALSE}
 set.seed(1)
 
 # Prepare for Gibbs sampler
@@ -68,7 +63,7 @@ ndata.types<- length(nbins)  #number of data types
 
 # Priors
 gamma1<- 0.1
-alpha<- 0.1 
+alpha<- 0.1
 
 # Run LDA model
 res<- cluster_segments(dat=obs, gamma1=gamma1, alpha=alpha,
@@ -92,21 +87,21 @@ The trace-plot of the log likelihood has reached an asymptote, denoting that the
 
 First, we will determine the optimal number of behavioral states by evaluating the proportions of time spent in each behavior across all track segments and IDs as stored within the `theta` matrix.
 
-```{r plot theta, fig.height=5}
+```{r plot-theta, fig.height=5}
 # Extract proportions of behaviors per track segment
 theta.estim<- extract_prop(res = res, ngibbs = ngibbs, nburn = nburn, nmaxclust = nmaxclust)
 
 # Convert to data frame for ggplot2
-theta.estim_df<- theta.estim %>% 
-  as.data.frame() %>% 
-  pivot_longer(., cols = 1:nmaxclust, names_to = "behavior", values_to = "prop") %>% 
+theta.estim_df<- theta.estim %>%
+  as.data.frame() %>%
+  pivot_longer(., cols = 1:nmaxclust, names_to = "behavior", values_to = "prop") %>%
   modify_at("behavior", factor)
 levels(theta.estim_df$behavior)<- 1:nmaxclust
 
 # Plot results
 ggplot(theta.estim_df, aes(behavior, prop)) +
   geom_boxplot(fill = "grey35", alpha = 0.5, outlier.shape = NA) +
-  geom_jitter(color = "grey35", position = position_jitter(0.1), 
+  geom_jitter(color = "grey35", position = position_jitter(0.1),
               alpha = 0.3) +
   labs(x="\nBehavior", y="Proportion of Total Behavior\n") +
   theme_bw() +
@@ -129,7 +124,7 @@ cumsum(theta.means)
 
 These summary statistics show that the first three most common behavioral states account for 99.6% of all observations from all IDs on average. Based on the previous boxplot and these results, three states appear to be the optimal number of behaviors for this dataset. **It is recommended that the optimal number of states are defined as the fewest number of states that represent > 90% of observations on average (which is three in this example). This should be corroborated by an inspection of the state-dependent distributions for each data stream to determine whether they make biological sense.**
 
-```{r plot distribs, fig.height=7}
+```{r plot-distribs, fig.height=7}
 # Extract bin estimates from phi matrix
 behav.res<- get_behav_hist(dat = res, nburn = nburn, ngibbs = ngibbs, nmaxclust = nmaxclust,
                            var.names = c("Step Length","Turning Angle"))
@@ -152,11 +147,11 @@ ggplot(behav.res, aes(x = bin, y = prop, fill = as.factor(behav))) +
 ```
 
 
-In this set of distributions, it is apparent that the first three behaviors are biologically meaningful, but the last four are not. Based on the shapes of these distributions, the first state appears to represent a movement with no directional persistence and with intermediate step lengths, the second state exhibits very short step lengths that are highly tortuous, and the third state displays long and straight movements. Given these descriptions, I will be referring to state 1 as 'area-restricted search' (ARS), state 2 as 'encamped', and state 3 as 'transit'. **However, these are broad characterizations of states and it is highly likely that each one is comprised of a number of different behaviors. For example, the encamped state may include, resting, feeding, incubating eggs at a nest, or reproduction.** 
+In this set of distributions, it is apparent that the first three behaviors are biologically meaningful, but the last four are not. Based on the shapes of these distributions, the first state appears to represent a movement with no directional persistence and with intermediate step lengths, the second state exhibits very short step lengths that are highly tortuous, and the third state displays long and straight movements. Given these descriptions, I will be referring to state 1 as 'area-restricted search' (ARS), state 2 as 'encamped', and state 3 as 'transit'. **However, these are broad characterizations of states and it is highly likely that each one is comprised of a number of different behaviors. For example, the encamped state may include, resting, feeding, incubating eggs at a nest, or reproduction.**
 
 Since were are only retaining the proportion estimates for the first three behaviors stored within the `theta` matrix, we must extract and re-scale these proportion estimates for three behavioral states. Additionally, we want to assign these segment-level proportion estimates to all observations stored within each segment. Both of these steps are performed by the `expand_behavior` function, which allows the user to later merge these results with the original dataset. These results are also provided in a format for easy visualization by `ggplot2`.
 
-```{r expand behav, fig.height=5}
+```{r expand-behav, fig.height=5}
 # Reformat proportion estimates for all track segments
 theta.estim.long<- expand_behavior(dat = tracks.seg, theta.estim = theta.estim, obs = obs,
                                    nbehav = 3, behav.names = c("ARS", "Encamped", "Transit"),
@@ -185,7 +180,7 @@ This visualization is unique to our model since we use a mixed-membership approa
 
 Since it is quite difficult to plot the proportion estimates for each state for all observations and all IDs on a map while still being able to interpret spatial patterns, it may be more useful to only plot the dominant behavior per track segment. Dominant behaviors are stored within the `behav` column of the new data frame that is generated by `assign_behavior()`. However, it is also possible to generate a separate map for each behavioral state to get a better sense of how often a given behavior is exhibited within each segment. Examples are shown below.
 
-```{r map behav, fig.height=7}
+```{r map-behav, fig.height=7}
 # Load original data
 data(tracks)
 
@@ -224,7 +219,7 @@ ggplot() +
 
 Maps of dominant behaviors are shown for all IDs, as well as observations labeled as `NA` that were not analyzed by the Bayesian framework. These `NA` observations were not recorded at the primary time interval (1 h or 3600 s) and were therefore excluded before analysis. To explore these tracks in different ways, I will focus on a single track (id3).
 
-```{r map separate behavs, fig.height=4}
+```{r map-separate-behavs, fig.height=4}
 # Map separate track segments for 'id3'
 tracks3<- tracks.out %>% filter(id == "id3")
 

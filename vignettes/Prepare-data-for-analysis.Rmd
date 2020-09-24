@@ -1,11 +1,6 @@
 ---
 title: "Prepare data for analysis"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Prepare data for analysis}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -13,7 +8,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width=7,
-  fig.retina=1.5
+  fig.retina=2
   )
 ```
 
@@ -29,7 +24,7 @@ Before we begin in earnest, the practitioner must make sure the data have been c
 
 ## Calculating step lengths, turning angles, and time intervals
 
-In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time interval between successive observations since only those at the primary time interval of interest will be retained for further analysis. 
+In many cases, step lengths and turning angles are used to estimate latent behavioral states from animal movement. Since these metrics are only directly comparable if measured on the same time interval, it is also important to calculate the time interval between successive observations since only those at the primary time interval of interest will be retained for further analysis.
 
 First, let's take a look at what the data should look like before calculating these data streams:
 
@@ -50,7 +45,7 @@ head(tracks)
 str(tracks)
 ```
 
-```{r plot tracks, echo=FALSE, fig.height=4}
+```{r plot-tracks, echo=FALSE, fig.height=4}
 
 # Plot tracks
 ggplot(data = tracks %>%
@@ -95,14 +90,14 @@ The new tracks data frame has three new columns ('step', 'angle', and 'dt'), whi
 
 Next, we want to filter the data so that we only retain data for a given time interval (or step). Let's look at a distribution of the time intervals that were just calculated:
 
-```{r, echo=FALSE, fig.align='center'}
+```{r hist, echo=FALSE, fig.align='center'}
 hist(tracks$dt, main = "Time intervals (s)")
 ```
 
 
 Based on this histogram, it appears that 3600 s (1 hour) is likely the primary time interval, where some observations slightly deviate from this exact interval. I will now round all time intervals (dt) and dates to reflect this rounding of times within a given tolerance window. In this example, I will choose 3 minutes (180 s) as the tolerance on which to round observations close to the primary time interval (3600 s).
 
-```{r round times}
+```{r round-times}
 tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 
 head(tracks)
@@ -141,7 +136,7 @@ The unique feature of this modeling framework is that it does not rely upon stan
 
 Let's first take a look at how step lengths and turning angles are distributed:
 
-```{r, warning=FALSE, echo=FALSE}
+```{r cont-distribs, warning=FALSE, echo=FALSE}
 ggplot(tracks, aes(x = step)) +
   geom_density(fill = "lightblue", na.rm = T) +
   theme_bw() +
@@ -186,7 +181,7 @@ tracks_disc.list<- map(tracks_filt.list,
 
 The plots below show the limits used to define the bins for each continuous variable, as well as what these distributions look like after discretization. First, step lengths will be shown:
 
-```{r, echo=FALSE, warning=FALSE}
+```{r distrib-lims-SL, echo=FALSE, warning=FALSE}
 ##Viz limits on continuous vars
 tracks.df<- bind_rows(tracks_disc.list)
 
@@ -236,7 +231,7 @@ ggplot(data = param.prop %>% filter(key == "SL"), aes(value, prop)) +
 
 And next the plots for turning angles:
 
-```{r, echo=FALSE, warning=FALSE}
+```{r distrib-lims-TA, echo=FALSE, warning=FALSE}
 
 #plot of continuous distrib with limits
 ggplot(tracks.df, aes(x=angle)) +

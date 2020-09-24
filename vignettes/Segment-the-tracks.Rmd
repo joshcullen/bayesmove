@@ -1,11 +1,6 @@
 ---
 title: "Segment the tracks"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Segment the tracks}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -13,7 +8,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width=7,
-  fig.retina=1.5
+  fig.retina=2
 )
 ```
 
@@ -53,7 +48,7 @@ tracks.list2<- map(tracks.list,
 
 ## Run the segmentation model
 
-```{r run model, results='hide'}
+```{r run model, results='hide', message = FALSE}
 set.seed(1)
 
 # Define hyperparameter for prior distribution
@@ -80,7 +75,7 @@ Now that each of the tracks have been segmented, we need to inspect the trace-pl
 traceplot(data = dat.res$nbrks, ngibbs = ngibbs, type = "nbrks")
 ```
 
-```{r nbrks traceplots, echo=FALSE, fig.width=3.25}
+```{r nbrks-traceplots, echo=FALSE, fig.width=3.25}
 par(mar=c(4.1,4.1,2,1))
 
 for (i in 1:nrow(dat.res$nbrks)) {
@@ -94,7 +89,7 @@ for (i in 1:nrow(dat.res$nbrks)) {
 traceplot(data = dat.res$LML, ngibbs = ngibbs, type = "LML")
 ```
 
-```{r LML traceplots, echo=FALSE, fig.width=3.25}
+```{r LML-traceplots, echo=FALSE, fig.width=3.25}
 par(mar=c(4.1,4.1,2,1))
 
 for (i in 1:nrow(dat.res$LML)) {
@@ -122,7 +117,7 @@ The object `MAP.est` is storing the iteration at which the MAP estimate occurs f
 
 ## Breakpoint visualization
  The `bayesmove` package provides a number of functions to visualize the data, such as `traceplot()`. The `plot_heatmap()` function provides an easy method to visualize the breakpoints compared to the data and to determine whether the number and location of breakpoints appear to be appropriate. The number and position of breakpoints will depend on a number of factors, such as the number of observations per ID, the sampling interval of the biologging device, and the method by which data streams were discretized. If the breakpoints do not appear to fit the data well, then the limits used to discretize the data streams likely need to be modified and the model re-run.
- 
+
 ```{r, eval=FALSE}
 # Plot breakpoints over the data
 plot_heatmap(data = tracks.list2, nbins = nbins, brkpts = brkpts, title = TRUE, legend = TRUE)

@@ -97,7 +97,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Prepare data for analysis</h1>
             
-            <h4 class="date">21 September 2020</h4>
+            <h4 class="date">24 September 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Prepare-data-for-analysis.Rmd"><code>vignettes/Prepare-data-for-analysis.Rmd</code></a></small>
       <div class="hidden name"><code>Prepare-data-for-analysis.Rmd</code></div>
@@ -147,7 +147,7 @@
 <span class="co">#&gt;  $ date: POSIXct, format: "2020-07-02 11:59:41" "2020-07-02 12:58:26" ...</span>
 <span class="co">#&gt;  $ x   : num  0 10.6 25.5 31.2 36.2 ...</span>
 <span class="co">#&gt;  $ y   : num  0 -1.67 -0.61 9.54 19.87 ...</span></pre></body></html></div>
-<p><img src="Prepare-data-for-analysis_files/figure-html/plot%20tracks-1.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/plot-tracks-1.png" width="672"></p>
 <p>We can see that ‘date’ is in a <code>POSIXct</code> format and that the x and y coordinates are stored as <code>numeric</code> variables. Technically, the coordinates can be in a lat-lon format, but this will make interpretation of step lengths more difficult since they will be recorded in map units. Therefore, it is suggested that x and y coordinates are in a UTM projection where the unit of measure is meters. The ‘id’ column can be stored either as <code>character</code> or <code>factor</code>.</p>
 <p>Now, let’s calculate step length, turning angle, and time interval:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">tracks</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prep_data.html">prep_data</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">tracks</span>, <span class="kw">coord.names</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>,<span class="st">"y"</span>), <span class="kw">id</span> <span class="kw">=</span> <span class="st">"id"</span>)
@@ -166,7 +166,7 @@
 <h2 class="hasAnchor">
 <a href="#round-times-and-filter-observations" class="anchor"></a>Round times and filter observations</h2>
 <p>Next, we want to filter the data so that we only retain data for a given time interval (or step). Let’s look at a distribution of the time intervals that were just calculated:</p>
-<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/hist-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Based on this histogram, it appears that 3600 s (1 hour) is likely the primary time interval, where some observations slightly deviate from this exact interval. I will now round all time intervals (dt) and dates to reflect this rounding of times within a given tolerance window. In this example, I will choose 3 minutes (180 s) as the tolerance on which to round observations close to the primary time interval (3600 s).</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">tracks</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">tracks</span>, <span class="kw">id</span> <span class="kw">=</span> <span class="st">"id"</span>, <span class="kw">int</span> <span class="kw">=</span> <span class="fl">3600</span>, <span class="kw">tol</span> <span class="kw">=</span> <span class="fl">180</span>, <span class="kw">time.zone</span> <span class="kw">=</span> <span class="st">"UTC"</span>)
 
@@ -185,7 +185,7 @@
 
 <span class="co"># How many observations of each time interval?</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span>(<span class="no">tracks</span>$<span class="no">dt</span>, <span class="kw">main</span> <span class="kw">=</span> <span class="st">"Rounded Time Intervals (s)"</span>)</pre></body></html></div>
-<p><img src="Prepare-data-for-analysis_files/figure-html/round%20times-1.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/round-times-1.png" width="672"></p>
 <p>It looks like nearly all observations had a time interval within the tolerance limit. Now the dataset needs to be filtered to only include observations where <code>dt == 3600</code>.</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Create list from data frame</span>
 <span class="no">tracks.list</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">tracks</span>, <span class="kw">ind</span> <span class="kw">=</span> <span class="st">"id"</span>)
@@ -227,7 +227,7 @@
 <a href="#discretize-data-streams" class="anchor"></a>Discretize data streams</h2>
 <p>The unique feature of this modeling framework is that it does not rely upon standard parametric density functions that are used in nearly every other model that estimates behavior. This is expected to reduce any constraints posed by the selection of a given parametric density function and allow for greater model flexibility. However, this does require the user to define the number of bins for each variable and how they will be discretized.</p>
 <p>Let’s first take a look at how step lengths and turning angles are distributed:</p>
-<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-3-2.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/cont-distribs-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/cont-distribs-2.png" width="672"></p>
 <p>We can see that step lengths are highly right-skewed whereas turning angles are a little more balanced despite having peaks at <span class="math inline">\(-\pi, 0\)</span>, and <span class="math inline">\(\pi\)</span> radians. These distributions will inform how we discretize these variables.</p>
 <p>An example is included below for the discretization of step lengths and turning angles, but this can be performed in many different ways.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># Define bin number and limits for turning angles</span>
@@ -252,11 +252,11 @@
                  <span class="kw">varIn</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"step"</span>, <span class="st">"angle"</span>),
                  <span class="kw">varOut</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SL"</span>, <span class="st">"TA"</span>))</pre></body></html></div>
 <p>The plots below show the limits used to define the bins for each continuous variable, as well as what these distributions look like after discretization. First, step lengths will be shown:</p>
-<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-SL-1.png" width="672"></p>
 <pre><code>#&gt; `summarise()` regrouping output by 'key' (override with `.groups` argument)</code></pre>
-<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-4-2.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-SL-2.png" width="672"></p>
 <p>And next the plots for turning angles:</p>
-<p><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-5-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/unnamed-chunk-5-2.png" width="672"></p>
+<p><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-TA-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-TA-2.png" width="672"></p>
 <p>The data are now in the proper format to be analyzed by the segmentation model within <code>bayesmove</code>. While these bin limits are suggested as default settings, they are by no means the only way to discretize the data. This may require trial and error after viewing results from the segmentation model.</p>
 </div>
   </div>

@@ -97,7 +97,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Cluster track segments</h1>
             
-            <h4 class="date">21 September 2020</h4>
+            <h4 class="date">24 September 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Cluster-track-segments.Rmd"><code>vignettes/Cluster-track-segments.Rmd</code></a></small>
       <div class="hidden name"><code>Cluster-track-segments.Rmd</code></div>
@@ -205,7 +205,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">panel.grid</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>(),
         <span class="kw">axis.title</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">16</span>),
         <span class="kw">axis.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>))</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/plot%20theta-1.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/plot-theta-1.png" width="672"></p>
 <p>Based on this boxplot, the first three clusters (or behavioral states) appear to be assigned the most frequently of the 7 possible behaviors (defined earlier by <code>nmaxclust</code>). We can also calculate the mean proportion per cluster/behavior across all track segments.</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># Calculate mean proportions per behavior</span>
 (<span class="no">theta.means</span><span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(<span class="no">theta.estim</span>), <span class="kw">digits</span> <span class="kw">=</span> <span class="fl">3</span>))
@@ -234,7 +234,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">8</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="no">behav</span> ~ <span class="no">var</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free_x"</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/plot%20distribs-1.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/plot-distribs-1.png" width="672"></p>
 <p>In this set of distributions, it is apparent that the first three behaviors are biologically meaningful, but the last four are not. Based on the shapes of these distributions, the first state appears to represent a movement with no directional persistence and with intermediate step lengths, the second state exhibits very short step lengths that are highly tortuous, and the third state displays long and straight movements. Given these descriptions, I will be referring to state 1 as ‘area-restricted search’ (ARS), state 2 as ‘encamped’, and state 3 as ‘transit’. <strong>However, these are broad characterizations of states and it is highly likely that each one is comprised of a number of different behaviors. For example, the encamped state may include, resting, feeding, incubating eggs at a nest, or reproduction.</strong></p>
 <p>Since were are only retaining the proportion estimates for the first three behaviors stored within the <code>theta</code> matrix, we must extract and re-scale these proportion estimates for three behavioral states. Additionally, we want to assign these segment-level proportion estimates to all observations stored within each segment. Both of these steps are performed by the <code>expand_behavior</code> function, which allows the user to later merge these results with the original dataset. These results are also provided in a format for easy visualization by <code>ggplot2</code>.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># Reformat proportion estimates for all track segments</span>
@@ -255,7 +255,7 @@
         <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>, <span class="kw">face</span> <span class="kw">=</span> <span class="st">"bold"</span>),
         <span class="kw">panel.grid</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span>()) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">id</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/expand%20behav-1.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/expand-behav-1.png" width="672"></p>
 <p>This visualization is unique to our model since we use a mixed-membership approach to clustering track segments into behavioral states. Therefore, these proportions estimates are not the probability of a single state occurring within each track segment, but rather the proportion of observations assigned to each behavioral state per track segment. Based upon the questions of interest, these proportion estimates can be aggregated at different temporal scales to develop activity budgets for the species of interest. To map these results in geographic space, we will need to merge these data with that of the original dataset.</p>
 </div>
 <div id="mapping-behavior-estimates" class="section level2">
@@ -295,7 +295,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span>(<span class="kw">label.theme</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">12</span>),
                              <span class="kw">title.theme</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>))) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">id</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free"</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/map%20behav-1.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/map-behav-1.png" width="672"></p>
 <p>Maps of dominant behaviors are shown for all IDs, as well as observations labeled as <code>NA</code> that were not analyzed by the Bayesian framework. These <code>NA</code> observations were not recorded at the primary time interval (1 h or 3600 s) and were therefore excluded before analysis. To explore these tracks in different ways, I will focus on a single track (id3).</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># Map separate track segments for 'id3'</span>
 <span class="no">tracks3</span><span class="kw">&lt;-</span> <span class="no">tracks.out</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">id</span> <span class="kw">==</span> <span class="st">"id3"</span>)
@@ -319,7 +319,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span>(<span class="kw">label.theme</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">12</span>),
                              <span class="kw">title.theme</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>))) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">id</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free"</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/map%20separate%20behavs-1.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/map-separate-behavs-1.png" width="672"></p>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># Proportion encamped</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks3</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">Encamped</span>), <span class="kw">size</span><span class="kw">=</span><span class="fl">0.5</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.7</span>) +
@@ -338,7 +338,7 @@
         <span class="kw">legend.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">12</span>),
         <span class="kw">legend.title</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">id</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free"</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/map%20separate%20behavs-2.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/map-separate-behavs-2.png" width="672"></p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># Proportion ARS</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks3</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">ARS</span>), <span class="kw">size</span><span class="kw">=</span><span class="fl">0.5</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.7</span>) +
@@ -357,7 +357,7 @@
         <span class="kw">legend.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">12</span>),
         <span class="kw">legend.title</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">id</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free"</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/map%20separate%20behavs-3.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/map-separate-behavs-3.png" width="672"></p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># Proportion transit</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks3</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">Transit</span>), <span class="kw">size</span><span class="kw">=</span><span class="fl">0.5</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.7</span>) +
@@ -376,7 +376,7 @@
         <span class="kw">legend.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">12</span>),
         <span class="kw">legend.title</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">id</span>, <span class="kw">scales</span> <span class="kw">=</span> <span class="st">"free"</span>)</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/map%20separate%20behavs-4.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/map-separate-behavs-4.png" width="672"></p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># Map of all IDs</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">behav</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">id</span>), <span class="kw">size</span><span class="kw">=</span><span class="fl">0.5</span>) +
@@ -395,7 +395,7 @@
         <span class="kw">strip.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>, <span class="kw">face</span> <span class="kw">=</span> <span class="st">"bold"</span>),
         <span class="kw">legend.text</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">12</span>),
         <span class="kw">legend.title</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">14</span>))</pre></body></html></div>
-<p><img src="Cluster-track-segments_files/figure-html/map%20separate%20behavs-5.png" width="672"></p>
+<p><img src="Cluster-track-segments_files/figure-html/map-separate-behavs-5.png" width="672"></p>
 <p>If desired, these results can be used to inform a number of <em>post hoc</em> analyses, such as behavior-specific resource (or step) selection functions, the calculation of activity budgets, or behavior-specific measures of landscape resistance.</p>
 </div>
   </div>

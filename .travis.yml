@@ -16,12 +16,11 @@ matrix:
 sudo: false
 cache: packages
 warnings_are_errors: false
-r_check_args: "--no-manual --timings --as-cran"
+r_check_args: "--timings --as-cran"
 
 script:
   - |
-    R CMD build --no-build-vignettes .
-    travis_wait 30 R CMD check --no-vignettes bayesmove*tar.gz
+    R CMD check --ignore-vignettes bayesmove*tar.gz
 
 notifications:
   email:
