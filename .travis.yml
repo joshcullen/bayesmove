@@ -18,9 +18,6 @@ cache: packages
 warnings_are_errors: false
 r_check_args: "--timings --as-cran"
 
-script:
-  - |
-    R CMD check --ignore-vignettes bayesmove*tar.gz
 
 notifications:
   email:
