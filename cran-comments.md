@@ -1,7 +1,7 @@
 ## Test environments
 * local OS X install (and on travis-ci), R 4.0.2
-* xenial linux devel and release (on travis-ci), R 4.0.2
-* windows (on appveyor), R 4.0.2
+* ubuntu-16.04 devel and release (on travis-ci and R-hub), R 4.0.2
+* windows (on appveyor and win-builder), R 4.0.2
 
 ## R CMD check results
 0 ERRORS | 0 WARNINGS | 2 NOTES
