@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Fixed a note related to a possibly invalid file URI (URI: reference/figures/logo.png) from the README.md file by changing the image link to man/figures/logo.png.
+* Fixed a note related to a possibly invalid file URI (URI: reference/figures/logo.png) from the README.md file by changing the image link to man/figures/logo.png. This NOTE disappeared when running again on win-builder and travis-ci.
 
 ## Test environments
 * local OS X install (and on travis-ci), R 4.0.2
