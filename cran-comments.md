@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Fixed a note related to a possibly invalid file URI (URI: reference/figures/logo.png) from the README.md file by changing the image link to man/figures/logo.png.
+
 ## Test environments
 * local OS X install (and on travis-ci), R 4.0.2
 * ubuntu-16.04 devel and release (on travis-ci and R-hub), R 4.0.2
@@ -12,8 +17,8 @@
   New submission
 
   Possibly mis-spelled words in DESCRIPTION:
-    biologging (9:71)
-    pre (10:76)
+    biologging (14:71)
+    pre (15:76)
   
   This is my first submission of the 'bayesmove' package to CRAN. Both 'biologging' and 'prep' are spelled correctly within the Description section of the DESCRIPTION file. The words 'biologging' and 'pre' are also saved within WORDLIST.
   

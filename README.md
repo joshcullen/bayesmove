@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bayesmove <a href="reference/figures/logo.png"><img align="right" width=35% src="man/figures/logo.png" style="padding-left: 10px"></a>
+# bayesmove <img src="man/figures/logo.png" align="right" width=35%  style="padding-left: 10px"/>
 
 <!-- badges: start -->
 
@@ -27,14 +27,19 @@ convergence. Model output are often returned in a format that is
 
 ## Installation
 
-You can install **bayesmove** from [GitHub](https://github.com/) with:
+You can install the latest CRAN release with:
+
+``` r
+install.packages("bayesmove")
+```
+
+You can install the latest **stable** version of the package from GitHub
+with:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("joshcullen/bayesmove")
 ```
-
-This package is currently being prepared for submission to CRAN.
 
 ## Support
 

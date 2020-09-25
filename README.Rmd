@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# bayesmove <a href="reference/figures/logo.png"><img align="right" width=35% src="man/figures/logo.png" style="padding-left: 10px"></a>
+# bayesmove <img src="man/figures/logo.png" align="right" width=35%  style="padding-left: 10px"/>
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.com/joshcullen/bayesmove.svg?branch=master)](https://travis-ci.com/joshcullen/bayesmove)
@@ -28,14 +28,19 @@ which addresses a number of limitations of existing segmentation methods and sta
 
 ## Installation
 
-You can install **bayesmove** from [GitHub](https://github.com/) with:
+You can install the latest CRAN release with:
+
+``` r
+install.packages("bayesmove")
+```
+
+You can install the latest **stable** version of the package from GitHub with:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("joshcullen/bayesmove")
 ```
 
-This package is currently being prepared for submission to CRAN.
 
 ## Support
 
