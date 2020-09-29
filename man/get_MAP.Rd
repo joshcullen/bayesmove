@@ -28,7 +28,7 @@ on which to assign track segments to the observations of each animal ID.
 data(tracks.list)
 
 #only retain id and discretized step length (SL) and turning angle (TA) columns
-tracks.list2<- map(tracks.list,
+tracks.list2<- purrr::map(tracks.list,
                    subset,
                   select = c(id, SL, TA))
 
@@ -40,7 +40,7 @@ alpha<- 1
 ngibbs<- 10000
 nbins<- c(5,8)
 
-future::plan(multisession)  #run all MCMC chains in parallel
+future::plan(future::multisession)  #run all MCMC chains in parallel
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
 

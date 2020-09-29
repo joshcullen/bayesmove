@@ -47,7 +47,7 @@ tracks into relatively homogeneous segments of movement.
 \details{
 This model is run in parallel using the \code{future} package. To ensure that
 the model is run in parallel, the \code{\link[future]{plan}} must be used
-with \code{multisession} as the argument for most operating systems.
+with \code{future::multisession} as the argument for most operating systems.
 Otherwise, model will run sequentially by default if this is not set before
 running \code{segment_behavior}.
 }
@@ -57,7 +57,7 @@ running \code{segment_behavior}.
 data(tracks.list)
 
 #only retain id and discretized step length (SL) and turning angle (TA) columns
-tracks.list2<- map(tracks.list,
+tracks.list2<- purrr::map(tracks.list,
                    subset,
                   select = c(id, SL, TA))
 
@@ -69,7 +69,7 @@ alpha<- 1
 ngibbs<- 10000
 nbins<- c(5,8)
 
-future::plan(multisession)  #run all MCMC chains in parallel
+future::plan(future::multisession)  #run all MCMC chains in parallel
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
 

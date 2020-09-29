@@ -317,7 +317,7 @@ assign_tseg_internal=function(dat, brkpts){
 #' data(tracks.list)
 #'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
-#' tracks.list2<- map(tracks.list,
+#' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
 #'                   select = c(id, SL, TA))
 #'
@@ -329,7 +329,7 @@ assign_tseg_internal=function(dat, brkpts){
 #' ngibbs<- 10000
 #' nbins<- c(5,8)
 #'
-#' future::plan(multisession)  #run all MCMC chains in parallel
+#' future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
@@ -539,7 +539,7 @@ get_MAP_internal=function(dat, nburn) {
 #' data(tracks.list)
 #'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
-#' tracks.list2<- map(tracks.list,
+#' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
 #'                   select = c(id, SL, TA))
 #'
@@ -551,7 +551,7 @@ get_MAP_internal=function(dat, nburn) {
 #' ngibbs<- 10000
 #' nbins<- c(5,8)
 #'
-#' future::plan(multisession)  #run all MCMC chains in parallel
+#' future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
@@ -594,7 +594,7 @@ get_MAP=function(dat, nburn) {
 #' data(tracks.list)
 #'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
-#' tracks.list2<- map(tracks.list,
+#' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
 #'                   select = c(id, SL, TA))
 #'
@@ -606,7 +606,7 @@ get_MAP=function(dat, nburn) {
 #' ngibbs<- 10000
 #' nbins<- c(5,8)
 #'
-#' future::plan(multisession)  #run all MCMC chains in parallel
+#' future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
@@ -762,7 +762,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' @importFrom graphics "par"
 #' @examples
 #'
-#'
+#' \donttest{
 #' #simulate data
 #' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
 #' angle<- runif(1000, -pi, pi)
@@ -805,7 +805,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' #run function
 #' plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
 #'              title = TRUE, legend = TRUE)
-#'
+#' }
 #'
 #' @export
 plot_heatmap=function(data, nbins, brkpts, title, legend) {
