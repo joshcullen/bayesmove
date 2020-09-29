@@ -47,16 +47,19 @@ The LDA model provides behavior estimates for all animal IDs pooled together,
 providing population-level estimates of animal behavioral states.
 }
 \examples{
-\dontrun{
-#create data frame
-dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
+\donttest{
+#load data
+data(tracks.seg)
 
-#summarize data by time segment
-obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
+#select only id, tseg, SL, and TA columns
+tracks.seg2<- tracks.seg[,c("id","tseg","SL","TA")]
+
+#summarize data by track segment
+obs<- summarize_tsegs(dat = tracks.seg2, nbins = c(5,8))
 
 #cluster data with LDA
 res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
                        nburn = 500, nmaxclust = 7, ndata.types = 2)
-                       }
+}
 
 }

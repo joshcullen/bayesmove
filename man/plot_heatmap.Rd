@@ -38,7 +38,7 @@ analysis.
 }
 \examples{
 
-\dontrun{
+
 #simulate data
 step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
 angle<- runif(1000, -pi, pi)
@@ -81,6 +81,6 @@ brkpts<- data.frame(id = 1:10, brkpts)
 #run function
 plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
              title = TRUE, legend = TRUE)
-}
+
 
 }

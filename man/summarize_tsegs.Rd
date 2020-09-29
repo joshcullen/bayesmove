@@ -28,46 +28,14 @@ Dirichlet Allocation. This function summarizes the counts observed per
 movement variable bin within each track segment per animal ID.
 }
 \examples{
-#simulate data
-step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-angle<- runif(1000, -pi, pi)
-date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-dt<- c(dt, NA)
-id<- rep(1:10, each = 100)
+#load data
+data(tracks.seg)
 
-#simulate breakpoints
-brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
-brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
-brkpts<- data.frame(id = 1:10, brkpts)
-
-#create data frame
-dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
-
-#define limits for each bin
-dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
-angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)  #8 bins
-
-#discretize step and angle
-dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
-                         varIn = c("step", "angle"),
-                         varOut = c("SL","TA"))
-
-#create list
-dat.list<- df_to_list(dat = dat1, ind = "id")
-
-#filter by primary time step
-dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
-
-#assign track segments
-dat2<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
-dat2<- dat2[,c("id","tseg","SL","TA")]
-
+#select only id, tseg, SL, and TA columns
+tracks.seg2<- tracks.seg[,c("id","tseg","SL","TA")]
 
 #run function
-obs<- summarize_tsegs(dat = dat2, nbins = c(5,8))
+obs<- summarize_tsegs(dat = tracks.seg2, nbins = c(5,8))
 
 
 }

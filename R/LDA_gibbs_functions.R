@@ -26,7 +26,7 @@
 #'
 #'
 #'
-#' @export
+#'
 sample.z=function(ntsegm, nbins, y, nmaxclust, phi, ltheta, zeroes, ndata.types){
   z.agg=list()
   for (i in 1:ndata.types){
@@ -58,7 +58,7 @@ sample.z=function(ntsegm, nbins, y, nmaxclust, phi, ltheta, zeroes, ndata.types)
 #'
 #'
 #' @importFrom stats "rbeta"
-#' @export
+#'
 sample.v=function(z.agg, gamma1, ntsegm, ndata.types, nmaxclust){
   soma.fim=matrix(0,ntsegm,nmaxclust)
   cumsum.fim=matrix(0,ntsegm,nmaxclust-1)
@@ -93,7 +93,7 @@ sample.v=function(z.agg, gamma1, ntsegm, ndata.types, nmaxclust){
 #'
 #'
 #'
-#' @export
+#'
 get.theta=function(v, nmaxclust, ntsegm){
   theta=matrix(NA,ntsegm,nmaxclust)
   theta[,1]=v[,1]
@@ -127,7 +127,7 @@ get.theta=function(v, nmaxclust, ntsegm){
 #'
 #'
 #'
-#' @export
+#'
 sample.phi=function(z.agg, alpha, nmaxclust, nbins, ndata.types){
   phi=list()
   for (j in 1:ndata.types){

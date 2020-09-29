@@ -28,12 +28,16 @@ within track segments. These results can be explored to determine the optimal
 number of latent behavioral states.
 }
 \examples{
-\dontrun{
-#create data frame
-dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
+
+\donttest{
+#load data
+data(tracks.seg)
+
+#select only id, tseg, SL, and TA columns
+tracks.seg2<- tracks.seg[,c("id","tseg","SL","TA")]
 
 #summarize data by track segment
-obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
+obs<- summarize_tsegs(dat = tracks.seg2, nbins = c(5,8))
 
 #cluster data with LDA
 res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,

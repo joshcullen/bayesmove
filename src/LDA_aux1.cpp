@@ -30,7 +30,7 @@ int cat1(double value, NumericVector prob) {
 //' @param prob A numeric matrix.
 //' @param randu A numeric vector.
 //'
-//' @export
+//'
 // [[Rcpp::export]]
 IntegerVector rmultinom1(NumericMatrix prob, NumericVector randu) {
 
@@ -49,7 +49,7 @@ IntegerVector rmultinom1(NumericMatrix prob, NumericVector randu) {
 //' @param randu A numeric vector.
 //' @param nmaxclust An integer.
 //'
-//' @export
+//'
 // [[Rcpp::export]]
 IntegerVector rmultinom2(NumericVector prob, int n, NumericVector randu, int nmaxclust) {
   IntegerVector ZAgg(nmaxclust);
@@ -72,7 +72,7 @@ IntegerVector rmultinom2(NumericVector prob, int n, NumericVector randu, int nma
 //' @param ltheta A numeric matrix.
 //' @param zeroes A numeric vector.
 //'
-//' @export
+//'
 // [[Rcpp::export]]
 List SampleZAgg(int ntsegm,int b1,IntegerMatrix y1, int nmaxclust,
                 NumericMatrix lphi1, NumericMatrix ltheta,NumericVector zeroes){
@@ -113,7 +113,7 @@ List SampleZAgg(int ntsegm,int b1,IntegerMatrix y1, int nmaxclust,
 //' @param nmaxclust An integer.
 //' @param z An integer matrix.
 //'
-//' @export
+//'
 // [[Rcpp::export]]
 IntegerMatrix CumSumInv(int ntsegm, int nmaxclust, IntegerMatrix z){
   IntegerMatrix res(ntsegm,z.ncol());

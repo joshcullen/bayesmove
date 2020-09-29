@@ -1,5 +1,3 @@
-
-
 #' Discretize movement variables
 #'
 #' Convert movement variables from continuous to discrete values for analysis by
@@ -20,22 +18,33 @@
 #' @import dplyr
 #'
 #' @examples
-#' #simulate data
-#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-#' angle<- runif(1000, -pi, pi)
-#' id<- rep(1:10, each = 100)
+#' #load data
+#' data(tracks)
 #'
-#' #create data frame
-#' dat<- data.frame(id, step, angle)
+#' #calculate step lengths and turning angles
+#' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
-#' #define limits for each bin
-#' dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))
-#' angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)
+#' #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
+#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 #'
-#' #run function
-#' dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
-#'                          varIn = c("step", "angle"),
-#'                          varOut = c("SL","TA"))
+#' #create list from data frame
+#' tracks.list<- df_to_list(dat = tracks, ind = "id")
+#'
+#' #filter observations to only 1 hr (or 3600 s)
+#' tracks_filt.list<- filter_time(dat.list = tracks.list, int = 3600)
+#'
+#' #define bin number and limits for turning angles and step lengths
+#' angle.bin.lims=seq(from=-pi, to=pi, by=pi/4)  #8 bins
+#' dist.bin.lims=quantile(tracks[tracks$dt == 3600,]$step,
+#'                       c(0,0.25,0.50,0.75,0.90,1), na.rm=TRUE)  #5 bins
+#'
+#'
+#' # Assign bins to observations
+#' tracks_disc.list<- purrr::map(tracks_filt.list,
+#'                       discrete_move_var,
+#'                       lims = list(dist.bin.lims, angle.bin.lims),
+#'                       varIn = c("step", "angle"),
+#'                       varOut = c("SL", "TA"))
 #'
 #'
 #' @export
@@ -83,20 +92,14 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #'
 #'
 #' @examples
-#' #simulate data
-#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-#' angle<- runif(1000, -pi, pi)
-#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-#' dt<- c(dt, NA)
-#' id<- rep(1:10, each = 100)
+#' #load data
+#' data(tracks)
 #'
-#' #create data frame
-#' dat<- data.frame(id, date, dt, step, angle)
+#' #calculate step lengths and turning angles
+#' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
-#' #run function
-#' dat1<- round_track_time(dat = dat, id = "id", int = 3600, tol = 20, time.zone = "UTC")
+#' #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
+#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 #'
 #' @export
 round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
@@ -162,24 +165,20 @@ round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
 #'
 #'
 #' @examples
-#' #simulate data
-#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-#' angle<- runif(1000, -pi, pi)
-#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-#' dt<- c(dt, NA)
-#' id<- rep(1:10, each = 100)
+#' #load data
+#' data(tracks)
 #'
-#' #create data frame
-#' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
+#' #calculate step lengths and turning angles
+#' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
-#' #create list
-#' dat.list<- df_to_list(dat = dat, ind = "id")
+#' #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
+#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 #'
-#' #run function
-#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
+#' #create list from data frame
+#' tracks.list<- df_to_list(dat = tracks, ind = "id")
+#'
+#' #filter observations to only 1 hr (or 3600 s)
+#' tracks_filt.list<- filter_time(dat.list = tracks.list, int = 3600)
 #'
 #' @importFrom rlang .data
 #' @export
@@ -203,7 +202,7 @@ filter_time=function(dat.list, int) {
   names(behav.list)<- id[ind]
 
   for (i in 1:n) {
-    behav.list[[i]]<- dat.list[[i]] %>%
+    behav.list[[i]]<- dat.list[[ind[i]]] %>%
       dplyr::mutate(obs = 1:length(.data$id)) %>%
       dplyr::filter(.data$dt == int) %>%
       dplyr::mutate(time1 = 1:length(.data$id))
@@ -231,7 +230,7 @@ filter_time=function(dat.list, int) {
 #'
 #'
 #'
-#' @export
+#'
 behav_seg_image=function(dat, nbins) {
 
   dat1<- data.frame(dat[,-1])  #remove id col
@@ -269,7 +268,7 @@ behav_seg_image=function(dat, nbins) {
 #'
 #'
 #'
-#' @export
+#'
 assign_tseg_internal=function(dat, brkpts){
 
   tmp<- which(unique(dat$id) == brkpts$id)
@@ -313,32 +312,36 @@ assign_tseg_internal=function(dat, brkpts){
 #'
 #'
 #' @examples
-#' #simulate data
-#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-#' angle<- runif(1000, -pi, pi)
-#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-#' dt<- c(dt, NA)
-#' id<- rep(1:10, each = 100)
+#' \donttest{
+#' #load data
+#' data(tracks.list)
 #'
-#' #simulate breakpoints
-#' brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
-#' brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
-#' brkpts<- data.frame(id = 1:10, brkpts)
+#' #only retain id and discretized step length (SL) and turning angle (TA) columns
+#' tracks.list2<- map(tracks.list,
+#'                    subset,
+#'                   select = c(id, SL, TA))
 #'
-#' #create data frame
-#' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 #'
-#' #create list
-#' dat.list<- df_to_list(dat = dat, ind = "id")
+#' set.seed(1)
 #'
-#' #filter by primary time step
-#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
+#' # Define model params
+#' alpha<- 1
+#' ngibbs<- 10000
+#' nbins<- c(5,8)
 #'
-#' #run function
-#' dat1<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
+#' future::plan(multisession)  #run all MCMC chains in parallel
+#' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+#'                            alpha = alpha)
+#'
+#'
+#' # Determine MAP iteration for selecting breakpoints and store breakpoints
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+#' brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
+#'
+#'
+#' # Assign track segments to all observations by ID
+#' tracks.seg<- assign_tseg(dat = tracks.list, brkpts = brkpts)
+#' }
 #'
 #' @export
 assign_tseg=function(dat, brkpts){
@@ -363,21 +366,11 @@ assign_tseg=function(dat, brkpts){
 #'
 #'
 #' @examples
-#' #simulate data
-#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-#' angle<- runif(1000, -pi, pi)
-#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-#' dt<- c(dt, NA)
-#' id<- rep(1:10, each = 100)
+#' #load data
+#' data(tracks)
 #'
-#' #create data frame
-#' dat<- data.frame(id, date, dt, step, angle)
-#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
-#'
-#' #run function
-#' dat.list<- df_to_list(dat = dat, ind = "id")
+#' #convert to list
+#' dat.list<- df_to_list(dat = tracks, ind = "id")
 #'
 #'
 #' @export
@@ -474,6 +467,9 @@ find_breaks=function(dat, ind) {
 #' @export
 traceplot=function(data, ngibbs, type) {
 
+  oldpar<- par(no.readonly = T)  #store original parameters
+  on.exit(par(oldpar))  #exit w/ original parameters
+
   identity<- data$id
 
   ifelse(length(identity) == 1, par(mfrow=c(1,1)),
@@ -488,7 +484,6 @@ traceplot=function(data, ngibbs, type) {
                               stop("Need to select one of 'nbrks' or 'LML' for plotting"))),
          main = paste(identity[i]))
   }
-  on.exit(par(ask = FALSE, mfrow=c(1,1)))
 }
 
 #---------------------------------------------
@@ -508,7 +503,7 @@ traceplot=function(data, ngibbs, type) {
 #'
 #'
 #'
-#' @export
+#'
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {
@@ -539,15 +534,31 @@ get_MAP_internal=function(dat, nburn) {
 #'
 #'
 #' @examples
-#' #simulate data
-#' ngibbs<- 1000
-#' y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
-#' dat<- matrix(c(1, y), 1, 1001)
-#' dat<- data.frame(dat)
-#' names(dat)[1]<- "id"
+#' \donttest{
+#' #load data
+#' data(tracks.list)
 #'
-#' #run function
-#' MAP.est<- get_MAP(dat = dat, nburn = ngibbs/2)
+#' #only retain id and discretized step length (SL) and turning angle (TA) columns
+#' tracks.list2<- map(tracks.list,
+#'                    subset,
+#'                   select = c(id, SL, TA))
+#'
+#'
+#' set.seed(1)
+#'
+#' # Define model params
+#' alpha<- 1
+#' ngibbs<- 10000
+#' nbins<- c(5,8)
+#'
+#' future::plan(multisession)  #run all MCMC chains in parallel
+#' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+#'                            alpha = alpha)
+#'
+#'
+#' # Determine MAP iteration for selecting breakpoints and store breakpoints
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+#' }
 #'
 #' @export
 get_MAP=function(dat, nburn) {
@@ -578,16 +589,32 @@ get_MAP=function(dat, nburn) {
 #'
 #'
 #' @examples
-#' #simulate data
-#' id1 = id2 = id3 = list(4, c(2,4), 4, 4, c(4,8), c(4,8,17), c(4,8,17),
-#'                        c(4,8,20), c(4,8,20,25), c(5,8,20,25))
-#' dat.list<- list(id1 = id1, id2 = id2, id3 = id3)
+#' \donttest{
+#' #load data
+#' data(tracks.list)
 #'
-#' MAP.est<- c(5, 8, 9)
+#' #only retain id and discretized step length (SL) and turning angle (TA) columns
+#' tracks.list2<- map(tracks.list,
+#'                    subset,
+#'                   select = c(id, SL, TA))
 #'
 #'
-#' #run function
-#' dat1<- get_breakpts(dat = dat.list, MAP.est = MAP.est)
+#' set.seed(1)
+#'
+#' # Define model params
+#' alpha<- 1
+#' ngibbs<- 10000
+#' nbins<- c(5,8)
+#'
+#' future::plan(multisession)  #run all MCMC chains in parallel
+#' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+#'                            alpha = alpha)
+#'
+#'
+#' # Determine MAP iteration for selecting breakpoints and store breakpoints
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+#' brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
+#' }
 #'
 #' @export
 get_breakpts=function(dat, MAP.est) {
@@ -634,7 +661,7 @@ get_breakpts=function(dat, MAP.est) {
 #'
 #'
 #' @importFrom rlang .data
-#' @export
+#'
 plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 
   #transform into pres/abs matrix
@@ -735,7 +762,7 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' @importFrom graphics "par"
 #' @examples
 #'
-#' \dontrun{
+#'
 #' #simulate data
 #' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
 #' angle<- runif(1000, -pi, pi)
@@ -778,15 +805,17 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' #run function
 #' plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
 #'              title = TRUE, legend = TRUE)
-#'}
+#'
 #'
 #' @export
 plot_heatmap=function(data, nbins, brkpts, title, legend) {
 
+  oldpar<- par(no.readonly = T)  #store original parameters
+  on.exit(par(oldpar))  #exit w/ original parameters
+
   par(ask = TRUE)
-  purrr::map(data, ~plot_heatmap_behav(., nbins = nbins, brkpts = brkpts, title = title,
+  purrr::walk(data, ~plot_heatmap_behav(., nbins = nbins, brkpts = brkpts, title = title,
                                 legend = legend))
-  par(ask = FALSE)
 
 }
 #------------------------------------------------
@@ -812,7 +841,7 @@ plot_heatmap=function(data, nbins, brkpts, title, legend) {
 #'
 #'
 #' @importFrom stats "na.omit"
-#' @export
+#'
 prep_data_internal=function(dat, coord.names) {
 
   #change names of coords to 'x' and 'y'
@@ -873,15 +902,11 @@ prep_data_internal=function(dat, coord.names) {
 #'
 #'
 #' @examples
-#' #simulate data
-#' lon<- c(1,1,3,4,4,5,7,9,10,13)
-#' lat<- c(2,1,2,2,3,5,8,1,1,2)
-#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 10)
-#' date<- date + lubridate::seconds(runif(length(date), -300, 300))  #introduce noise
-#' dat<- data.frame(id = 1, date, lon, lat)
+#' #load data
+#' data(tracks)
 #'
-#' #run function
-#' dat1<- prep_data(dat = dat, coord.names = c("lon","lat"), id = "id")
+#' #calculate step lengths and turning angles
+#' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
 #' @export
 prep_data=function(dat, coord.names, id) {

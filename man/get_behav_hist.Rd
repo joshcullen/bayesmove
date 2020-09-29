@@ -35,10 +35,22 @@ of movement variable distribution for each behavior estimated.
 }
 \examples{
 
-\dontrun{
+\donttest{
+#load data
+data(tracks.seg)
+
+#select only id, tseg, SL, and TA columns
+tracks.seg2<- tracks.seg[,c("id","tseg","SL","TA")]
+
+#summarize data by track segment
+obs<- summarize_tsegs(dat = tracks.seg2, nbins = c(5,8))
+
 #cluster data with LDA
-res<- cluster_segments(dat = dat, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
+res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
                        nburn = 500, nmaxclust = 7, ndata.types = 2)
+
+#Extract proportions of behaviors per track segment
+theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 
 #run function
 behav.res<- get_behav_hist(dat = res, nburn = 500, ngibbs = 1000, nmaxclust = 7,

@@ -12,6 +12,5 @@
 ^\.github$
 ^logo\.png$
 ^cran-comments\.md$
-^precompile\.R$
 ^vignettes$
 ^CRAN-RELEASE$

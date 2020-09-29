@@ -37,19 +37,13 @@ and dates must be labeled \code{dt} and \code{date}, respectively, where
 dates are of class \code{POSIXct}.
 }
 \examples{
-#simulate data
-step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-angle<- runif(1000, -pi, pi)
-date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-dt<- c(dt, NA)
-id<- rep(1:10, each = 100)
+#load data
+data(tracks)
 
-#create data frame
-dat<- data.frame(id, date, dt, step, angle)
+#calculate step lengths and turning angles
+tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 
-#run function
-dat1<- round_track_time(dat = dat, id = "id", int = 3600, tol = 20, time.zone = "UTC")
+#round times to nearest interval of interest (e.g. 3600 s or 1 hr)
+tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 
 }

@@ -23,14 +23,30 @@ inform \code{\link{get_breakpts}} as to which breakpoints should be retained
 on which to assign track segments to the observations of each animal ID.
 }
 \examples{
-#simulate data
-ngibbs<- 1000
-y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
-dat<- matrix(c(1, y), 1, 1001)
-dat<- data.frame(dat)
-names(dat)[1]<- "id"
+\donttest{
+#load data
+data(tracks.list)
 
-#run function
-MAP.est<- get_MAP(dat = dat, nburn = ngibbs/2)
+#only retain id and discretized step length (SL) and turning angle (TA) columns
+tracks.list2<- map(tracks.list,
+                   subset,
+                  select = c(id, SL, TA))
+
+
+set.seed(1)
+
+# Define model params
+alpha<- 1
+ngibbs<- 10000
+nbins<- c(5,8)
+
+future::plan(multisession)  #run all MCMC chains in parallel
+dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+                           alpha = alpha)
+
+
+# Determine MAP iteration for selecting breakpoints and store breakpoints
+MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+}
 
 }

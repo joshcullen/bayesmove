@@ -6,7 +6,7 @@
 #' @param prob A numeric matrix.
 #' @param randu A numeric vector.
 #'
-#' @export
+#'
 rmultinom1 <- function(prob, randu) {
     .Call(`_bayesmove_rmultinom1`, prob, randu)
 }
@@ -18,7 +18,7 @@ rmultinom1 <- function(prob, randu) {
 #' @param randu A numeric vector.
 #' @param nmaxclust An integer.
 #'
-#' @export
+#'
 rmultinom2 <- function(prob, n, randu, nmaxclust) {
     .Call(`_bayesmove_rmultinom2`, prob, n, randu, nmaxclust)
 }
@@ -33,7 +33,7 @@ rmultinom2 <- function(prob, n, randu, nmaxclust) {
 #' @param ltheta A numeric matrix.
 #' @param zeroes A numeric vector.
 #'
-#' @export
+#'
 SampleZAgg <- function(ntsegm, b1, y1, nmaxclust, lphi1, ltheta, zeroes) {
     .Call(`_bayesmove_SampleZAgg`, ntsegm, b1, y1, nmaxclust, lphi1, ltheta, zeroes)
 }
@@ -44,7 +44,7 @@ SampleZAgg <- function(ntsegm, b1, y1, nmaxclust, lphi1, ltheta, zeroes) {
 #' @param nmaxclust An integer.
 #' @param z An integer matrix.
 #'
-#' @export
+#'
 CumSumInv <- function(ntsegm, nmaxclust, z) {
     .Call(`_bayesmove_CumSumInv`, ntsegm, nmaxclust, z)
 }

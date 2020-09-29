@@ -30,31 +30,35 @@ framework to perform mixed-membership clustering by Latent Dirichlet
 Allocation.
 }
 \examples{
-#simulate data
-step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-angle<- runif(1000, -pi, pi)
-date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-dt<- c(dt, NA)
-id<- rep(1:10, each = 100)
+\donttest{
+#load data
+data(tracks.list)
 
-#simulate breakpoints
-brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
-brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
-brkpts<- data.frame(id = 1:10, brkpts)
+#only retain id and discretized step length (SL) and turning angle (TA) columns
+tracks.list2<- map(tracks.list,
+                   subset,
+                  select = c(id, SL, TA))
 
-#create data frame
-dat<- data.frame(id, date, dt, step, angle)
-dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
 
-#create list
-dat.list<- df_to_list(dat = dat, ind = "id")
+set.seed(1)
 
-#filter by primary time step
-dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
+# Define model params
+alpha<- 1
+ngibbs<- 10000
+nbins<- c(5,8)
 
-#run function
-dat1<- assign_tseg(dat = dat.list.filt, brkpts = brkpts)
+future::plan(multisession)  #run all MCMC chains in parallel
+dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+                           alpha = alpha)
+
+
+# Determine MAP iteration for selecting breakpoints and store breakpoints
+MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
+
+
+# Assign track segments to all observations by ID
+tracks.seg<- assign_tseg(dat = tracks.list, brkpts = brkpts)
+}
 
 }

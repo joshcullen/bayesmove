@@ -39,12 +39,16 @@ A new data frame that expands behavior proportions for each
 Expand behavior estimates from track segments to observations
 }
 \examples{
-\dontrun{
-#create data frame
-dat<- data.frame(id, date, dt, step, angle, SL, TA, tseg)
+
+\donttest{
+#load data
+data(tracks.seg)
+
+#select only id, tseg, SL, and TA columns
+tracks.seg2<- tracks.seg[,c("id","tseg","SL","TA")]
 
 #summarize data by track segment
-obs<- summarize_tsegs(dat = dat, nbins = c(5,8))
+obs<- summarize_tsegs(dat = tracks.seg2, nbins = c(5,8))
 
 #cluster data with LDA
 res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
@@ -54,7 +58,7 @@ res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 
 #Create augmented matrix by replicating rows (tsegs) according to obs per tseg
-theta.estim2<- expand_behavior(dat = dat, theta.estim = theta.estim, obs = obs,
+theta.estim.long<- expand_behavior(dat = tracks.seg, theta.estim = theta.estim, obs = obs,
                                nbehav = 3, behav.names = c("Encamped","ARS","Transit"),
                                behav.order = c(1,2,3))
 }

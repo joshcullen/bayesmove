@@ -36,14 +36,10 @@ other R packages (e.g., \code{adehabitatLT}). However, functions from other
 packages can also be used to perform this step in data preparation.
 }
 \examples{
-#simulate data
-lon<- c(1,1,3,4,4,5,7,9,10,13)
-lat<- c(2,1,2,2,3,5,8,1,1,2)
-date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 10)
-date<- date + lubridate::seconds(runif(length(date), -300, 300))  #introduce noise
-dat<- data.frame(id = 1, date, lon, lat)
+#load data
+data(tracks)
 
-#run function
-dat1<- prep_data(dat = dat, coord.names = c("lon","lat"), id = "id")
+#calculate step lengths and turning angles
+tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 
 }

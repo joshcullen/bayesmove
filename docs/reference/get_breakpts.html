@@ -179,16 +179,29 @@ IDs supplied to <code><a href='segment_behavior.html'>segment_behavior()</a></co
   breakpoints that do not exist.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>#simulate data</span>
-<span class='no'>id1</span> <span class='kw'>=</span> <span class='no'>id2</span> <span class='kw'>=</span> <span class='no'>id3</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>4</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>4</span>), <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>8</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>8</span>,<span class='fl'>17</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>8</span>,<span class='fl'>17</span>),
-                       <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>8</span>,<span class='fl'>20</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>8</span>,<span class='fl'>20</span>,<span class='fl'>25</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>8</span>,<span class='fl'>20</span>,<span class='fl'>25</span>))
-<span class='no'>dat.list</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>id1</span> <span class='kw'>=</span> <span class='no'>id1</span>, <span class='kw'>id2</span> <span class='kw'>=</span> <span class='no'>id2</span>, <span class='kw'>id3</span> <span class='kw'>=</span> <span class='no'>id3</span>)
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='co'>#load data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>tracks.list</span>)
 
-<span class='no'>MAP.est</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>, <span class='fl'>8</span>, <span class='fl'>9</span>)
+<span class='co'>#only retain id and discretized step length (SL) and turning angle (TA) columns</span>
+<span class='no'>tracks.list2</span><span class='kw'>&lt;-</span> <span class='fu'>map</span>(<span class='no'>tracks.list</span>,
+                   <span class='no'>subset</span>,
+                  <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>id</span>, <span class='no'>SL</span>, <span class='no'>TA</span>))</div><div class='output co'>#&gt; <span class='error'>Error in map(tracks.list, subset, select = c(id, SL, TA)): could not find function "map"</span></div><div class='input'>
 
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1</span>)
 
-<span class='co'>#run function</span>
-<span class='no'>dat1</span><span class='kw'>&lt;-</span> <span class='fu'>get_breakpts</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat.list</span>, <span class='kw'>MAP.est</span> <span class='kw'>=</span> <span class='no'>MAP.est</span>)</div></pre>
+<span class='co'># Define model params</span>
+<span class='no'>alpha</span><span class='kw'>&lt;-</span> <span class='fl'>1</span>
+<span class='no'>ngibbs</span><span class='kw'>&lt;-</span> <span class='fl'>10000</span>
+<span class='no'>nbins</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>8</span>)
+
+<span class='kw pkg'>future</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/future/man/plan.html'>plan</a></span>(<span class='no'>multisession</span>)  <span class='co'>#run all MCMC chains in parallel</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(first, envir = parent.frame(), enclos = baseenv()): object 'multisession' not found</span></div><div class='input'><span class='no'>dat.res</span><span class='kw'>&lt;-</span> <span class='fu'><a href='segment_behavior.html'>segment_behavior</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>tracks.list2</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='no'>ngibbs</span>, <span class='kw'>nbins</span> <span class='kw'>=</span> <span class='no'>nbins</span>,
+                           <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>alpha</span>)</div><div class='output co'>#&gt; <span class='error'>Error in future_map2_template(purrr::map, "list", .x, .y, .f, ..., .progress = .progress,     .options = .options): object 'tracks.list2' not found</span></div><div class='input'>
+
+<span class='co'># Determine MAP iteration for selecting breakpoints and store breakpoints</span>
+<span class='no'>MAP.est</span><span class='kw'>&lt;-</span> <span class='fu'><a href='get_MAP.html'>get_MAP</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat.res</span>$<span class='no'>LML</span>, <span class='kw'>nburn</span> <span class='kw'>=</span> <span class='fl'>5000</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nrow(dat): object 'dat.res' not found</span></div><div class='input'><span class='no'>brkpts</span><span class='kw'>&lt;-</span> <span class='fu'>get_breakpts</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat.res</span>$<span class='no'>brkpts</span>, <span class='kw'>MAP.est</span> <span class='kw'>=</span> <span class='no'>MAP.est</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est): object 'dat.res' not found</span></div><div class='input'># }
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

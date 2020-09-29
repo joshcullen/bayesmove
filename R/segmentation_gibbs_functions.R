@@ -20,7 +20,7 @@
 #'
 #'
 #'
-#' @export
+#'
 get_summary_stats=function(breakpt, dat, max.time, nbins, ndata.types){
 
   breakpt1<- c(1, breakpt, max.time)
@@ -72,7 +72,7 @@ get_summary_stats=function(breakpt, dat, max.time, nbins, ndata.types){
 #'
 #'
 #'
-#' @export
+#'
 log_marg_likel=function(alpha, summary.stats, nbins, ndata.types){
 
   #get ratios
@@ -115,7 +115,7 @@ log_marg_likel=function(alpha, summary.stats, nbins, ndata.types){
 #'
 #'
 #' @importFrom stats "runif"
-#' @export
+#'
 samp_move=function(breakpt, max.time, dat, alpha, nbins, ndata.types){
 
   breakpt.old<- breakpt

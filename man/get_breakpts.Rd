@@ -27,15 +27,31 @@ A data frame where breakpoints are returned per animal ID within each
 Extract breakpoints for each animal ID
 }
 \examples{
-#simulate data
-id1 = id2 = id3 = list(4, c(2,4), 4, 4, c(4,8), c(4,8,17), c(4,8,17),
-                       c(4,8,20), c(4,8,20,25), c(5,8,20,25))
-dat.list<- list(id1 = id1, id2 = id2, id3 = id3)
+\donttest{
+#load data
+data(tracks.list)
 
-MAP.est<- c(5, 8, 9)
+#only retain id and discretized step length (SL) and turning angle (TA) columns
+tracks.list2<- map(tracks.list,
+                   subset,
+                  select = c(id, SL, TA))
 
 
-#run function
-dat1<- get_breakpts(dat = dat.list, MAP.est = MAP.est)
+set.seed(1)
+
+# Define model params
+alpha<- 1
+ngibbs<- 10000
+nbins<- c(5,8)
+
+future::plan(multisession)  #run all MCMC chains in parallel
+dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+                           alpha = alpha)
+
+
+# Determine MAP iteration for selecting breakpoints and store breakpoints
+MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
+}
 
 }

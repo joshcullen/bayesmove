@@ -28,22 +28,33 @@ Convert movement variables from continuous to discrete values for analysis by
 \code{\link{segment_behavior}}.
 }
 \examples{
-#simulate data
-step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-angle<- runif(1000, -pi, pi)
-id<- rep(1:10, each = 100)
+#load data
+data(tracks)
 
-#create data frame
-dat<- data.frame(id, step, angle)
+#calculate step lengths and turning angles
+tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 
-#define limits for each bin
-dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))
-angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)
+#round times to nearest interval of interest (e.g. 3600 s or 1 hr)
+tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
 
-#run function
-dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
-                         varIn = c("step", "angle"),
-                         varOut = c("SL","TA"))
+#create list from data frame
+tracks.list<- df_to_list(dat = tracks, ind = "id")
+
+#filter observations to only 1 hr (or 3600 s)
+tracks_filt.list<- filter_time(dat.list = tracks.list, int = 3600)
+
+#define bin number and limits for turning angles and step lengths
+angle.bin.lims=seq(from=-pi, to=pi, by=pi/4)  #8 bins
+dist.bin.lims=quantile(tracks[tracks$dt == 3600,]$step,
+                      c(0,0.25,0.50,0.75,0.90,1), na.rm=TRUE)  #5 bins
+
+
+# Assign bins to observations
+tracks_disc.list<- purrr::map(tracks_filt.list,
+                      discrete_move_var,
+                      lims = list(dist.bin.lims, angle.bin.lims),
+                      varIn = c("step", "angle"),
+                      varOut = c("SL", "TA"))
 
 
 }
