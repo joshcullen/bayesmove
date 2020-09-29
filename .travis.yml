@@ -17,6 +17,7 @@ sudo: false
 cache: packages
 warnings_are_errors: false
 r_check_args: "--timings --as-cran"
+env: R_CHECK_DONTTEST_EXAMPLES=false
 
 
 notifications:

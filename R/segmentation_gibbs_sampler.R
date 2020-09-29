@@ -142,7 +142,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   mod<- furrr::future_map2(data, breakpt,
                            ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
                                                          alpha = alpha, breakpt = .y),
-                   .progress = TRUE)
+                   .progress = TRUE, future.seed = TRUE)
   tictoc::toc()  #provide elapsed time
 
 
