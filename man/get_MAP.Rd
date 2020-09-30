@@ -27,6 +27,9 @@ on which to assign track segments to the observations of each animal ID.
 #load data
 data(tracks.list)
 
+#subset only first track
+tracks.list<- tracks.list[1]
+
 #only retain id and discretized step length (SL) and turning angle (TA) columns
 tracks.list2<- purrr::map(tracks.list,
                    subset,
@@ -37,16 +40,16 @@ set.seed(1)
 
 # Define model params
 alpha<- 1
-ngibbs<- 10000
+ngibbs<- 1000
 nbins<- c(5,8)
 
-future::plan(future::multisession)  #run all MCMC chains in parallel
+#future::plan(future::multisession)  #run all MCMC chains in parallel
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
 
 
 # Determine MAP iteration for selecting breakpoints and store breakpoints
-MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+MAP.est<- get_MAP(dat = dat.res$LML, nburn = ngibbs/2)
 }
 
 }

@@ -31,6 +31,9 @@ Convert movement variables from continuous to discrete values for analysis by
 #load data
 data(tracks)
 
+#subset only first track
+tracks<- tracks[tracks$id == "id1",]
+
 #calculate step lengths and turning angles
 tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 

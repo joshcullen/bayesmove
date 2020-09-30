@@ -39,6 +39,9 @@ packages can also be used to perform this step in data preparation.
 #load data
 data(tracks)
 
+#subset only first track
+tracks<- tracks[tracks$id == "id1",]
+
 #calculate step lengths and turning angles
 tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 

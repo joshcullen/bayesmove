@@ -56,6 +56,9 @@ running \code{segment_behavior}.
 #load data
 data(tracks.list)
 
+#subset only first track
+tracks.list<- tracks.list[1]
+
 #only retain id and discretized step length (SL) and turning angle (TA) columns
 tracks.list2<- purrr::map(tracks.list,
                    subset,
@@ -69,11 +72,10 @@ alpha<- 1
 ngibbs<- 10000
 nbins<- c(5,8)
 
-future::plan(future::multisession)  #run all MCMC chains in parallel
+#future::plan(future::multisession)  #run all MCMC chains in parallel
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
 
-future::plan(future::sequential)
 }
 
 }

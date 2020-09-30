@@ -112,6 +112,9 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #' #load data
 #' data(tracks.list)
 #'
+#' #subset only first track
+#' tracks.list<- tracks.list[1]
+#'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
 #' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
@@ -122,14 +125,13 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #'
 #' # Define model params
 #' alpha<- 1
-#' ngibbs<- 10000
+#' ngibbs<- 1000
 #' nbins<- c(5,8)
 #'
-#' future::plan(future::multisession)  #run all MCMC chains in parallel
+#' #future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
-#' future::plan(future::sequential)
 #' }
 #'
 #' @importFrom future "plan"
@@ -142,7 +144,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   mod<- furrr::future_map2(data, breakpt,
                            ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
                                                          alpha = alpha, breakpt = .y),
-                   .progress = TRUE, future.seed = TRUE)
+                   .progress = TRUE, .options = furrr::future_options(seed = T))
   tictoc::toc()  #provide elapsed time
 
 

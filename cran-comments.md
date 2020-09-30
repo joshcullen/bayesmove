@@ -1,7 +1,9 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Fixed a note related to a possibly invalid file URI (URI: reference/figures/logo.png) from the README.md file by changing the image link to man/figures/logo.png. This NOTE disappeared when running again on win-builder and travis-ci.
+* Added an on.exit() call immediately within functions where I adjust par() for plotting.
+
+* Unwrapped some examples that used \dontrun{} and changed others to \donttest{} if they took > 5 s. However, the examples wrapped with \donttest{} were still checked by --run-donttest when pushed to Travis-CI and AppVeyor.
 
 ## Test environments
 * local OS X install (and on travis-ci), R 4.0.2

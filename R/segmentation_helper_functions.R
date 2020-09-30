@@ -21,6 +21,9 @@
 #' #load data
 #' data(tracks)
 #'
+#' #subset only first track
+#' tracks<- tracks[tracks$id == "id1",]
+#'
 #' #calculate step lengths and turning angles
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
@@ -95,6 +98,9 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #' #load data
 #' data(tracks)
 #'
+#' #subset only first track
+#' tracks<- tracks[tracks$id == "id1",]
+#'
 #' #calculate step lengths and turning angles
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
@@ -167,6 +173,9 @@ round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
 #' @examples
 #' #load data
 #' data(tracks)
+#'
+#' #subset only first track
+#' tracks<- tracks[tracks$id == "id1",]
 #'
 #' #calculate step lengths and turning angles
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
@@ -316,6 +325,9 @@ assign_tseg_internal=function(dat, brkpts){
 #' #load data
 #' data(tracks.list)
 #'
+#' #subset only first track
+#' tracks.list<- tracks.list[1]
+#'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
 #' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
@@ -326,16 +338,16 @@ assign_tseg_internal=function(dat, brkpts){
 #'
 #' # Define model params
 #' alpha<- 1
-#' ngibbs<- 10000
+#' ngibbs<- 1000
 #' nbins<- c(5,8)
 #'
-#' future::plan(future::multisession)  #run all MCMC chains in parallel
+#' #future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
 #'
 #' # Determine MAP iteration for selecting breakpoints and store breakpoints
-#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = ngibbs/2)
 #' brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
 #'
 #'
@@ -538,6 +550,9 @@ get_MAP_internal=function(dat, nburn) {
 #' #load data
 #' data(tracks.list)
 #'
+#' #subset only first track
+#' tracks.list<- tracks.list[1]
+#'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
 #' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
@@ -548,16 +563,16 @@ get_MAP_internal=function(dat, nburn) {
 #'
 #' # Define model params
 #' alpha<- 1
-#' ngibbs<- 10000
+#' ngibbs<- 1000
 #' nbins<- c(5,8)
 #'
-#' future::plan(future::multisession)  #run all MCMC chains in parallel
+#' #future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
 #'
 #' # Determine MAP iteration for selecting breakpoints and store breakpoints
-#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = ngibbs/2)
 #' }
 #'
 #' @export
@@ -593,6 +608,9 @@ get_MAP=function(dat, nburn) {
 #' #load data
 #' data(tracks.list)
 #'
+#' #subset only first track
+#' tracks.list<- tracks.list[1]
+#'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
 #' tracks.list2<- purrr::map(tracks.list,
 #'                    subset,
@@ -603,16 +621,16 @@ get_MAP=function(dat, nburn) {
 #'
 #' # Define model params
 #' alpha<- 1
-#' ngibbs<- 10000
+#' ngibbs<- 1000
 #' nbins<- c(5,8)
 #'
-#' future::plan(future::multisession)  #run all MCMC chains in parallel
+#' #future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
 #'
 #' # Determine MAP iteration for selecting breakpoints and store breakpoints
-#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = 5000)
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = ngibbs/2)
 #' brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
 #' }
 #'
@@ -904,6 +922,9 @@ prep_data_internal=function(dat, coord.names) {
 #' @examples
 #' #load data
 #' data(tracks)
+#'
+#' #subset only first track
+#' tracks<- tracks[tracks$id == "id1",]
 #'
 #' #calculate step lengths and turning angles
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")

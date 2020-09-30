@@ -32,6 +32,9 @@ lengths and turning angles. Column storing the time intervals must be labeled
 #load data
 data(tracks)
 
+#subset only first track
+tracks<- tracks[tracks$id == "id1",]
+
 #calculate step lengths and turning angles
 tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 
