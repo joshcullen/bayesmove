@@ -479,7 +479,7 @@ find_breaks=function(dat, ind) {
 #' @export
 traceplot=function(data, ngibbs, type) {
 
-  oldpar<- par(no.readonly = T)  #store original parameters
+  oldpar<- par(no.readonly = TRUE)  #store original parameters
   on.exit(par(oldpar))  #exit w/ original parameters
 
   identity<- data$id
@@ -657,123 +657,105 @@ get_breakpts=function(dat, MAP.est) {
 }
 #------------------------------------------------
 
-#' Internal function for plotting breakpoints over a heatmap of the discretized
-#' movement variables
+#' Internal function for plotting breakpoints over each of the data streams
 #'
 #' An internal function for plotting the results of the segmentation model.
 #'
-#' @param data A data frame for a single animal ID that contains only columns
-#'   for the ID and each of the movement variables that were analyzed by
-#'   \code{\link{segment_behavior}}. The ID column must be first.
-#' @param nbins numeric. A vector of the number of bins used to discretize each
-#'   movement variable. These must be in the same order as the columns within
-#'   \code{data}.
+#' @param data A data frame for a single animal ID that contains columns for the
+#'   ID, date or time variable, and each of the movement variables that were
+#'   analyzed by \code{\link{segment_behavior}}. Data streams can be in
+#'   continuous or discrete form.
+#' @param as_date logical. If \code{TRUE}, plots breakpoints and data streams
+#'   over the date. By default, this is set to \code{FALSE}.
+#' @param var_names A vector of the column names for the movement variables to
+#'   be plotted over time.
+#' @param var_labels A vector of the labels to be plotted on the y-axis for each
+#'   movement variable.  Set to \code{NULL} by default.
 #' @param brkpts A data frame that contains the breakpoints associated with each
 #'   animal ID. This data frame is returned by \code{\link{get_breakpts}}.
-#' @param title logical. If \code{TRUE}, includes the animal ID as the title of
-#'   the plot.
-#' @param legend logical. If \code{TRUE}, shows the legend for the heatmap.
 #'
-#' @return A heatmap for each movement variable showing the bins assigned to
-#'   each observation over time that is overlayed by the extracted breakpoints.
+#' @return A line plot for each movement variable showing how the estimated
+#'   breakpoints relate to the underlying data. Depending on the user input for
+#'   \code{var_names}, this may either be on the scale of the original
+#'   continuous data or the discretized data.
 #'
 #'
 #' @importFrom rlang .data
 #'
-plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
-
-  #transform into pres/abs matrix
-  behav.heat<- behav_seg_image(data, nbins)
-
-  #convert to long form
-  behav.heat.long<- purrr::map2(behav.heat, as.list(names(behav.heat)), ~{
-    tmp<- .x %>%
-      data.frame()
-    tmp %>%
-      tidyr::pivot_longer(cols = 1:ncol(tmp), names_to = "bin", values_to = "value") %>%
-      dplyr::mutate(time = rep(1:nrow(data), each = length(unique(.data$bin))),
-                    var = rep(.y, length(.data$bin)))}
-  ) %>%
-    dplyr::bind_rows() %>%
-    dplyr::mutate_at("value", factor) %>%
-    dplyr::mutate_at("bin", readr::parse_number)
-
-  levels(behav.heat.long$value)<- c("Unused","Used")
+plot_breakpoints_behav=function(data, as_date, var_names, var_labels, brkpts) {
 
   #index brkpts for particular id
   ind<- which(unique(data$id) == brkpts$id)
   breakpt<- brkpts[ind,-1] %>%
     purrr::discard(is.na) %>%
-    t() %>%
-    data.frame()
-  names(breakpt)<- "breaks"
+    as.numeric()
+  if (as_date == TRUE) breakpt<- data[breakpt, "date"]
+  breakpt<- data.frame(breaks = breakpt)
 
 
-  if(legend == TRUE) {
-    legend.pos<- "top"
-  } else {
-    legend.pos<- "none"
+  # Reformat data into long form using preferred time variable
+  x<- ifelse(as_date == TRUE, "date", "time1")
+  dat.long<- data[,c("id", x, var_names)] %>%
+    tidyr::pivot_longer(cols = -c(1:2), names_to = "var", values_to = "value")
+
+  # Store number of variables/data streams
+  var.len<- length(var_names)
+
+  #Relabel variables is var_labels specified
+  if (!is.null(var_labels)) {
+    for (i in 1:var.len) {
+      dat.long$var<- gsub(x = dat.long$var, pattern = var_names[i], replacement = var_labels[i])
+    }
   }
-  title<- ifelse(title == TRUE,
-                 list(theme(axis.title = element_text(size = 18),
-                            axis.text = element_text(size = 12),
-                            strip.text = element_text(size = 12, face = 'bold'),
-                            plot.title = element_text(size = 20, hjust = 0, vjust = -6),
-                            plot.margin = margin(0, 1, 0.5, 0.5, "cm"),
-                            legend.justification = "right",
-                            legend.position = legend.pos,
-                            legend.text = element_text(
-                              margin = margin(r = 15, unit = "pt")))),
-                 list(theme(axis.title = element_text(size = 18),
-                            axis.text = element_text(size = 12),
-                            strip.text = element_text(size = 12, face = 'bold'),
-                            plot.title = element_blank(),
-                            legend.justification = "right",
-                            legend.position = legend.pos,
-                            legend.text = element_text(
-                              margin = margin(r = 15, unit = "pt")))))
+
+
 
   print(
-    ggplot(behav.heat.long, aes(x=.data$time, y=as.character(.data$bin), fill=.data$value)) +
-      geom_tile() +
-      facet_wrap(~.data$var, scales = 'free', nrow = 2) +
-      scale_fill_viridis_d('') +
-      scale_y_discrete(expand = c(0,0)) +
-      scale_x_continuous(expand = c(0,0)) +
+    ggplot(dat.long, aes(x=.data[[x]], y=.data$value, color=.data$var)) +
+      geom_line(na.rm = TRUE, size = 0.25) +
+      facet_wrap(~.data$var, scales = 'free', nrow = var.len, strip.position = "left") +
+      scale_color_brewer("", palette = "Dark2", guide = FALSE) +
       geom_vline(data = breakpt, aes(xintercept = .data$breaks - 0.5),
-                 color = viridis::viridis(n=9)[7], size = 0.6, alpha = 1) +
-      labs(x = "\nTime", y = "Bin\n") +
+                 color = "black", size = 0.7, alpha = 1) +
+      labs(x = "\nTime", y = "") +
       ggtitle(paste(unique(data$id))) +
       theme_bw() +
-      title
+      theme(axis.title = element_text(size = 18),
+            axis.text = element_text(size = 12),
+            strip.text = element_text(size = 14),
+            strip.background = element_blank(),
+            strip.placement = "outside",
+            plot.title = element_text(size = 20),
+            panel.grid.minor = element_blank())
   )
 }
 #------------------------------------------------
 
-#' Plot breakpoints over a time series heatmap of the movement variables
+#' Plot breakpoints over a time series of each movement variable
 #'
 #' Visualize the breakpoints estimated by the segmentation model as they relate
-#' to the discretized data on which the model was performed. These plots assist
+#' to either the original (continuous) or discretized data. These plots assist
 #' in determining whether too many or too few breakpoints were estimated as well
 #' as whether the user needs to redefine how they discretized their data before
 #' analysis.
 #'
 #' @param data A list where each element stores a data frame for a given animal
-#'   ID. Each of these data frames contain only columns for the ID and each of
-#'   the movement variables that were analyzed by
-#'   \code{\link{segment_behavior}}. The ID column must be first.
-#' @param nbins numeric. A vector of the number of bins used to discretize each
-#'   movement variable. These must be in the same order as the columns within
-#'   \code{data}.
+#'   ID. Each of these data frames contains columns for the ID, date or time1
+#'   generated by \code{\link{filter_time}}, as well as each of the movement
+#'   variables analyzed by \code{\link{segment_behavior}}.
+#' @param as_date logical. If \code{TRUE}, plots breakpoints and data streams
+#'   over the date. By default, this is set to \code{FALSE}.
+#' @param var_names A vector of the column names for the movement variables to
+#'   be plotted over time.
+#' @param var_labels A vector of the labels to be plotted on the y-axis for each
+#'   movement variable.  Set to \code{NULL} by default.
 #' @param brkpts A data frame that contains the breakpoints associated with each
 #'   animal ID. This data frame is returned by \code{\link{get_breakpts}}.
-#' @param title logical. If \code{TRUE}, includes the animal ID as the title of
-#'   the plot.
-#' @param legend logical. If \code{TRUE}, shows the legend for the heatmap.
 #'
-#' @return A heatmap per animal ID that shows the value of each movement
-#'   variable over time (as discretized into bins) and is overlayed by the
-#'   extracted breakpoints.
+#' @return A line plot per animal ID for each movement variable showing how the estimated
+#'   breakpoints relate to the underlying data. Depending on the user input for
+#'   \code{var_names}, this may either be on the scale of the original
+#'   continuous data or the discretized data.
 #'
 #' @import ggplot2
 #'
@@ -781,60 +763,49 @@ plot_heatmap_behav=function(data, nbins, brkpts, title, legend) {
 #' @examples
 #'
 #' \donttest{
-#' #simulate data
-#' step<- rgamma(1000, c(1, 2.5, 10), c(1, 1, 1))
-#' angle<- runif(1000, -pi, pi)
-#' date<- seq(c(ISOdate(2020, 6, 17, tz = "UTC")), by = "hour", length.out = 1000)
-#' date<- date + lubridate::seconds(runif(length(date), -15, 15))  #introduce noise
-#' dt<- as.numeric(diff(date)) * 60  #convert time difference to seconds
-#' dt<- c(dt, NA)
-#' var<- rep(sample(c(1,2), 100, replace = TRUE), each = 10)
-#' id<- rep(1:10, each = 100)
+#' #load data
+#' data(tracks.list)
+#'
+#' #subset only first track
+#' tracks.list<- tracks.list[1]
+#'
+#' #only retain id and discretized step length (SL) and turning angle (TA) columns
+#' tracks.list2<- purrr::map(tracks.list,
+#'                    subset,
+#'                   select = c(id, SL, TA))
 #'
 #'
-#' #create data frame and round time
-#' dat<- data.frame(id, date, dt, step, angle, var)
-#' dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
+#' set.seed(1)
+#'
+#' # Define model params
+#' alpha<- 1
+#' ngibbs<- 1000
+#' nbins<- c(5,8)
+#'
+#' #future::plan(future::multisession)  #run all MCMC chains in parallel
+#' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+#'                            alpha = alpha)
 #'
 #'
-#' #define limits for each bin
-#' dist.lims<- c(quantile(step, c(0, 0.25, 0.5, 0.75, 0.95)), max(step))  #5 bins
-#' angle.lims<- c(-pi, -3*pi/4, -pi/2, -pi/4, 0, pi/4, pi/2, 3*pi/4, pi)  #8 bins
-#'
-#' #discretize step and angle
-#' dat1<- discrete_move_var(dat = dat, lims = list(dist.lims, angle.lims),
-#'                          varIn = c("step", "angle"),
-#'                          varOut = c("SL","TA"))
-#'
-#'
-#' #create list and filter by primary time step
-#' dat.list<- df_to_list(dat = dat1, ind = "id")
-#' dat.list.filt<- filter_time(dat.list = dat.list, int = 3600)
-#' dat.list.filt1<- lapply(dat.list.filt,
-#'                         function(x) subset(x, select = c(id, SL, TA)))
-#'
-#'
-#' #simulate breakpoints
-#' brkpts<- rep(sort(sample(1:65, 7, replace = TRUE)), 10)
-#' brkpts<- matrix(brkpts, 10, 7, byrow = TRUE)
-#' brkpts<- data.frame(id = 1:10, brkpts)
+#' # Determine MAP iteration for selecting breakpoints and store breakpoints
+#' MAP.est<- get_MAP(dat = dat.res$LML, nburn = ngibbs/2)
+#' brkpts<- get_breakpts(dat = dat.res$brkpts, MAP.est = MAP.est)
 #'
 #'
 #' #run function
-#' plot_heatmap(data = dat.list.filt1, nbins = c(5,8), brkpts = brkpts,
-#'              title = TRUE, legend = TRUE)
+#' plot_breakpoints(data = tracks.list, as_date = FALSE, var_names = c("step","angle"),
+#'     var_labels = c("Step Length (m)", "Turning Angle (rad)"), brkpts = brkpts)
 #' }
 #'
 #' @export
-plot_heatmap=function(data, nbins, brkpts, title, legend) {
+plot_breakpoints=function(data, as_date = FALSE, var_names, var_labels = NULL, brkpts) {
 
-  oldpar<- par(no.readonly = T)  #store original parameters
+  oldpar<- par(no.readonly = TRUE)  #store original parameters
   on.exit(par(oldpar))  #exit w/ original parameters
 
   par(ask = TRUE)
-  purrr::walk(data, ~plot_heatmap_behav(., nbins = nbins, brkpts = brkpts, title = title,
-                                legend = legend))
-
+  purrr::walk(data, ~plot_breakpoints_behav(., as_date = as_date, var_names = var_names,
+                                            var_labels = var_labels, brkpts = brkpts))
 }
 #------------------------------------------------
 

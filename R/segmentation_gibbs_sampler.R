@@ -128,10 +128,11 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #' ngibbs<- 1000
 #' nbins<- c(5,8)
 #'
-#' #future::plan(future::multisession)  #run all MCMC chains in parallel
+#' future::plan(future::multisession)  #run all MCMC chains in parallel
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
 #'                            alpha = alpha)
 #'
+#' future::plan(future::sequential)  #return to single core
 #' }
 #'
 #' @importFrom future "plan"
@@ -159,10 +160,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
     data.frame()  #create DF of number of breakpoints by ID
   names(nbrks)<- c('id', paste0("Iter_", 1:ngibbs))
   ncol.nbrks<- ncol(nbrks)
-  nbrks<- nbrks %>%
-    dplyr::mutate_at(2:ncol.nbrks, as.character) %>%
-    dplyr::mutate_at(2:ncol.nbrks, as.numeric) %>%
-    dplyr::mutate_at(1, as.character)
+  nbrks[,2:ncol.nbrks]<- apply(nbrks[,2:ncol.nbrks], 2, function(x) as.numeric(as.character(x)))
 
 
   LML<- purrr::map_dfr(mod, 3) %>%
@@ -171,10 +169,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
     data.frame()  #create DF of LML by ID
   names(LML)<- c('id', paste0("Iter_", 1:ngibbs))
   ncol.LML<- ncol(LML)
-  LML<- LML %>%
-    dplyr::mutate_at(2:ncol.LML, as.character) %>%
-    dplyr::mutate_at(2:ncol.LML, as.numeric) %>%
-    dplyr::mutate_at(1, as.character)
+  LML[,2:ncol.LML]<- apply(LML[,2:ncol.LML], 2, function(x) as.numeric(as.character(x)))
 
 
   elapsed.time<- purrr::map_dfr(mod, 4) %>%

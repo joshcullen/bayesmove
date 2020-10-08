@@ -92,12 +92,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="Segment-the-tracks_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Segment the tracks</h1>
             
-            <h4 class="date">29 September 2020</h4>
+            <h4 class="date">08 October 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Segment-the-tracks.Rmd"><code>vignettes/Segment-the-tracks.Rmd</code></a></small>
       <div class="hidden name"><code>Segment-the-tracks.Rmd</code></div>
@@ -110,19 +110,20 @@
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>At this stage, only observations at a single time interval have been retained and data streams (i.e., step lengths, turning angles) have been discretized to perform segmentation on each animal ID. These data are then used as input for the Bayesian segmentation model, which uses a reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate the breakpoints where values substantially change for the data streams. To facilitate the parallel computation of this model (for each ID), the data must be stored as a list.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bayesmove</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">purrr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lubridate</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">furrr</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavisVaughan/furrr">furrr</a></span><span class="op">)</span>
 
 <span class="co"># Load data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">tracks.list</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tracks.list</span><span class="op">)</span>
 
 <span class="co"># Check data structure</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">tracks.list</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tracks.list</span><span class="op">)</span>
 <span class="co">#&gt; List of 3</span>
 <span class="co">#&gt;  $ id1:'data.frame': 4683 obs. of  11 variables:</span>
 <span class="co">#&gt;   ..$ id   : chr [1:4683] "id1" "id1" "id1" "id1" ...</span>
@@ -159,74 +160,79 @@
 <span class="co">#&gt;   ..$ obs  : int [1:4716] 1 2 3 4 6 7 8 9 10 11 ...</span>
 <span class="co">#&gt;   ..$ time1: int [1:4716] 1 2 3 4 5 6 7 8 9 10 ...</span>
 <span class="co">#&gt;   ..$ SL   : int [1:4716] 1 2 1 3 5 1 1 1 1 1 ...</span>
-<span class="co">#&gt;   ..$ TA   : int [1:4716] NA 8 2 3 5 7 8 8 1 1 ...</span></pre></body></html></div>
+<span class="co">#&gt;   ..$ TA   : int [1:4716] NA 8 2 3 5 7 8 8 1 1 ...</span></pre></div>
 <p>Data for each animal ID are stored separately in each element of the list, where elements include a data frame of the data, including each discretized data stream. Before the model can be run, each of the data frames within the list must only contain a column for the id, as well as the columns that store the discretized data streams.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Only retain id and discretized step length (SL) and turning angle (TA) columns</span>
-<span class="no">tracks.list2</span><span class="kw">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">tracks.list</span>,
-                   <span class="no">subset</span>,
-                   <span class="kw">select</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">id</span>, <span class="no">SL</span>, <span class="no">TA</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># Only retain id and discretized step length (SL) and turning angle (TA) columns</span>
+<span class="va">tracks.list2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">tracks.list</span>,
+                   <span class="va">subset</span>,
+                   select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 <div id="run-the-segmentation-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#run-the-segmentation-model" class="anchor"></a>Run the segmentation model</h2>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Define hyperparameter for prior distribution</span>
-<span class="no">alpha</span><span class="kw">&lt;-</span> <span class="fl">1</span>
+<span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">1</span>
 
 <span class="co"># Set number of iterations for the Gibbs sampler</span>
-<span class="no">ngibbs</span><span class="kw">&lt;-</span> <span class="fl">10000</span>
+<span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">10000</span>
 
 <span class="co"># Set the number of bins used to discretize each data stream</span>
-<span class="no">nbins</span><span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>,<span class="fl">8</span>)
+<span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">8</span><span class="op">)</span>
 
 
-<span class="kw pkg">future</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">multisession</span>)  <span class="co">#run all MCMC chains in parallel</span>
+<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>  <span class="co">#run all MCMC chains in parallel</span>
                     <span class="co">#refer to future::plan() for more details</span>
-<span class="no">dat.res</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/segment_behavior.html">segment_behavior</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks.list2</span>, <span class="kw">ngibbs</span> <span class="kw">=</span> <span class="no">ngibbs</span>, <span class="kw">nbins</span> <span class="kw">=</span> <span class="no">nbins</span>,
-                           <span class="kw">alpha</span> <span class="kw">=</span> <span class="no">alpha</span>)</pre></body></html></div>
+<span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment_behavior.html">segment_behavior</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list2</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nbins <span class="op">=</span> <span class="va">nbins</span>,
+                           alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span></pre></div>
 <p>Now that each of the tracks have been segmented, we need to inspect the trace-plots for the log marginal likelihood to determine whether the model converged or not. Additionally, we can inspect a traceplot of the number of estimated breakpoints per iteration of the RJMCMC for each ID.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Trace-plots for the number of breakpoints per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">dat.res</span>$<span class="no">nbrks</span>, <span class="kw">ngibbs</span> <span class="kw">=</span> <span class="no">ngibbs</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"nbrks"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># Trace-plots for the number of breakpoints per ID</span>
+<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">nbrks</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></pre></div>
 <p><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-1.png" width="312"><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-2.png" width="312"><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-3.png" width="312"></p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">dat.res</span>$<span class="no">LML</span>, <span class="kw">ngibbs</span> <span class="kw">=</span> <span class="no">ngibbs</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"LML"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span>
+<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></pre></div>
 <p><img src="Segment-the-tracks_files/figure-html/LML-traceplots-1.png" width="312"><img src="Segment-the-tracks_files/figure-html/LML-traceplots-2.png" width="312"><img src="Segment-the-tracks_files/figure-html/LML-traceplots-3.png" width="312"></p>
 <p>It appears that the models have converged based on the traceplots of the log marginal likelihoods for all IDs. If this was not the case, the model would need to be re-run with a greater number of iterations for <code>ngibbs</code>. It also appears that most IDs likely have 30-40 breakpoints, but the exact number and position of these breakpoints will be determined by selecting the <em>maximum a posteriori</em> (MAP) estimate for each animal ID. This is performed as follows:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># Determine MAP for selecting breakpoints</span>
-<span class="no">MAP.est</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat.res</span>$<span class="no">LML</span>, <span class="kw">nburn</span> <span class="kw">=</span> <span class="fl">5000</span>)
-<span class="no">MAP.est</span>
-<span class="co">#&gt; [1] 9984 8334 9820</span>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="co"># Determine MAP for selecting breakpoints</span>
+<span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span>
+<span class="va">MAP.est</span>
+<span class="co">#&gt; [1]  6660 10000  9823</span>
 
-<span class="no">brkpts</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat.res</span>$<span class="no">brkpts</span>, <span class="kw">MAP.est</span> <span class="kw">=</span> <span class="no">MAP.est</span>)
+<span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span>
 
 <span class="co"># How many breakpoints estimated per ID?</span>
-<span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">brkpts</span>[,-<span class="fl">1</span>], <span class="fl">1</span>, <span class="kw">function</span>(<span class="no">x</span>) <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="kw pkg">purrr</span><span class="kw ns">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span>(<span class="no">x</span>, <span class="no">is.na</span>)))
+<span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; id1 id2 id3 </span>
-<span class="co">#&gt;  36  48  35</span></pre></body></html></div>
+<span class="co">#&gt;  38  52  33</span></pre></div>
 <p>The object <code>MAP.est</code> is storing the iteration at which the MAP estimate occurs for each ID, whereas <code>brkpts</code> is a data frame that stores all of the breakpoints per ID. We can plot these breakpoints over the discretized data streams to inspect how well this appears to match changes in these values.</p>
 </div>
 <div id="breakpoint-visualization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#breakpoint-visualization" class="anchor"></a>Breakpoint visualization</h2>
-<p>The <code>bayesmove</code> package provides a number of functions to visualize the data, such as <code><a href="../reference/traceplot.html">traceplot()</a></code>. The <code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> function provides an easy method to visualize the breakpoints compared to the data and to determine whether the number and location of breakpoints appear to be appropriate. The number and position of breakpoints will depend on a number of factors, such as the number of observations per ID, the sampling interval of the biologging device, and the method by which data streams were discretized. If the breakpoints do not appear to fit the data well, then the limits used to discretize the data streams likely need to be modified and the model re-run.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Plot breakpoints over the data</span>
-<span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">tracks.list2</span>, <span class="kw">nbins</span> <span class="kw">=</span> <span class="no">nbins</span>, <span class="kw">brkpts</span> <span class="kw">=</span> <span class="no">brkpts</span>, <span class="kw">title</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">legend</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p><img src="Segment-the-tracks_files/figure-html/heatmaps-1.png" width="672" style="display: block; margin: auto;"></p>
-<pre><code>#&gt; Warning in par(oldpar): calling par(new=TRUE) with no plot</code></pre>
-<p><img src="Segment-the-tracks_files/figure-html/heatmaps-2.png" width="672" style="display: block; margin: auto;"></p>
-<pre><code>#&gt; Warning in par(oldpar): calling par(new=TRUE) with no plot</code></pre>
-<p><img src="Segment-the-tracks_files/figure-html/heatmaps-3.png" width="672" style="display: block; margin: auto;"></p>
-<p>From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on <code>SL</code> (step lengths) and <code>TA</code> (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each data stream are shown on the y-axis.</p>
+<p>The <code>bayesmove</code> package provides a number of functions to visualize results from the model, such as <code><a href="../reference/traceplot.html">traceplot()</a></code>. The <code><a href="../reference/plot_breakpoints.html">plot_breakpoints()</a></code> function provides an easy method to visualize the breakpoints compared to the data and to determine whether the number and location of breakpoints appear to be appropriate. The number and position of breakpoints will depend on a number of factors, such as the number of observations per ID, the sampling interval of the biologging device, and the method by which data streams were discretized. If the breakpoints do not appear to fit the data well, then the limits used to discretize the data streams likely need to be modified and the model re-run.</p>
+<p>Additionally, there are a number of options to use when visualizing breakpoints compared to the data streams, such as plotting by <code>date</code> or by observation (<code>time1</code>). Additionally, data streams can be visualized on their original scale (continuous) or as bins. An example is provided here using continuous values for step lengths and turning angles by observation, but this can be easily modified.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="co"># Plot breakpoints over the data</span>
+<span class="fu"><a href="../reference/plot_breakpoints.html">plot_breakpoints</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list</span>, as_date <span class="op">=</span> <span class="cn">FALSE</span>, var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span><span class="op">)</span>,
+                 var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Step Length (km)"</span>, <span class="st">"Turning Angle (rad)"</span><span class="op">)</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></pre></div>
+<p><img src="Segment-the-tracks_files/figure-html/heatmaps-1.png" width="672" style="display: block; margin: auto;"><img src="Segment-the-tracks_files/figure-html/heatmaps-2.png" width="672" style="display: block; margin: auto;"><img src="Segment-the-tracks_files/figure-html/heatmaps-3.png" width="672" style="display: block; margin: auto;"></p>
+<p>From these lineplots, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on <code>SL</code> (step lengths) and <code>TA</code> (turning angles). If the user would like to plot the bins instead, they should replace <code>step</code> and <code>angle</code> with <code>SL</code> and <code>TA</code>, respectively, as well as the y-axis titles for <code>var_names</code>.</p>
 <p>Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define track segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.</p>
 </div>
 <div id="assign-track-segments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#assign-track-segments" class="anchor"></a>Assign track segments</h2>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># Assign track segments to all observations by ID</span>
-<span class="no">tracks.seg</span><span class="kw">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">tracks.list</span>, <span class="kw">brkpts</span> <span class="kw">=</span> <span class="no">brkpts</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co"># Assign track segments to all observations by ID</span>
+<span class="va">tracks.seg</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.list</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">tracks.seg</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks.seg</span><span class="op">)</span>
 <span class="co">#&gt;    id                date        x          y   step  angle   dt obs time1 SL</span>
 <span class="co">#&gt; 1 id1 2020-07-02 12:00:00  0.00000  0.0000000 10.695     NA 3600   1     1  5</span>
 <span class="co">#&gt; 2 id1 2020-07-02 13:00:00 10.56492 -1.6654990 14.974  0.227 3600   2     2  5</span>
@@ -240,7 +246,7 @@
 <span class="co">#&gt; 3  6    1</span>
 <span class="co">#&gt; 4  5    1</span>
 <span class="co">#&gt; 5  5    1</span>
-<span class="co">#&gt; 6  1    1</span></pre></body></html></div>
+<span class="co">#&gt; 6  1    1</span></pre></div>
 <p>These segments will then be clustered in the next stage of this Bayesian framework: a mixed-membership Latent Dirichlet Allocation model.</p>
 </div>
   </div>
@@ -260,7 +266,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

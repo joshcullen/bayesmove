@@ -152,7 +152,7 @@ segment_behavior." />
 <code><a href='segment_behavior.html'>segment_behavior</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>discrete_move_var</span>(<span class='no'>dat</span>, <span class='no'>lims</span>, <span class='no'>varIn</span>, <span class='no'>varOut</span>)</pre>
+    <pre class="usage"><span class='fu'>discrete_move_var</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>lims</span>, <span class='va'>varIn</span>, <span class='va'>varOut</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,32 +186,38 @@ returned by the function.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#load data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>tracks</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>tracks</span><span class='op'>)</span>
+
+<span class='co'>#subset only first track</span>
+<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='va'>tracks</span><span class='op'>[</span><span class='va'>tracks</span><span class='op'>$</span><span class='va'>id</span> <span class='op'>==</span> <span class='st'>"id1"</span>,<span class='op'>]</span>
 
 <span class='co'>#calculate step lengths and turning angles</span>
-<span class='no'>tracks</span><span class='kw'>&lt;-</span> <span class='fu'><a href='prep_data.html'>prep_data</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>tracks</span>, <span class='kw'>coord.names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>,<span class='st'>"y"</span>), <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"id"</span>)
+<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'><a href='prep_data.html'>prep_data</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>tracks</span>, coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>,<span class='st'>"y"</span><span class='op'>)</span>, id <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span>
 
 <span class='co'>#round times to nearest interval of interest (e.g. 3600 s or 1 hr)</span>
-<span class='no'>tracks</span><span class='kw'>&lt;-</span> <span class='fu'><a href='round_track_time.html'>round_track_time</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>tracks</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>int</span> <span class='kw'>=</span> <span class='fl'>3600</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>180</span>, <span class='kw'>time.zone</span> <span class='kw'>=</span> <span class='st'>"UTC"</span>)
+<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'><a href='round_track_time.html'>round_track_time</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>tracks</span>, id <span class='op'>=</span> <span class='st'>"id"</span>, int <span class='op'>=</span> <span class='fl'>3600</span>, tol <span class='op'>=</span> <span class='fl'>180</span>, time.zone <span class='op'>=</span> <span class='st'>"UTC"</span><span class='op'>)</span>
 
 <span class='co'>#create list from data frame</span>
-<span class='no'>tracks.list</span><span class='kw'>&lt;-</span> <span class='fu'><a href='df_to_list.html'>df_to_list</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>tracks</span>, <span class='kw'>ind</span> <span class='kw'>=</span> <span class='st'>"id"</span>)
+<span class='va'>tracks.list</span><span class='op'>&lt;-</span> <span class='fu'><a href='df_to_list.html'>df_to_list</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>tracks</span>, ind <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span>
 
 <span class='co'>#filter observations to only 1 hr (or 3600 s)</span>
-<span class='no'>tracks_filt.list</span><span class='kw'>&lt;-</span> <span class='fu'><a href='filter_time.html'>filter_time</a></span>(<span class='kw'>dat.list</span> <span class='kw'>=</span> <span class='no'>tracks.list</span>, <span class='kw'>int</span> <span class='kw'>=</span> <span class='fl'>3600</span>)
+<span class='va'>tracks_filt.list</span><span class='op'>&lt;-</span> <span class='fu'><a href='filter_time.html'>filter_time</a></span><span class='op'>(</span>dat.list <span class='op'>=</span> <span class='va'>tracks.list</span>, int <span class='op'>=</span> <span class='fl'>3600</span><span class='op'>)</span>
 
 <span class='co'>#define bin number and limits for turning angles and step lengths</span>
-<span class='no'>angle.bin.lims</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='kw'>from</span><span class='kw'>=</span>-<span class='no'>pi</span>, <span class='kw'>to</span><span class='kw'>=</span><span class='no'>pi</span>, <span class='kw'>by</span><span class='kw'>=</span><span class='no'>pi</span>/<span class='fl'>4</span>)  <span class='co'>#8 bins</span>
-<span class='no'>dist.bin.lims</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span>(<span class='no'>tracks</span>[<span class='no'>tracks</span>$<span class='no'>dt</span> <span class='kw'>==</span> <span class='fl'>3600</span>,]$<span class='no'>step</span>,
-                      <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0.25</span>,<span class='fl'>0.50</span>,<span class='fl'>0.75</span>,<span class='fl'>0.90</span>,<span class='fl'>1</span>), <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>)  <span class='co'>#5 bins</span>
+<span class='va'>angle.bin.lims</span><span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from<span class='op'>=</span><span class='op'>-</span><span class='va'>pi</span>, to<span class='op'>=</span><span class='va'>pi</span>, by<span class='op'>=</span><span class='va'>pi</span><span class='op'>/</span><span class='fl'>4</span><span class='op'>)</span>  <span class='co'>#8 bins</span>
+<span class='va'>dist.bin.lims</span><span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span><span class='op'>(</span><span class='va'>tracks</span><span class='op'>[</span><span class='va'>tracks</span><span class='op'>$</span><span class='va'>dt</span> <span class='op'>==</span> <span class='fl'>3600</span>,<span class='op'>]</span><span class='op'>$</span><span class='va'>step</span>,
+                      <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0.25</span>,<span class='fl'>0.50</span>,<span class='fl'>0.75</span>,<span class='fl'>0.90</span>,<span class='fl'>1</span><span class='op'>)</span>, na.rm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'>#5 bins</span>
 
 
 <span class='co'># Assign bins to observations</span>
-<span class='no'>tracks_disc.list</span><span class='kw'>&lt;-</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>tracks_filt.list</span>,
-                      <span class='no'>discrete_move_var</span>,
-                      <span class='kw'>lims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>dist.bin.lims</span>, <span class='no'>angle.bin.lims</span>),
-                      <span class='kw'>varIn</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"step"</span>, <span class='st'>"angle"</span>),
-                      <span class='kw'>varOut</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SL"</span>, <span class='st'>"TA"</span>))</div></pre>
+<span class='va'>tracks_disc.list</span><span class='op'>&lt;-</span> <span class='fu'>purrr</span><span class='fu'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span><span class='op'>(</span><span class='va'>tracks_filt.list</span>,
+                      <span class='va'>discrete_move_var</span>,
+                      lims <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>dist.bin.lims</span>, <span class='va'>angle.bin.lims</span><span class='op'>)</span>,
+                      varIn <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"step"</span>, <span class='st'>"angle"</span><span class='op'>)</span>,
+                      varOut <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL"</span>, <span class='st'>"TA"</span><span class='op'>)</span><span class='op'>)</span>
+
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -227,7 +233,7 @@ returned by the function.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

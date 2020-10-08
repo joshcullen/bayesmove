@@ -152,7 +152,7 @@ well as the log marginal likelihood (LML) for each animal ID." />
 well as the log marginal likelihood (LML) for each animal ID.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>traceplot</span>(<span class='no'>data</span>, <span class='no'>ngibbs</span>, <span class='no'>type</span>)</pre>
+    <pre class="usage"><span class='fu'>traceplot</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>ngibbs</span>, <span class='va'>type</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,14 +182,15 @@ breakpoints or 'LML' for the log marginal likelihood.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#simulate data</span>
-<span class='no'>ngibbs</span><span class='kw'>&lt;-</span> <span class='fl'>1000</span>
-<span class='no'>y</span><span class='kw'>&lt;-</span> (-<span class='fl'>1000</span> * <span class='fl'>501</span>:<span class='fl'>1500</span>)/(-<span class='fl'>500</span> + <span class='fl'>501</span>:<span class='fl'>1500</span>) + <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>ngibbs</span>, <span class='fl'>0</span>, <span class='fl'>0.1</span>)
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='no'>y</span>), <span class='fl'>1</span>, <span class='fl'>1001</span>)
-<span class='no'>dat</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>dat</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>dat</span>)[<span class='fl'>1</span>]<span class='kw'>&lt;-</span> <span class='st'>"id"</span>
+<span class='va'>ngibbs</span><span class='op'>&lt;-</span> <span class='fl'>1000</span>
+<span class='va'>y</span><span class='op'>&lt;-</span> <span class='op'>(</span><span class='op'>-</span><span class='fl'>1000</span> <span class='op'>*</span> <span class='fl'>501</span><span class='op'>:</span><span class='fl'>1500</span><span class='op'>)</span><span class='op'>/</span><span class='op'>(</span><span class='op'>-</span><span class='fl'>500</span> <span class='op'>+</span> <span class='fl'>501</span><span class='op'>:</span><span class='fl'>1500</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>ngibbs</span>, <span class='fl'>0</span>, <span class='fl'>0.1</span><span class='op'>)</span>
+<span class='va'>dat</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='va'>y</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fl'>1001</span><span class='op'>)</span>
+<span class='va'>dat</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span> <span class='st'>"id"</span>
 
 <span class='co'>#run function</span>
-<span class='fu'>traceplot</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>ngibbs</span> <span class='kw'>=</span> <span class='no'>ngibbs</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"LML"</span>)</div><div class='img'><img src='traceplot-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>traceplot</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dat</span>, ngibbs <span class='op'>=</span> <span class='va'>ngibbs</span>, type <span class='op'>=</span> <span class='st'>"LML"</span><span class='op'>)</span>
+</div><div class='img'><img src='traceplot-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -206,7 +207,7 @@ breakpoints or 'LML' for the log marginal likelihood.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

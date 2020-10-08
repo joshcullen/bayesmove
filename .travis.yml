@@ -17,7 +17,9 @@ sudo: false
 cache: packages
 warnings_are_errors: false
 r_check_args: "--timings --as-cran"
-
+script:
+  - |
+    travis_wait 20 R CMD check bayesmove*tar.gz
 
 notifications:
   email:

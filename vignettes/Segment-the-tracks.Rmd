@@ -116,22 +116,25 @@ The object `MAP.est` is storing the iteration at which the MAP estimate occurs f
 
 
 ## Breakpoint visualization
- The `bayesmove` package provides a number of functions to visualize the data, such as `traceplot()`. The `plot_heatmap()` function provides an easy method to visualize the breakpoints compared to the data and to determine whether the number and location of breakpoints appear to be appropriate. The number and position of breakpoints will depend on a number of factors, such as the number of observations per ID, the sampling interval of the biologging device, and the method by which data streams were discretized. If the breakpoints do not appear to fit the data well, then the limits used to discretize the data streams likely need to be modified and the model re-run.
+The `bayesmove` package provides a number of functions to visualize results from the model, such as `traceplot()`. The `plot_breakpoints()` function provides an easy method to visualize the breakpoints compared to the data and to determine whether the number and location of breakpoints appear to be appropriate. The number and position of breakpoints will depend on a number of factors, such as the number of observations per ID, the sampling interval of the biologging device, and the method by which data streams were discretized. If the breakpoints do not appear to fit the data well, then the limits used to discretize the data streams likely need to be modified and the model re-run.
+
+Additionally, there are a number of options to use when visualizing breakpoints compared to the data streams, such as plotting by `date` or by observation (`time1`). Additionally, data streams can be visualized on their original scale (continuous) or as bins. An example is provided here using continuous values for step lengths and turning angles by observation, but this can be easily modified.
 
 ```{r, eval=FALSE}
 # Plot breakpoints over the data
-plot_heatmap(data = tracks.list2, nbins = nbins, brkpts = brkpts, title = TRUE, legend = TRUE)
+plot_breakpoints(data = tracks.list, as_date = FALSE, var_names = c("step","angle"),
+                 var_labels = c("Step Length (km)", "Turning Angle (rad)"), brkpts = brkpts)
 ```
 
-```{r heatmaps, echo=FALSE, fig.align='center', fig.height=5}
-for (i in 1:length(tracks.list2)) {
-  plot_heatmap(data = tracks.list2[i], nbins = nbins, brkpts = brkpts, title = TRUE,
-               legend = TRUE)
+```{r heatmaps, echo=FALSE, fig.align='center', fig.height=5, warning=FALSE, message=FALSE}
+for (i in 1:length(tracks.list)) {
+  plot_breakpoints(data = tracks.list[i], as_date = FALSE, var_names = c("step","angle"),
+                 var_labels = c("Step Length (km)", "Turning Angle (rad)"), brkpts = brkpts)
 }
 ```
 
 
-From these heatmaps, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on `SL` (step lengths) and `TA` (turning angles). This heatmap shows time (or the consecutive observations) on the x-axis, whereas the bins that correspond to each data stream are shown on the y-axis.
+From these lineplots, it appears that the segmentation model estimated the breakpoints quite well to create relatively homogeneous units of observations based on `SL` (step lengths) and `TA` (turning angles). If the user would like to plot the bins instead, they should replace `step` and `angle` with `SL` and `TA`, respectively, as well as the y-axis titles for `var_names`.
 
 Now that the MAP estimates of the breakpoints have been identified and we are satisfied with the results, we will use these breakpoints to define track segments of observations for each individual. These segments represent different changes in movement patterns based on the variables that were originally selected.
 

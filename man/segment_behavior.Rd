@@ -69,13 +69,14 @@ set.seed(1)
 
 # Define model params
 alpha<- 1
-ngibbs<- 10000
+ngibbs<- 1000
 nbins<- c(5,8)
 
-#future::plan(future::multisession)  #run all MCMC chains in parallel
+future::plan(future::multisession)  #run all MCMC chains in parallel
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
 
+future::plan(future::sequential)  #return to single core
 }
 
 }
