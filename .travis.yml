@@ -20,7 +20,7 @@ r_check_args: "--timings --as-cran"
 script:
   - |
     R CMD build .
-    travis_wait 20 R CMD check --no-vignettes bayesmove*tar.gz
+    travis_wait 20 R CMD check bayesmove*tar.gz
 
 notifications:
   email:
