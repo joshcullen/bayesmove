@@ -16,11 +16,10 @@ matrix:
 sudo: false
 cache: packages
 warnings_are_errors: false
-r_check_args: "--timings --as-cran"
 script:
   - |
     R CMD build .
-    travis_wait 20 R CMD check bayesmove*tar.gz
+    travis_wait 20 R CMD check --as-cran bayesmove*tar.gz
 
 notifications:
   email:
