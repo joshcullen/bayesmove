@@ -695,6 +695,9 @@ plot_breakpoints_behav=function(data, as_date, var_names, var_labels, brkpts) {
 
   # Reformat data into long form using preferred time variable
   x<- ifelse(as_date == TRUE, "date", "time1")
+
+  #in case time1 modified
+  if (x == "time1" & dplyr::n_distinct(diff(data$time1)) > 1) data$time1<- seq(1, nrow(data))
   dat.long<- data[,c("id", x, var_names)] %>%
     tidyr::pivot_longer(cols = -c(1:2), names_to = "var", values_to = "value")
 
