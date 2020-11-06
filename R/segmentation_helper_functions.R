@@ -288,6 +288,10 @@ assign_tseg_internal=function(dat, brkpts){
   breakpt1<- c(0, breakpt, Inf)
   n<- length(breakpt1)
   res<- matrix(NA, nrow(dat), 1)
+
+  #in case time1 modified
+  if (dat$time1[1] != 1 | dplyr::n_distinct(diff(dat$time1)) > 1) dat$time1<- seq(1, nrow(dat))
+
   for (i in 2:n){
     ind<- which(breakpt1[i-1] < dat$time1 & dat$time1 <= breakpt1[i])
     res[ind,]<- i-1
