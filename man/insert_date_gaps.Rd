@@ -54,7 +54,7 @@ theta.estim.long<- expand_behavior(dat = tracks.seg, theta.estim = theta.estim, 
 #Add gaps when dt > 1 week (in minutes)
 theta.estim.list<- df_to_list(dat = theta.estim.long, ind = "id")
 theta.estim.long2<- purrr::map(theta.estim.list,
-                      ~insert_date_gaps(.x, tol = 3600, units = "sec")) \%>\%
+                      ~insert_date_gaps(.x, tol = 60*24*7, units = "min")) \%>\%
   dplyr::bind_rows()
 }
 
