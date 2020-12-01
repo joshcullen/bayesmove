@@ -33,7 +33,10 @@ Imports:
     tictoc (>= 1.0),
     tidyr (>= 1.0.0),
     magrittr,
-    future (>= 1.15.1)
+    future (>= 1.15.1),
+    shiny,
+    dygraphs (>= 1.1.0),
+    leaflet (>= 2.0.0)
 URL: https://github.com/joshcullen/bayesmove, https://joshcullen.github.io/bayesmove/
 BugReports: https://github.com/joshcullen/bayesmove/issues
 Suggests: 
@@ -43,7 +46,13 @@ Suggests:
     knitr,
     rmarkdown,
     ggforce,
-    RcppArmadillo
+    RcppArmadillo,
+    sf,
+    shinyWidgets,
+    xts,
+    htmltools,
+    shinythemes,
+    move
 Language: en-US
 RoxygenNote: 7.1.1
 LinkingTo: 

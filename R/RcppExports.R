@@ -49,3 +49,16 @@ CumSumInv <- function(ntsegm, nmaxclust, z) {
     .Call(`_bayesmove_CumSumInv`, ntsegm, nmaxclust, z)
 }
 
+#' Internal function that generates nmat matrix to help with multinomial draws
+#'
+#' @param z An integer vector.
+#' @param dat An integer vector.
+#' @param ncateg An integer.
+#' @param nbehav An integer.
+#' @param nobs An integer.
+#'
+#'
+SummarizeDat <- function(z, dat, ncateg, nbehav, nobs) {
+    .Call(`_bayesmove_SummarizeDat`, z, dat, ncateg, nbehav, nobs)
+}
+

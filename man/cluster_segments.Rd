@@ -43,8 +43,8 @@ behavioral states by first segmenting individual tracks into relatively
 homogeneous segments of movement.
 }
 \details{
-The LDA model provides behavior estimates for all animal IDs pooled together,
-providing population-level estimates of animal behavioral states.
+The LDA model analyzes all animal IDs pooled together, thereby providing
+population-level estimates of behavioral states.
 }
 \examples{
 \donttest{

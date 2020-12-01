@@ -519,7 +519,7 @@ traceplot=function(data, ngibbs, type) {
 #'
 #'
 #'
-#'
+#' @export
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {

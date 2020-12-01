@@ -143,6 +143,14 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #' @param var.names character. A vector of names used for each of the movement
 #'   variables. Must be in the same order as were listed within the data frame
 #'   returned by \code{\link{summarize_tsegs}}.
+#' @param ord numeric. A vector of the column numbers by which to reorganize
+#'   \emph{phi} based upon the \emph{theta} vector from the MAP estimate. The
+#'   \emph{theta} vector should have been sorted in decreasing order. Only
+#'   needed when evaluating results from observation-level clustering via
+#'   \code{\link{cluster_obs}}.
+#' @param MAP.iter numeric. The iteration that represents the MAP estimate (as
+#'   identified using \code{\link{get_MAP_internal}}) from the observation-level
+#'   clustering model via \code{\link{cluster_obs}}.
 #'
 #' @return A data frame that contains columns for bin number, behavioral state,
 #'   proportion represented by a given bin, and movement variable name. This is
@@ -169,21 +177,29 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #' #Extract proportions of behaviors per track segment
 #' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 #'
-#' #run function
+#' #run function for clustered segments
 #' behav.res<- get_behav_hist(dat = res, nburn = 500, ngibbs = 1000, nmaxclust = 7,
 #'                            var.names = c("Step Length","Turning Angle"))
 #' }
 #'
 #' @importFrom rlang .data
 #' @export
-get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
+get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names, ord, MAP.iter) {
 
   #summarize cluster results by frequency and proportion
   behav.list<- list()
   for (i in 1:length(dat$phi)) {
-    tmp<- matrix(dat$phi[[i]][(nburn+1):ngibbs,], length((nburn+1):ngibbs),
-                 ncol(dat$phi[[i]]))
-    tmp1<- matrix(colMeans(tmp), ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
+
+    if ("z" %in% names(dat)) {  #for mixture model
+      tmp<- matrix(dat$phi[[i]][MAP.iter,], 1, ncol(dat$phi[[i]]))
+      tmp1<- matrix(tmp, ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
+      tmp1<- tmp1[,as.numeric(ord)]
+
+    } else {  #for LDA
+      tmp<- matrix(dat$phi[[i]][(nburn+1):ngibbs,], length((nburn+1):ngibbs),
+                   ncol(dat$phi[[i]]))
+      tmp1<- matrix(colMeans(tmp), ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
+    }
 
     behav.list[[i]]<- data.frame(bin = 1:nrow(tmp1), tmp1) %>%
       dplyr::rename_at(dplyr::vars(tidyr::starts_with('X')), ~as.character(1:ncol(tmp1))) %>%
@@ -197,6 +213,7 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 
   behav.res
 }
+
 #------------------------------------------------
 
 #' Expand behavior estimates from track segments to observations

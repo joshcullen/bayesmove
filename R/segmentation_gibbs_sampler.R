@@ -141,6 +141,9 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 segment_behavior=function(data, ngibbs, nbins, alpha,
                           breakpt = purrr::map(names(data), ~ NULL)) {
 
+  if (is.null(names(data)))
+    stop("Must provide names for list elements of `data` argument.")
+
   tictoc::tic()  #start timer
   mod<- furrr::future_map2(data, breakpt,
                            ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,

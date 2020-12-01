@@ -7,8 +7,8 @@
 #' behavioral states by first segmenting individual tracks into relatively
 #' homogeneous segments of movement.
 #'
-#' The LDA model provides behavior estimates for all animal IDs pooled together,
-#' providing population-level estimates of animal behavioral states.
+#' The LDA model analyzes all animal IDs pooled together, thereby providing
+#' population-level estimates of behavioral states.
 #'
 #' @param dat A data frame returned by \code{\link{summarize_tsegs}} that
 #'   summarizes the counts of observations per bin and movement variable for all
