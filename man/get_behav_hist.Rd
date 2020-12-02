@@ -4,7 +4,7 @@
 \alias{get_behav_hist}
 \title{Extract bin estimates from Latent Dirichlet Allocation model}
 \usage{
-get_behav_hist(dat, nburn, ngibbs, nmaxclust, var.names)
+get_behav_hist(dat, nburn, ngibbs, nmaxclust, var.names, ord, MAP.iter)
 }
 \arguments{
 \item{dat}{The list object returned by the LDA model
@@ -21,6 +21,16 @@ attribute behaviors.}
 \item{var.names}{character. A vector of names used for each of the movement
 variables. Must be in the same order as were listed within the data frame
 returned by \code{\link{summarize_tsegs}}.}
+
+\item{ord}{numeric. A vector of the column numbers by which to reorganize
+\emph{phi} based upon the \emph{theta} vector from the MAP estimate. The
+\emph{theta} vector should have been sorted in decreasing order. Only
+needed when evaluating results from observation-level clustering via
+\code{\link{cluster_obs}}.}
+
+\item{MAP.iter}{numeric. The iteration that represents the MAP estimate (as
+identified using \code{\link{get_MAP_internal}}) from the observation-level
+clustering model via \code{\link{cluster_obs}}.}
 }
 \value{
 A data frame that contains columns for bin number, behavioral state,
@@ -52,7 +62,7 @@ res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
 #Extract proportions of behaviors per track segment
 theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 
-#run function
+#run function for clustered segments
 behav.res<- get_behav_hist(dat = res, nburn = 500, ngibbs = 1000, nmaxclust = 7,
                            var.names = c("Step Length","Turning Angle"))
 }

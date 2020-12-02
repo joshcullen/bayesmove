@@ -10,6 +10,9 @@
     <loc>http://joshcullen.github.io/bayesmove/reference/SampleZAgg.html</loc>
   </url>
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/SummarizeDat.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/assign_behavior.html</loc>
   </url>
   <url>
@@ -23,6 +26,9 @@
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/behav_seg_image.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/cluster_obs.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/cluster_segments.html</loc>
@@ -46,6 +52,9 @@
     <loc>http://joshcullen.github.io/bayesmove/reference/find_breaks.html</loc>
   </url>
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/get.llk.mixmod.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/get.theta.html</loc>
   </url>
   <url>
@@ -62,6 +71,9 @@
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/get_summary_stats.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/insert_date_gaps.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/log_marg_likel.html</loc>
@@ -94,16 +106,31 @@
     <loc>http://joshcullen.github.io/bayesmove/reference/samp_move.html</loc>
   </url>
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/sample.gamma.mixmod.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/sample.phi.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/sample.phi.mixmod.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/sample.v.html</loc>
   </url>
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/sample.v.mixmod.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/sample.z.html</loc>
   </url>
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/sample.z.mixmod.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/segment_behavior.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/shiny_tracks.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/summarize_tsegs.html</loc>
@@ -119,6 +146,9 @@
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/tracks.seg.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Cluster-observations.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/articles/Cluster-track-segments.html</loc>

@@ -3,14 +3,8 @@ navbar:
   title: "bayesmove"
   type: inverse
   left:
-    - text: "Articles"
-      menu:
-      - text: "Prepare Data"
-        href: articles/Prepare-data-for-analysis.html
-      - text: "Segment the Tracks"
-        href: articles/Segment-the-tracks.html
-      - text: "Cluster Track Segments"
-        href: articles/Cluster-track-segments.html
+    - text: "Vignettes"
+      href: articles/index.html
     - text: "Reference"
       href: reference/index.html
     - text: "News"
@@ -18,6 +12,24 @@ navbar:
   right:
     - icon: fa-github
       href: https://github.com/joshcullen/bayesmove
+
+articles:
+  - title: "Estimate segment-level behavioral states"
+    desc: >
+      These vignettes provide an example workflow of estimating segment-level behavioral
+      states by discretizing data streams, partitioning tracks into segments, and
+      clustering segments into states.
+    contents:
+      - Prepare-data-for-analysis
+      - Segment-the-tracks
+      - Cluster-track-segments
+  - title: "Estimate observation-level behavioral states"
+    desc: >
+      This vignettes provides an example workflow to estimate observation-level behavioral
+      states by discretizing data streams and then clustering segments into states directly.
+    contents:
+      - Cluster-observations
+
 template:
   params:
     ganalytics: UA-151357058-2

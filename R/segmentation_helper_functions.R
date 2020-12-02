@@ -288,6 +288,10 @@ assign_tseg_internal=function(dat, brkpts){
   breakpt1<- c(0, breakpt, Inf)
   n<- length(breakpt1)
   res<- matrix(NA, nrow(dat), 1)
+
+  #in case time1 modified
+  if (dat$time1[1] != 1 | dplyr::n_distinct(diff(dat$time1)) > 1) dat$time1<- seq(1, nrow(dat))
+
   for (i in 2:n){
     ind<- which(breakpt1[i-1] < dat$time1 & dat$time1 <= breakpt1[i])
     res[ind,]<- i-1
@@ -515,7 +519,7 @@ traceplot=function(data, ngibbs, type) {
 #'
 #'
 #'
-#'
+#' @export
 get_MAP_internal=function(dat, nburn) {
 
   if (which.max(dat[-1]) < nburn) {
@@ -695,6 +699,9 @@ plot_breakpoints_behav=function(data, as_date, var_names, var_labels, brkpts) {
 
   # Reformat data into long form using preferred time variable
   x<- ifelse(as_date == TRUE, "date", "time1")
+
+  #in case time1 modified
+  if (x == "time1" & dplyr::n_distinct(diff(data$time1)) > 1) data$time1<- seq(1, nrow(data))
   dat.long<- data[,c("id", x, var_names)] %>%
     tidyr::pivot_longer(cols = -c(1:2), names_to = "var", values_to = "value")
 

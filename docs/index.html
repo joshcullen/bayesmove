@@ -48,29 +48,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/Prepare-data-for-analysis.html">Prepare Data</a>
-    </li>
-    <li>
-      <a href="articles/Segment-the-tracks.html">Segment the Tracks</a>
-    </li>
-    <li>
-      <a href="articles/Cluster-track-segments.html">Cluster Track Segments</a>
-    </li>
-  </ul>
+  <a href="articles/index.html">Vignettes</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
@@ -107,7 +92,9 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>The goal of <strong>bayesmove</strong> is to analyze animal movement using a non-parametric Bayesian framework, which addresses a number of limitations of existing segmentation methods and state-space models. In particular, this two-stage framework first partitions individual tracks into segments, which are then clustered into latent behavioral states. This framework allows the analysis of multiple telemetry and biologging data streams, which must first be discretized into a set of bins before they can be analyzed. This package also includes features to check model convergence. Model output are often returned in a format that is <code>tidyverse</code>-friendly, which allows for easy visualization using <code>ggplot2</code>.</p>
+<p>The goal of <strong>bayesmove</strong> is to analyze animal movement using a non-parametric Bayesian framework, which addresses a number of limitations of existing segmentation methods and state-space models. This package currently offers two different model frameworks on which to make behavioral inference from animal telemetry data: 1) <strong>segment-level behavioral state estimation</strong> and 2) <strong>observation-level behavioral state estimation</strong>.</p>
+<p>The model that makes segment-level inference is a two-stage framework that first partitions individual tracks into segments and subsequently clusters these segments into latent behavioral states. This framework allows the analysis of multiple telemetry and biologging data streams, which must first be discretized into a set of bins before they can be analyzed. The model that makes behavioral inference at the observation-level also requires that data streams are first discretized, but then directly clusters these observations together into behavioral states within a single step. While the outcome is similar to that from state-space and hidden Markov models, this observation-level model does not assume an underlying Markov property or use a mechanistic process (e.g., correlated random walk).</p>
+<p>This package also includes features to check model convergence based on the log-likelihood for each MCMC iteration. Model output are often returned in a format that is <code>tidyverse</code>-friendly, which allows for easy visualization using <code>ggplot2</code>.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -119,6 +106,10 @@
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"joshcullen/bayesmove"</span><span class="op">)</span></pre></div>
+<p>or latest development (<strong>unstable</strong>) version with:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"joshcullen/bayesmove@dev"</span><span class="op">)</span></pre></div>
 </div>
 <div id="support" class="section level2">
 <h2 class="hasAnchor">

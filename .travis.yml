@@ -13,13 +13,19 @@ matrix:
     os: linux
 
 
+apt_packages:
+  - libudunits2-dev
+  - libgdal1-dev
+
+
 sudo: false
 cache: packages
 warnings_are_errors: false
 script:
   - |
     R CMD build .
-    travis_wait 20 R CMD check --as-cran bayesmove*tar.gz
+    travis_wait 30 R CMD check --as-cran bayesmove*tar.gz
+
 
 notifications:
   email:

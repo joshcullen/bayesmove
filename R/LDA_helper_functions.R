@@ -143,6 +143,14 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #' @param var.names character. A vector of names used for each of the movement
 #'   variables. Must be in the same order as were listed within the data frame
 #'   returned by \code{\link{summarize_tsegs}}.
+#' @param ord numeric. A vector of the column numbers by which to reorganize
+#'   \emph{phi} based upon the \emph{theta} vector from the MAP estimate. The
+#'   \emph{theta} vector should have been sorted in decreasing order. Only
+#'   needed when evaluating results from observation-level clustering via
+#'   \code{\link{cluster_obs}}.
+#' @param MAP.iter numeric. The iteration that represents the MAP estimate (as
+#'   identified using \code{\link{get_MAP_internal}}) from the observation-level
+#'   clustering model via \code{\link{cluster_obs}}.
 #'
 #' @return A data frame that contains columns for bin number, behavioral state,
 #'   proportion represented by a given bin, and movement variable name. This is
@@ -169,21 +177,29 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #' #Extract proportions of behaviors per track segment
 #' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
 #'
-#' #run function
+#' #run function for clustered segments
 #' behav.res<- get_behav_hist(dat = res, nburn = 500, ngibbs = 1000, nmaxclust = 7,
 #'                            var.names = c("Step Length","Turning Angle"))
 #' }
 #'
 #' @importFrom rlang .data
 #' @export
-get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
+get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names, ord, MAP.iter) {
 
   #summarize cluster results by frequency and proportion
   behav.list<- list()
   for (i in 1:length(dat$phi)) {
-    tmp<- matrix(dat$phi[[i]][(nburn+1):ngibbs,], length((nburn+1):ngibbs),
-                 ncol(dat$phi[[i]]))
-    tmp1<- matrix(colMeans(tmp), ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
+
+    if ("z" %in% names(dat)) {  #for mixture model
+      tmp<- matrix(dat$phi[[i]][MAP.iter,], 1, ncol(dat$phi[[i]]))
+      tmp1<- matrix(tmp, ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
+      tmp1<- tmp1[,as.numeric(ord)]
+
+    } else {  #for LDA
+      tmp<- matrix(dat$phi[[i]][(nburn+1):ngibbs,], length((nburn+1):ngibbs),
+                   ncol(dat$phi[[i]]))
+      tmp1<- matrix(colMeans(tmp), ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
+    }
 
     behav.list[[i]]<- data.frame(bin = 1:nrow(tmp1), tmp1) %>%
       dplyr::rename_at(dplyr::vars(tidyr::starts_with('X')), ~as.character(1:ncol(tmp1))) %>%
@@ -197,6 +213,7 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 
   behav.res
 }
+
 #------------------------------------------------
 
 #' Expand behavior estimates from track segments to observations
@@ -402,4 +419,92 @@ assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) 
 
   dat1$behav<- factor(dat1$behav, levels = behav.names)
   dat1
+}
+
+
+#------------------------------------------------
+
+#' Insert gaps for missing behavior proportions in time series
+#'
+#' @param data A data frame containing all of the columns returned by
+#'   \code{\link{expand_behavior}}. This includes \code{id}, \code{tseg},
+#'   \code{time1}, \code{date}, \code{behavior}, and \code{prop}.
+#' @param tol integer. The tolerance (or threshold) of time after which NA
+#'   breaks should be inserted to facilitate accurate time series plots.
+#' @param units character. The units by which \code{tol} is specified, and
+#'   therefore how time differences between dates are measured.
+#'
+#' @return A data frame nearly identical to that originally produced by
+#'   \code{\link{expand_behavior}}, but that includes inserted \code{NA} values
+#'   to denote breaks in the date greater than \code{tol}. Additionally, two new
+#'   columns (\code{ymin} and \code{ymax}) are included within this data frame.
+#'   These columns can be used within \code{\link[ggplot2]{geom_ribbon}} to
+#'   produce stacked areas that account for gaps in the time series.
+#'
+#' @examples
+#' \donttest{
+#' #load data
+#' data(tracks.seg)
+#'
+#' #select only id, tseg, SL, and TA columns
+#' tracks.seg2<- tracks.seg[,c("id","tseg","SL","TA")]
+#'
+#' #summarize data by track segment
+#' obs<- summarize_tsegs(dat = tracks.seg2, nbins = c(5,8))
+#'
+#' #cluster data with LDA
+#' res<- cluster_segments(dat = obs, gamma1 = 0.1, alpha = 0.1, ngibbs = 1000,
+#'                        nburn = 500, nmaxclust = 7, ndata.types = 2)
+#'
+#' #Extract proportions of behaviors per track segment
+#' theta.estim<- extract_prop(res = res, ngibbs = 1000, nburn = 500, nmaxclust = 7)
+#'
+#' #Create augmented matrix by replicating rows (tsegs) according to obs per tseg
+#' theta.estim.long<- expand_behavior(dat = tracks.seg, theta.estim = theta.estim, obs = obs,
+#'                                nbehav = 3, behav.names = c("Encamped","ARS","Transit"),
+#'                                behav.order = c(1,2,3))
+#'
+#' #Add gaps when dt > 1 week (in minutes)
+#' theta.estim.list<- df_to_list(dat = theta.estim.long, ind = "id")
+#' theta.estim.long2<- purrr::map(theta.estim.list,
+#'                       ~insert_date_gaps(.x, tol = 60*24*7, units = "min")) %>%
+#'   dplyr::bind_rows()
+#' }
+#'
+#' @export
+insert_date_gaps = function(data, tol, units) {
+
+  #find dt > tol
+  dt<- as.numeric(difftime(data$date, dplyr::lag(data$date), units = units))
+  ind<- which(dt >= tol)
+
+  if (length(ind) > 0) {
+
+    #insert NAs in these gaps
+    oo<- 0  #counter
+    for (i in 1:length(ind)) {
+      ind<- ind + oo
+
+      data[(ind[i] + 1):(nrow(data) + 1),]<- data[ind[i]:nrow(data),]
+      data[ind[i], c("tseg","time1","prop")]<- NA
+      data[ind[i], "date"]<- data[(ind[i] - 1),]$date + lubridate::seconds(1)
+
+      oo<- oo + 1
+    }
+  } else {
+    data<- data
+  }
+
+  #calculate ymin and ymax for plotting w/ geom_ribbon()
+  data$ymax<- data$prop
+  data$ymin<- 0
+  zl<- levels(data$behavior)
+  for (i in 2:length(zl)) {
+    zi<- data$behavior==zl[i]
+    zi_1<- data$behavior==zl[i-1]
+    data$ymin[zi]<- data$ymax[zi_1]
+    data$ymax[zi]<- data$ymin[zi] + data$ymax[zi]
+  }
+
+  data
 }

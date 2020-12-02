@@ -89,29 +89,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/Prepare-data-for-analysis.html">Prepare Data</a>
-    </li>
-    <li>
-      <a href="../articles/Segment-the-tracks.html">Segment the Tracks</a>
-    </li>
-    <li>
-      <a href="../articles/Cluster-track-segments.html">Cluster Track Segments</a>
-    </li>
-  </ul>
+        <li>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -178,6 +163,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="SummarizeDat.html">SummarizeDat()</a></code> </p>
+        </td>
+        <td><p>Internal function that generates nmat matrix to help with multinomial draws</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="assign_behavior.html">assign_behavior()</a></code> </p>
         </td>
         <td><p>Assign behavior estimates to observations</p></td>
@@ -206,6 +197,12 @@
         </td>
         <td><p>Internal function that transforms a vector of bin numbers to a
 presence-absence matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cluster_obs.html">cluster_obs()</a></code> </p>
+        </td>
+        <td><p>Cluster observations into behavioral states</p></td>
       </tr><tr>
         
         <td>
@@ -251,6 +248,12 @@ presence-absence matrix</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="get.llk.mixmod.html">get.llk.mixmod()</a></code> </p>
+        </td>
+        <td><p>Calculate the log-likelihood for iteration of mixture model</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="get.theta.html">get.theta()</a></code> </p>
         </td>
         <td><p>Internal function to calculate theta parameter</p></td>
@@ -286,6 +289,12 @@ chain</p></td>
         </td>
         <td><p>Internal function that calculates the sufficient statistics for the
 segmentation model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="insert_date_gaps.html">insert_date_gaps()</a></code> </p>
+        </td>
+        <td><p>Insert gaps for missing behavior proportions in time series</p></td>
       </tr><tr>
         
         <td>
@@ -345,7 +354,19 @@ algorithm</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="sample.gamma.mixmod.html">sample.gamma.mixmod()</a></code> </p>
+        </td>
+        <td><p>Internal function to sample the gamma hyperparameter</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="sample.phi.html">sample.phi()</a></code> </p>
+        </td>
+        <td><p>Internal function to sample bin estimates for each movement variable</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sample.phi.mixmod.html">sample.phi.mixmod()</a></code> </p>
         </td>
         <td><p>Internal function to sample bin estimates for each movement variable</p></td>
       </tr><tr>
@@ -357,15 +378,33 @@ algorithm</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="sample.v.mixmod.html">sample.v.mixmod()</a></code> </p>
+        </td>
+        <td><p>Internal function to sample parameter for truncated stick-breaking prior</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="sample.z.html">sample.z()</a></code> </p>
         </td>
         <td><p>Internal function to sample latent clusters</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="sample.z.mixmod.html">sample.z.mixmod()</a></code> </p>
+        </td>
+        <td><p>Internal function to sample latent clusters (for observations)</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="segment_behavior.html">segment_behavior()</a></code> </p>
         </td>
         <td><p>Segmentation model to estimate breakpoints</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="shiny_tracks.html">shiny_tracks()</a></code> </p>
+        </td>
+        <td><p>Dynamically explore tracks within Shiny app</p></td>
       </tr><tr>
         
         <td>
