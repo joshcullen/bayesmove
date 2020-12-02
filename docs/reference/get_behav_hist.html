@@ -92,29 +92,14 @@ of movement variable distribution for each behavior estimated." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/Prepare-data-for-analysis.html">Prepare Data</a>
-    </li>
-    <li>
-      <a href="../articles/Segment-the-tracks.html">Segment the Tracks</a>
-    </li>
-    <li>
-      <a href="../articles/Cluster-track-segments.html">Cluster Track Segments</a>
-    </li>
-  </ul>
+        <li>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -154,7 +139,7 @@ variable from the posterior distribution. This can be used for visualization
 of movement variable distribution for each behavior estimated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_behav_hist</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>nburn</span>, <span class='va'>ngibbs</span>, <span class='va'>nmaxclust</span>, <span class='va'>var.names</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_behav_hist</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>nburn</span>, <span class='va'>ngibbs</span>, <span class='va'>nmaxclust</span>, <span class='va'>var.names</span>, <span class='va'>ord</span>, <span class='va'>MAP.iter</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,6 +169,20 @@ attribute behaviors.</p></td>
 variables. Must be in the same order as were listed within the data frame
 returned by <code><a href='summarize_tsegs.html'>summarize_tsegs</a></code>.</p></td>
     </tr>
+    <tr>
+      <th>ord</th>
+      <td><p>numeric. A vector of the column numbers by which to reorganize
+<em>phi</em> based upon the <em>theta</em> vector from the MAP estimate. The
+<em>theta</em> vector should have been sorted in decreasing order. Only
+needed when evaluating results from observation-level clustering via
+<code><a href='cluster_obs.html'>cluster_obs</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>MAP.iter</th>
+      <td><p>numeric. The iteration that represents the MAP estimate (as
+identified using <code><a href='get_MAP_internal.html'>get_MAP_internal</a></code>) from the observation-level
+clustering model via <code><a href='cluster_obs.html'>cluster_obs</a></code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -212,7 +211,7 @@ returned by <code><a href='summarize_tsegs.html'>summarize_tsegs</a></code>.</p>
 <span class='co'>#Extract proportions of behaviors per track segment</span>
 <span class='va'>theta.estim</span><span class='op'>&lt;-</span> <span class='fu'><a href='extract_prop.html'>extract_prop</a></span><span class='op'>(</span>res <span class='op'>=</span> <span class='va'>res</span>, ngibbs <span class='op'>=</span> <span class='fl'>1000</span>, nburn <span class='op'>=</span> <span class='fl'>500</span>, nmaxclust <span class='op'>=</span> <span class='fl'>7</span><span class='op'>)</span>
 
-<span class='co'>#run function</span>
+<span class='co'>#run function for clustered segments</span>
 <span class='va'>behav.res</span><span class='op'>&lt;-</span> <span class='fu'>get_behav_hist</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>res</span>, nburn <span class='op'>=</span> <span class='fl'>500</span>, ngibbs <span class='op'>=</span> <span class='fl'>1000</span>, nmaxclust <span class='op'>=</span> <span class='fl'>7</span>,
                            var.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Step Length"</span>,<span class='st'>"Turning Angle"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='co'># }</span>

@@ -1,7 +1,7 @@
 Package: bayesmove
 Type: Package
 Title: Non-Parametric Bayesian Analyses of Animal Movement
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Joshua",
              family = "Cullen",

@@ -44,29 +44,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Prepare-data-for-analysis.html">Prepare Data</a>
-    </li>
-    <li>
-      <a href="../articles/Segment-the-tracks.html">Segment the Tracks</a>
-    </li>
-    <li>
-      <a href="../articles/Cluster-track-segments.html">Cluster Track Segments</a>
-    </li>
-  </ul>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -97,7 +82,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Cluster track segments</h1>
             
-            <h4 class="date">27 October 2020</h4>
+            <h4 class="date">01 December 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Cluster-track-segments.Rmd"><code>vignettes/Cluster-track-segments.Rmd</code></a></small>
       <div class="hidden name"><code>Cluster-track-segments.Rmd</code></div>
@@ -177,7 +162,7 @@
 <p>Similar to checking convergence of the segmentation model, we must also inspect a trace-plot of log likelihood from the LDA to discern if the model reached convergence.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Check traceplot of log likelihood</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loglikel</span>, type<span class="op">=</span><span class="st">'l'</span>, xlab <span class="op">=</span> <span class="st">"Iteration"</span>, ylab <span class="op">=</span> <span class="st">"Log Likelihood"</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loglikel</span>, type<span class="op">=</span><span class="st">'l'</span>, xlab <span class="op">=</span> <span class="st">"Iteration"</span>, ylab <span class="op">=</span> <span class="st">"Log Likelihood"</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/traceplot-1.png" width="672"></p>
 <p>The trace-plot of the log likelihood has reached an asymptote, denoting that the model has converged on the posterior. We can now use these results to determine the optimal number of latent behavioral states that are present, as well as to characterize these state-specific distributions, and to attribute proportions of time spent in each behavior to track segments.</p>
 </div>
@@ -191,7 +176,7 @@
 
 <span class="co"># Convert to data frame for ggplot2</span>
 <span class="va">theta.estim_df</span><span class="op">&lt;-</span> <span class="va">theta.estim</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://bartk.gitlab.io/move/reference/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="va">.</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nmaxclust</span>, names_to <span class="op">=</span> <span class="st">"behavior"</span>, values_to <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://purrr.tidyverse.org/reference/modify.html">modify_at</a></span><span class="op">(</span><span class="st">"behavior"</span>, <span class="va">factor</span><span class="op">)</span>
 <span class="co">#&gt; Note: Using an external vector in selections is ambiguous.</span>

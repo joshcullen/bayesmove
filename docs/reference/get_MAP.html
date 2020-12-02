@@ -92,29 +92,14 @@ on which to assign track segments to the observations of each animal ID." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/Prepare-data-for-analysis.html">Prepare Data</a>
-    </li>
-    <li>
-      <a href="../articles/Segment-the-tracks.html">Segment the Tracks</a>
-    </li>
-    <li>
-      <a href="../articles/Cluster-track-segments.html">Cluster Track Segments</a>
-    </li>
-  </ul>
+        <li>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -200,7 +185,7 @@ estimate will be identified.</p></td>
 <span class='co'>#future::plan(future::multisession)  #run all MCMC chains in parallel</span>
 <span class='va'>dat.res</span><span class='op'>&lt;-</span> <span class='fu'><a href='segment_behavior.html'>segment_behavior</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>tracks.list2</span>, ngibbs <span class='op'>=</span> <span class='va'>ngibbs</span>, nbins <span class='op'>=</span> <span class='va'>nbins</span>,
                            alpha <span class='op'>=</span> <span class='va'>alpha</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 20.23 sec elapsed</div><div class='input'>
+</div><div class='output co'>#&gt; 19.411 sec elapsed</div><div class='input'>
 
 <span class='co'># Determine MAP iteration for selecting breakpoints and store breakpoints</span>
 <span class='va'>MAP.est</span><span class='op'>&lt;-</span> <span class='fu'>get_MAP</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat.res</span><span class='op'>$</span><span class='va'>LML</span>, nburn <span class='op'>=</span> <span class='va'>ngibbs</span><span class='op'>/</span><span class='fl'>2</span><span class='op'>)</span>

@@ -39,11 +39,6 @@
 #' @export
 shiny_tracks = function(data, epsg){
 
-# library(sp)
-# library(rgdal)
-# library(viridis)
-# library(rgeos)
-
 
 
 ###################
@@ -246,6 +241,11 @@ server <- function(data, epsg) {
 
       # UPDATED MAP
       req(reacted.data()) # Do this if reacted.data() is not null
+
+
+      dat.filt.sf<- sf::st_as_sf(dat.filt(), coords = c("x","y"), crs = epsg) %>%
+        sf::st_transform(4326) %>%
+        sf::st_cast("LINESTRING")
 
       # Track w/in time window
       df<- reactive({
