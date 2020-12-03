@@ -2,7 +2,8 @@
 % Please edit documentation in R/segmentation_helper_functions.R
 \name{prep_data}
 \alias{prep_data}
-\title{Calculate step lengths, turning angles, and time steps}
+\title{Calculate step lengths, turning angles, net-squared displacement, and time
+steps}
 \usage{
 prep_data(dat, coord.names, id)
 }
@@ -10,7 +11,7 @@ prep_data(dat, coord.names, id)
 \item{dat}{A data frame that contains a column for animal IDs, the columns
 associated with the x and y coordinates, and a column for the date. For
 easier interpretation of the model results, it is recommended that
-coordinates be stored after UTM projection (meters) as opposed to
+coordinates be stored in a UTM projection (meters) as opposed to
 unprojected in decimal degrees (map units). Date-time should be of class
 \code{POSIXct} and be labeled \code{date} within the data frame.}
 
@@ -22,18 +23,20 @@ first and the name for the y coordinate second.}
 }
 \value{
 A data frame where all original data are returned and new columns are
-  added for step length (\code{step}), turning angle (\code{angle}), and time
+  added for step length (\code{step}), turning angle (\code{angle}),
+  net-squared displacement (\code{NSD}), and time
   step (\code{dt}). Names for coordinates are changed to \code{x} and
-  \code{y}. Units for step length depend on the projection of the
-  coordinates, turning angles are returned in radians, and time steps are
+  \code{y}. Units for \code{step} and \code{NSD} depend on the projection of the
+  coordinates, \code{angle} is returned in radians, and \code{dt} is
   returned in seconds.
 }
 \description{
-Calculates step lengths and turning angles based on coordinates for each
-animal ID and calculates time steps based on the date-time. Provides a
-self-contained method to calculate these variables without needing to rely on
-other R packages (e.g., \code{adehabitatLT}). However, functions from other
-packages can also be used to perform this step in data preparation.
+Calculates step lengths, turning angles, and net-squared displacement based
+on coordinates for each animal ID and calculates time steps based on the
+date-time. Provides a self-contained method to calculate these variables
+without needing to rely on other R packages (e.g., \code{adehabitatLT}).
+However, functions from other packages can also be used to perform this step
+in data preparation.
 }
 \examples{
 #load data

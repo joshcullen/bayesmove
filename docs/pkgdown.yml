@@ -4,9 +4,10 @@ pkgdown_sha: ~
 articles:
   Cluster-observations: Cluster-observations.html
   Cluster-track-segments: Cluster-track-segments.html
+  Exploratory-analysis-in-Shiny: Exploratory-analysis-in-Shiny.html
   Prepare-data-for-analysis: Prepare-data-for-analysis.html
   Segment-the-tracks: Segment-the-tracks.html
-last_built: 2020-12-02T01:41Z
+last_built: 2020-12-03T17:18Z
 urls:
   reference: http://joshcullen.github.io/bayesmove/reference
   article: http://joshcullen.github.io/bayesmove/articles

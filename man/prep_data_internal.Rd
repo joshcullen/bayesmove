@@ -20,8 +20,8 @@ first and the name for the y coordinate second.}
 }
 \value{
 A data frame where all original data are returned and new columns are
-  added for step length (\code{step}), turning angle (\code{angle}), and time
-  step (\code{dt}).
+  added for step length (\code{step}), turning angle (\code{angle}),
+  net-squared displacement (\code{NSD}), and time step (\code{dt}).
 }
 \description{
 An internal function that calculates step lengths, turning angles, and time
