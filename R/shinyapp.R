@@ -62,7 +62,9 @@ ui <- function(data, epsg) {
                                      br(),
                                      p("Application author: ",
                                        a("Josh Cullen", href = "https://joshcullen.github.io/"),
+
                                        tags$br(),
+
                                        a("University of Florida", href = "http://www.ufl.edu"),
                                        style = "font-family: 'times'; font-si16pt")
                         ),
@@ -89,7 +91,9 @@ ui <- function(data, epsg) {
                           br(),
                           p("Application author: ",
                             a("Josh Cullen", href = "https://joshcullen.github.io/"),
+
                             tags$br(),
+
                             a("University of Florida", href = "http://www.ufl.edu"),
                             style = "font-family: 'times'; font-si16pt")),
 
