@@ -832,8 +832,8 @@ plot_breakpoints=function(data, as_date = FALSE, var_names, var_labels = NULL, b
 #'   first and the name for the y coordinate second.
 #'
 #' @return A data frame where all original data are returned and new columns are
-#'   added for step length (\code{step}), turning angle (\code{angle}), and time
-#'   step (\code{dt}).
+#'   added for step length (\code{step}), turning angle (\code{angle}),
+#'   net-squared displacement (\code{NSD}), and time step (\code{dt}).
 #'
 #'
 #' @importFrom stats "na.omit"
@@ -859,6 +859,12 @@ prep_data_internal=function(dat, coord.names) {
                  ifelse(angle < -pi, 2*pi + angle, angle))
   dat$angle<- c(NA, angle)
 
+  # calculate net-squared displacement
+  x0<- dat[1,"x"]  #identify starting x-coord
+  y0<- dat[1,"y"]  #identify starting y-coord
+  displ<- sqrt((dat[,"x"] - x0)^2 + (dat[,"y"] - y0)^2)
+  dat$NSD<- displ^2
+
   #calculate time steps
   dt<- difftime(dat$date, dplyr::lag(dat$date, 1), units = "secs") %>%
     na.omit() %>%
@@ -866,22 +872,26 @@ prep_data_internal=function(dat, coord.names) {
     round()
   dat$dt<- c(dt, NA)
 
+
+
   dat
 }
 #------------------------------------------------
 
-#' Calculate step lengths, turning angles, and time steps
+#' Calculate step lengths, turning angles, net-squared displacement, and time
+#' steps
 #'
-#' Calculates step lengths and turning angles based on coordinates for each
-#' animal ID and calculates time steps based on the date-time. Provides a
-#' self-contained method to calculate these variables without needing to rely on
-#' other R packages (e.g., \code{adehabitatLT}). However, functions from other
-#' packages can also be used to perform this step in data preparation.
+#' Calculates step lengths, turning angles, and net-squared displacement based
+#' on coordinates for each animal ID and calculates time steps based on the
+#' date-time. Provides a self-contained method to calculate these variables
+#' without needing to rely on other R packages (e.g., \code{adehabitatLT}).
+#' However, functions from other packages can also be used to perform this step
+#' in data preparation.
 #'
 #' @param dat A data frame that contains a column for animal IDs, the columns
 #'   associated with the x and y coordinates, and a column for the date. For
 #'   easier interpretation of the model results, it is recommended that
-#'   coordinates be stored after UTM projection (meters) as opposed to
+#'   coordinates be stored in a UTM projection (meters) as opposed to
 #'   unprojected in decimal degrees (map units). Date-time should be of class
 #'   \code{POSIXct} and be labeled \code{date} within the data frame.
 #' @param coord.names character. A vector of the column names under which the
@@ -890,10 +900,11 @@ prep_data_internal=function(dat, coord.names) {
 #' @param id character. The name of the column storing the animal IDs.
 #'
 #' @return A data frame where all original data are returned and new columns are
-#'   added for step length (\code{step}), turning angle (\code{angle}), and time
+#'   added for step length (\code{step}), turning angle (\code{angle}),
+#'   net-squared displacement (\code{NSD}), and time
 #'   step (\code{dt}). Names for coordinates are changed to \code{x} and
-#'   \code{y}. Units for step length depend on the projection of the
-#'   coordinates, turning angles are returned in radians, and time steps are
+#'   \code{y}. Units for \code{step} and \code{NSD} depend on the projection of the
+#'   coordinates, \code{angle} is returned in radians, and \code{dt} is
 #'   returned in seconds.
 #'
 #'
@@ -913,7 +924,7 @@ prep_data=function(dat, coord.names, id) {
   purrr::map(df_to_list(dat = dat, ind = id),
       ~prep_data_internal(., coord.names = coord.names)) %>%
     dplyr::bind_rows() %>%
-    mutate_at(c("step","angle"), ~round(., 3))
+    mutate_at(c("step","angle","NSD"), ~round(., 3))
 
 
 }

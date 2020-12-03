@@ -148,7 +148,7 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   mod<- furrr::future_map2(data, breakpt,
                            ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
                                                          alpha = alpha, breakpt = .y),
-                   .progress = TRUE, .options = furrr::future_options(seed = T))
+                   .progress = TRUE, .options = furrr::furrr_options(seed = T))
   tictoc::toc()  #provide elapsed time
 
 

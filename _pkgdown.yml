@@ -29,6 +29,13 @@ articles:
       states by discretizing data streams and then clustering segments into states directly.
     contents:
       - Cluster-observations
+  - title: "Dynamic exploration of animal movement patterns"
+    desc: >
+      This vignettes provides a step-by-step guide to dynamically explore temporal patterns
+      in animal tracks using a built-in Shiny app.
+    contents:
+      - Exploratory-analysis-in-Shiny
+
 
 template:
   params:

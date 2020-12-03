@@ -82,7 +82,8 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Segment the tracks</h1>
             
-            <h4 class="date">01 December 2020</h4>
+            <h4 class="date">03 December 2020</h4>
+
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Segment-the-tracks.Rmd"><code>vignettes/Segment-the-tracks.Rmd</code></a></small>
       <div class="hidden name"><code>Segment-the-tracks.Rmd</code></div>
@@ -187,14 +188,14 @@
 <span class="co"># Determine MAP for selecting breakpoints</span>
 <span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span>
 <span class="va">MAP.est</span>
-<span class="co">#&gt; [1]  6660 10000  9823</span>
+<span class="co">#&gt; [1] 9364 9912 9084</span>
 
 <span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span>
 
 <span class="co"># How many breakpoints estimated per ID?</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; id1 id2 id3 </span>
-<span class="co">#&gt;  38  52  33</span></pre></div>
+<span class="co">#&gt;  41  47  34</span></pre></div>
 <p>The object <code>MAP.est</code> is storing the iteration at which the MAP estimate occurs for each ID, whereas <code>brkpts</code> is a data frame that stores all of the breakpoints per ID. We can plot these breakpoints over the discretized data streams to inspect how well this appears to match changes in these values.</p>
 </div>
 <div id="breakpoint-visualization" class="section level2">
