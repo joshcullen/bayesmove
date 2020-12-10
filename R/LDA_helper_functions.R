@@ -432,7 +432,8 @@ assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) 
 #' @param tol integer. The tolerance (or threshold) of time after which NA
 #'   breaks should be inserted to facilitate accurate time series plots.
 #' @param units character. The units by which \code{tol} is specified, and
-#'   therefore how time differences between dates are measured.
+#'   therefore how time differences between dates are measured. These can be
+#'   "secs", "mins", "hours", "days", or "weeks".
 #'
 #' @return A data frame nearly identical to that originally produced by
 #'   \code{\link{expand_behavior}}, but that includes inserted \code{NA} values
@@ -481,15 +482,12 @@ insert_date_gaps = function(data, tol, units) {
   if (length(ind) > 0) {
 
     #insert NAs in these gaps
-    oo<- 0  #counter
     for (i in 1:length(ind)) {
-      ind<- ind + oo
+      ind<- ind + 1
 
       data[(ind[i] + 1):(nrow(data) + 1),]<- data[ind[i]:nrow(data),]
       data[ind[i], c("tseg","time1","prop")]<- NA
       data[ind[i], "date"]<- data[(ind[i] - 1),]$date + lubridate::seconds(1)
-
-      oo<- oo + 1
     }
   } else {
     data<- data
@@ -500,8 +498,8 @@ insert_date_gaps = function(data, tol, units) {
   data$ymin<- 0
   zl<- levels(data$behavior)
   for (i in 2:length(zl)) {
-    zi<- data$behavior==zl[i]
-    zi_1<- data$behavior==zl[i-1]
+    zi<- which(data$behavior==zl[i])
+    zi_1<- which(data$behavior==zl[i-1])
     data$ymin[zi]<- data$ymax[zi_1]
     data$ymax[zi]<- data$ymin[zi] + data$ymax[zi]
   }

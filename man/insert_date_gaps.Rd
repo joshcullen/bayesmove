@@ -15,7 +15,8 @@ insert_date_gaps(data, tol, units)
 breaks should be inserted to facilitate accurate time series plots.}
 
 \item{units}{character. The units by which \code{tol} is specified, and
-therefore how time differences between dates are measured.}
+therefore how time differences between dates are measured. These can be
+"secs", "mins", "hours", "days", or "weeks".}
 }
 \value{
 A data frame nearly identical to that originally produced by

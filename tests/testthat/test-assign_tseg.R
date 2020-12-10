@@ -1,7 +1,9 @@
 test_that("time segments are assigned properly", {
   #simulate data
 
-  time1<- rep(1:100, 10)
+  tmp<- 1:105
+  tmp<- tmp[-c(2,5,8,50,100)]
+  time1<- rep(tmp, 10)
   id<- rep(1:10, each = 100)
 
   #simulate breakpoints
@@ -29,5 +31,6 @@ test_that("time segments are assigned properly", {
   expect_s3_class(dat1, "data.frame")
   expect_identical(nrow(dat1), length(id))
   expect_equal(sum(ifelse(is.na(dat1$tseg), 0, 1)), 1000)
+  expect_identical(dat1$time1[1:100], 1:100)
 
 })
