@@ -17,9 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/bayesmove)](https://CRAN.R-project.org/package=bayesmove)
-[![Travis build status](https://travis-ci.com/joshcullen/bayesmove.svg?branch=master)](https://travis-ci.com/joshcullen/bayesmove)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/joshcullen/bayesmove?branch=master&svg=true)](https://ci.appveyor.com/project/joshcullen/bayesmove)
-[![Codecov test coverage](https://codecov.io/gh/joshcullen/bayesmove/branch/master/graph/badge.svg)](https://codecov.io/gh/joshcullen/bayesmove?branch=master)
+[![R build status](https://github.com/joshcullen/bayesmove/workflows/R-CMD-check/badge.svg)](https://github.com/joshcullen/bayesmove/actions)
 [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/bayesmove)](https://cran.r-project.org/web/packages/bayesmove/index.html)
 [![CRAN total downloads](https://cranlogs.r-pkg.org/badges/grand-total/bayesmove)](https://cran.r-project.org/web/packages/bayesmove/index.html)
 <!-- badges: end -->
