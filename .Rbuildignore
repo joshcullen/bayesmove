@@ -2,9 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
-^\.travis\.yml$
-^appveyor\.yml$
-^codecov\.yml$
 ^data-raw$
 ^_pkgdown\.yml$
 ^docs$
