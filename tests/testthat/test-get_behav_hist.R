@@ -1,4 +1,4 @@
-test_that("function correctly wrangles phi matrixinto data frame", {
+test_that("function correctly wrangles phi matrix into data frame", {
 
   #simulate data
   SL<- matrix(runif(500*35), 500, 35)
@@ -19,7 +19,11 @@ test_that("function correctly wrangles phi matrixinto data frame", {
 
   res<- list(phi = phi)
 
-  #run function
+  #to test for results from mixture model
+  res2<- c(res, z = list(seq(1,1000)))
+
+
+  #run function (for segmentation/LDA)
   behav.res<- get_behav_hist(dat = res, nburn = 250, ngibbs = 500, nmaxclust = 7,
                              var.names = c("Step Length","Turning Angle"))
 
@@ -29,4 +33,17 @@ test_that("function correctly wrangles phi matrixinto data frame", {
   expect_equal(sum(dplyr::pull(tmp_SL, prop)), 1)
   expect_equal(sum(dplyr::pull(tmp_TA, prop)), 1)
   expect_equal(nrow(behav.res), 35+56)
+
+
+  #run function (for mixture model)
+  behav.res2<- get_behav_hist(dat = res2, nburn = 250, ngibbs = 500, nmaxclust = 7,
+                              var.names = c("Step Length","Turning Angle"),
+                              ord = 1:7, MAP.iter = 450)
+
+  tmp_SL2<- behav.res2[behav.res2$behav == 1 & behav.res2$var == "Step Length", "prop"]
+  tmp_TA2<- behav.res2[behav.res2$behav == 1 & behav.res2$var == "Turning Angle", "prop"]
+
+  expect_equal(sum(dplyr::pull(tmp_SL2, prop)), 1)
+  expect_equal(sum(dplyr::pull(tmp_TA2, prop)), 1)
+  expect_equal(nrow(behav.res2), 35+56)
 })

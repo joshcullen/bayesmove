@@ -82,7 +82,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Exploratory analysis in Shiny</h1>
 
-            <h4 class="date">03 December 2020</h4>
+            <h4 class="date">10 December 2020</h4>
 
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Exploratory-analysis-in-Shiny.Rmd"><code>vignettes/Exploratory-analysis-in-Shiny.Rmd</code></a></small>
       <div class="hidden name"><code>Exploratory-analysis-in-Shiny.Rmd</code></div>
@@ -96,7 +96,7 @@
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>The creation of maps is essential to understanding animal movement patterns over space and time, but these maps nearly always show spatial patterns at the expense of time. The “flattening” of temporal patterns of animal movement over geographic space can preclude a detailed understanding of how animals move across a landscape (or seascape). This is particularly true when individuals exhibit high site fidelity or there are many overlapping tracks from multiple individuals.</p>
 <p>During the data exploration stage, it is particularly useful to become familiar with relationships between movement patterns and covariates of interest. However, this process can be difficult when practitioners only rely on static maps that obscure the temporal pattern exhibited by an organism.</p>
-<p>As an example, below is a static plot of the <code>fisher</code> dataset (LaPoint et al., 2013) included within the <code>move</code> package.</p>
+<p>As an example, below is a static plot of the <code>fisher</code> dataset (LaPoint et al., 2013) included within the <code>move</code> package. The land use basemap was downloaded from the supporting material from Muff et al. (2019).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bartk.gitlab.io/move/">move</a></span><span class="op">)</span>
@@ -108,9 +108,10 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span>
 
 <span class="co"># View static tracks</span>
-<span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span>; <span class="fu"><a href="https://bartk.gitlab.io/move/reference/lines.html">lines</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span></pre></div>
-<p><img src="Exploratory-analysis-in-Shiny_files/figure-html/load%20data-1.png" width="672"></p>
-<p>Even without an underlying basemap or raster, it is apparent that these movement patterns are difficult to discern other than these fishers move within a confined home range. It is also unclear how long these individuals were tracked and whether they exhibited regular movement across the home range each day or at different periods of the study.</p>
+<span class="fu"><a href="https://bartk.gitlab.io/move/reference/lines.html">lines</a></span><span class="op">(</span><span class="va">fishers</span>, col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></pre></div>
+<p align="center">
+<img src="Shiny-Fig01.png" width="400"></p>
+<p>Even with an underlying basemap, it is apparent that these movement patterns are difficult to discern other than these fishers move within a confined home range and typically avoid developed areas (red). It is also unclear how long these individuals were tracked and whether they exhibited regular movement across the home range each day or at different periods of the study.</p>
 <p>While we could potentially subset these data to create a grid of plots at some time interval of interest (e.g., days, months, seasons, years), this can take unnecessarily long to try different combinations for one or multiple tagged individuals. Additionally, it would be difficult to explore patterns in the intrinsic properties of movement itself (e.g., identify episodic periods of high site fidelity, looping forays, or what locations animals move to during periods of thermal stress). Therefore, we have created a R Shiny application within the <code>bayesmove</code> package to dynamically explore animal movement patterns.</p>
 </div>
 <div id="dynamic-exploration-of-animal-movement-patterns" class="section level2">
@@ -145,6 +146,7 @@
 <a href="#references" class="anchor"></a>References</h2>
 <p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Animal behavior, cost-based corridor models, and real corridors. <em>Landscape Ecology</em>, 28(8), 1615–1630. <a href="http://dx.doi.org/10.1007/s10980-013-9910-0">doi:10.1007/s10980-013-9910-0</a>.</p>
 <p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Data from: Animal behavior, cost-based corridor models, and real corridors. <em>Movebank Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g">doi:10.5441/001/1.2tp2j43g</a>.</p>
+<p>Muff, Stefanie; Signer, Johannes; Fieberg, John R. (2019). R Code and Output Supporting “Accounting for individual-specific variation in habitat-selection studies: Efficient estimation of mixed-effects models using Bayesian or frequentist computation”. Retrieved from the Data Repository for the University of Minnesota, <a href="https://doi.org/10.13020/8bhv-dz98" class="uri">https://doi.org/10.13020/8bhv-dz98</a>.</p>
 </div>
   </div>
 

@@ -108,7 +108,7 @@ sample.phi.mixmod=function(alpha, nmaxclust, nbins, ndata.types, nmat){
 }
 #------------------------------------
 
-#' Calculate the log-likelihood for iteration of mixture model
+#' Internal function to calculate the log-likelihood for iteration of mixture model
 #'
 #' Calculates the log-likelihood of the mixture model based on estimates for
 #' \emph{theta} and \emph{phi}.

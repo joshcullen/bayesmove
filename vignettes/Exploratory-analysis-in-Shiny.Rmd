@@ -19,10 +19,10 @@ The creation of maps is essential to understanding animal movement patterns over
 
 During the data exploration stage, it is particularly useful to become familiar with relationships between movement patterns and covariates of interest. However, this process can be difficult when practitioners only rely on static maps that obscure the temporal pattern exhibited by an organism.
 
-As an example, below is a static plot of the `fisher` dataset (LaPoint et al., 2013) included within the `move` package.
+As an example, below is a static plot of the `fisher` dataset (LaPoint et al., 2013) included within the `move` package. The land use basemap was downloaded from the supporting material from Muff et al. (2019).
 
 
-```{r load data, message=FALSE}
+```{r load, message=FALSE, eval=FALSE}
 library(bayesmove)
 library(move)
 library(dplyr)
@@ -33,11 +33,24 @@ library(lubridate)
 data(fishers)
 
 # View static tracks
-plot(fishers); lines(fishers)
+lines(fishers, col = "black", lwd = 2)
 ```
 
+```{r load data, message=FALSE, echo=FALSE}
+library(bayesmove)
+library(move)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
 
-Even without an underlying basemap or raster, it is apparent that these movement patterns are difficult to discern other than these fishers move within a confined home range. It is also unclear how long these individuals were tracked and whether they exhibited regular movement across the home range each day or at different periods of the study.
+# Load data
+data(fishers)
+```
+<p align="center">
+<img src="Shiny-Fig01.png" width="400">
+</p>
+
+Even with an underlying basemap, it is apparent that these movement patterns are difficult to discern other than these fishers move within a confined home range and typically avoid developed areas (red). It is also unclear how long these individuals were tracked and whether they exhibited regular movement across the home range each day or at different periods of the study.
 
 While we could potentially subset these data to create a grid of plots at some time interval of interest (e.g., days, months, seasons, years), this can take unnecessarily long to try different combinations for one or multiple tagged individuals. Additionally, it would be difficult to explore patterns in the intrinsic properties of movement itself (e.g., identify episodic periods of high site fidelity, looping forays, or what locations animals move to during periods of thermal stress). Therefore, we have created a R Shiny application within the `bayesmove` package to dynamically explore animal movement patterns.
 
@@ -122,3 +135,5 @@ If any other features are desired (e.g., loading raster layers, filtering of sel
 LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Animal behavior, cost-based corridor models, and real corridors. *Landscape Ecology*, 28(8), 1615–1630. [doi:10.1007/s10980-013-9910-0](http://dx.doi.org/10.1007/s10980-013-9910-0).
 
 LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Data from: Animal behavior, cost-based corridor models, and real corridors. *Movebank Data Repository*. [doi:10.5441/001/1.2tp2j43g](http://dx.doi.org/10.5441/001/1.2tp2j43g).
+
+Muff, Stefanie; Signer, Johannes; Fieberg, John R. (2019). R Code and Output Supporting "Accounting for individual-specific variation in habitat-selection studies: Efficient estimation of mixed-effects models using Bayesian or frequentist computation". Retrieved from the Data Repository for the University of Minnesota, https://doi.org/10.13020/8bhv-dz98.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mixmod_gibbs_functions.R
 \name{get.llk.mixmod}
 \alias{get.llk.mixmod}
-\title{Calculate the log-likelihood for iteration of mixture model}
+\title{Internal function to calculate the log-likelihood for iteration of mixture model}
 \usage{
 get.llk.mixmod(phi, theta, ndata.types, dat, nobs, nmaxclust)
 }
