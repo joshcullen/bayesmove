@@ -36,7 +36,9 @@ Imports:
     future (>= 1.15.1),
     shiny,
     dygraphs (>= 1.1.0),
-    leaflet (>= 2.0.0)
+    leaflet (>= 2.0.0),
+    sf,
+    move
 URL: https://github.com/joshcullen/bayesmove, https://joshcullen.github.io/bayesmove/
 BugReports: https://github.com/joshcullen/bayesmove/issues
 Suggests: 
@@ -47,12 +49,10 @@ Suggests:
     rmarkdown,
     ggforce,
     RcppArmadillo,
-    sf,
     shinyWidgets,
     xts,
     htmltools,
-    shinythemes,
-    move
+    shinythemes
 Language: en-US
 RoxygenNote: 7.1.1
 LinkingTo: 

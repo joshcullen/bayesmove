@@ -28,8 +28,7 @@ plotted.
 
 If the data are stored as longitude and latitude (i.e., WGS84), the EPSG code
 is 4326. All other codes will need to be looked up if they are not already
-known. Once resource for determining the EPSG code for a region or projection
-of interest can be found on a variety of websites, such as \url{epsg.io}.
+known.
 }
 \examples{
 \dontrun{
