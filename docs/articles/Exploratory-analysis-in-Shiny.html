@@ -64,7 +64,7 @@
 <li>
   <a href="https://github.com/joshcullen/bayesmove">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -75,22 +75,22 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="Exploratory-analysis-in-Shiny_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Exploratory analysis in Shiny</h1>
-            
+
             <h4 class="date">10 December 2020</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Exploratory-analysis-in-Shiny.Rmd"><code>vignettes/Exploratory-analysis-in-Shiny.Rmd</code></a></small>
       <div class="hidden name"><code>Exploratory-analysis-in-Shiny.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -110,7 +110,7 @@
 <span class="co"># View static tracks</span>
 <span class="fu"><a href="https://bartk.gitlab.io/move/reference/lines.html">lines</a></span><span class="op">(</span><span class="va">fishers</span>, col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></pre></div>
 <p align="center">
-<img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig01.png" width="400"></p>
+<img src="Shiny-Fig01.png" width="400"></p>
 <p>Even with an underlying basemap, it is apparent that these movement patterns are difficult to discern other than these fishers move within a confined home range and typically avoid developed areas (red). It is also unclear how long these individuals were tracked and whether they exhibited regular movement across the home range each day or at different periods of the study.</p>
 <p>While we could potentially subset these data to create a grid of plots at some time interval of interest (e.g., days, months, seasons, years), this can take unnecessarily long to try different combinations for one or multiple tagged individuals. Additionally, it would be difficult to explore patterns in the intrinsic properties of movement itself (e.g., identify episodic periods of high site fidelity, looping forays, or what locations animals move to during periods of thermal stress). Therefore, we have created a R Shiny application within the <code>bayesmove</code> package to dynamically explore animal movement patterns.</p>
 </div>
@@ -121,8 +121,8 @@
 <p>In this example, coordinates recorded in WGS84 UTM 18N are used since they are measured in meters, which allows for intuitive understanding for calculated step lengths and net-squared displacement. Upon first running the function, users should be brought to a page that allows dynamic exploration of individual movement patterns:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># Convert from `Move` object to data frame</span>
-<span class="va">fishers2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://bartk.gitlab.io/move/reference/trackId.html">trackId</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">fishers2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://bartk.gitlab.io/move/reference/trackId.html">trackId</a></span><span class="op">(</span><span class="va">fishers</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">study.local.timestamp</span><span class="op">)</span>
 
 <span class="co"># Calculate step lengths, turning angles, and net squared displacement</span>
@@ -131,15 +131,15 @@
 
 <span class="co"># Run Shiny app</span>
 <span class="fu"><a href="../reference/shiny_tracks.html">shiny_tracks</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">fishers2</span>, epsg <span class="op">=</span> <span class="fl">32618</span><span class="op">)</span></pre></div>
-<p><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig1.png"><br><br> This screenshot shows the general layout of the Shiny app, which has two tabs: the first is for exploration of individual movement patterns and the second is for the exploration of all individuals simultaneously.</p>
+<p><img src="Shiny-Fig1.png"><br><br> This screenshot shows the general layout of the Shiny app, which has two tabs: the first is for exploration of individual movement patterns and the second is for the exploration of all individuals simultaneously.</p>
 <p>We can see on the sidebar that there is a dropdown menu to change which animal ID to explore and another dropdown menu to visualize the time series of a given variable in the data frame, which is shown as the plot at the top. Since the first column in the data frame (apart from ‘id’) is shown initially, you will see the numeric form of a time variable. The map shown below is the entire track for ‘Leroy’, where the green dot is the starting location and the red dot is the ending location.</p>
 <p>To dynamically explore a more interesting variable, such as net-squared displacement, we can change the variable in the dropdown menu and then click and drag on the time series plot to only highlight a particular time period of interest on the map. <br><br></p>
-<p><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig2.png"><br><br><br><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig3.png"><br><br><br><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig4.png"></p>
+<p><img src="Shiny-Fig2.png"><br><br><br><img src="Shiny-Fig3.png"><br><br><br><img src="Shiny-Fig4.png"></p>
 <p><br><br> Each of these screenshots shows a different period selected over this time series. The first and third maps show a foray behavior where Leroy takes approximately 1 day to move across his home range and return to his starting location. The second screenshot shows very little movement during the morning until noon, after which leroy starts to move again. Other variables and IDs could also be explored. It may even be useful to zoom in on the satellite basemap to see exactly what type of land cover is being traversed or occupied.</p>
 <hr>
 <p>In addition to dynamic exploration of individuals, it may also be useful to explore how multiple individuals move over time, especially if interactions among individuals are suspected. We can visualize these patterns in the ‘View all tracks’ tab. <br><br></p>
-<p><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig5.png"><br><br> In this module of the Shiny app, users can select/deselect multiple IDs to visualize. For this <code>fishers</code> dataset, there are only 2 individuals. Additionally the slider at the top can be dragged to change the size and position of the time window of interest. This action will dynamically update the map to only include IDs that were tracked during the time period of interest. <br><br></p>
-<p><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig6.png"><br><br><br><img src="../../../../../../Snail%20Kite%20Project/Data/R%20Scripts/ValleLabUF/bayesmove/vignettes/Shiny-Fig7.png"><br><br> If any other features are desired (e.g., loading raster layers, filtering of selected variables, exporting a filtered set of observations, etc), feel free to send requests by e-mail (joshcullen10 [at] gmail [dot] com) or submit as an issue on the GitHub page for <code>bayesmove</code>.</p>
+<p><img src="Shiny-Fig5.png"><br><br> In this module of the Shiny app, users can select/deselect multiple IDs to visualize. For this <code>fishers</code> dataset, there are only 2 individuals. Additionally the slider at the top can be dragged to change the size and position of the time window of interest. This action will dynamically update the map to only include IDs that were tracked during the time period of interest. <br><br></p>
+<p><img src="Shiny-Fig6.png"><br><br><br><img src="Shiny-Fig7.png"><br><br> If any other features are desired (e.g., loading raster layers, filtering of selected variables, exporting a filtered set of observations, etc), feel free to send requests by e-mail (joshcullen10 [at] gmail [dot] com) or submit as an issue on the GitHub page for <code>bayesmove</code>.</p>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
@@ -171,7 +171,7 @@
       </footer>
 </div>
 
-  
+
 
 
   </body>
