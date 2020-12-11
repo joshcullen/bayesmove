@@ -112,35 +112,37 @@ round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
-    tmp<- matrix(NA, nrow(dat[[i]]), 2)
+    tmp<- matrix(NA, nrow(dat[[i]]), 1)
 
     if (length(int) == 1) {  #when using only 1 time interval
       for (j in 1:nrow(dat[[i]])) {
         if (is.na(dat[[i]]$dt[j])) {
-          tmp[j, 1:2]<- NA
+          tmp[j,]<- NA
         } else if (dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol) &
                    dat[[i]]$dt[j] != int) {
-          tmp[j, 1:2]<- c(int, dat[[i]]$date[j] - (dat[[i]]$dt[j] - int))
+          tmp[j,]<- int
         } else {
-          tmp[j, 1:2]<- c(dat[[i]]$dt[j], dat[[i]]$date[j])
+          tmp[j,]<- dat[[i]]$dt[j]
         }
       }
     } else {  #when using more than one time interval
       for (j in 1:nrow(dat[[i]])) {
         if (is.na(dat[[i]]$dt[j])) {
-          tmp[j, 1:2]<- NA
+          tmp[j,]<- NA
         } else if (sum(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol) &
                        dat[[i]]$dt[j] != int) > 0) {
           ind<- which(dat[[i]]$dt[j] >= (int - tol) & dat[[i]]$dt[j] <= (int + tol) &
                         dat[[i]]$dt[j] != int)
-          tmp[j, 1:2]<- c(int[ind], dat[[i]]$date[j] - (dat[[i]]$dt[j] - int))
+          tmp[j,]<- int[ind]
         } else {
-          tmp[j, 1:2]<- c(dat[[i]]$dt[j], dat[[i]]$date[j])
+          tmp[j,]<- dat[[i]]$dt[j]
         }
       }
     }
     dat[[i]]$dt<- tmp[,1]
-    dat[[i]]$date<- tmp[,2] %>%
+
+    tmp.date<- cumsum(c(as.numeric(dat[[i]]$date[1]), dat[[i]]$dt[-nrow(dat[[i]])]))
+    dat[[i]]$date<- tmp.date %>%
       as.POSIXct(origin = '1970-01-01', tz = time.zone)
   }
 
@@ -927,4 +929,86 @@ prep_data=function(dat, coord.names, id) {
     mutate_at(c("step","angle","NSD"), ~round(., 3))
 
 
+}
+#------------------------------------------------
+
+#' Insert NA gaps to regularize a time series
+#'
+#' @param data A data frame that minimally contains columns for animal ID, date,
+#'   and time step. These must be labeled \code{id}, \code{date}, and \code{dt},
+#'   respectively, where date is of class \code{POSIXct}.
+#' @param int integer. An integer that characterizes the desired interval on
+#'   which to insert new rows.
+#' @param units character. The units of the selected time interval \code{int},
+#'   which can be selected from one of "secs", "mins", "hours", "days", or
+#'   "weeks".
+#'
+#' @return A data frame where new rows have been inserted to regularize the \code{date} column. This results in values provided for \code{id}, \code{date}, and {dt} while inserting NAs for all other columns. Additionally, observations with duplicate date-times are removed.
+#'
+#' @examples
+#' #load data
+#' data(tracks)
+#'
+#' #remove rows to show how function works (create irregular time series)
+#' set.seed(1)
+#' ind<- sort(sample(2:15003, 500))
+#'
+#' tracks.red<- tracks[-ind,]
+#'
+#' #calculate step lengths, turning angles, net-squared displacement, and time steps
+#' tracks.red<- prep_data(dat = tracks.red, coord.names = c("x","y"), id = "id")
+#'
+#' #round times to nearest interval
+#' tracks.red<- round_track_time(dat = tracks.red, id = "id", int = c(3600, 7200, 10800, 14400),
+#'                               tol = 300)
+#'
+#' #insert NA gaps
+#' dat.out<- insert_NAs(tracks.red, int = 3600, units = "secs")
+#'
+#'
+#' @export
+insert_NAs = function(data, int, units) {
+
+  dat.list<- bayesmove::df_to_list(data, "id")
+
+  dat.list<- purrr::map(dat.list, ~{
+
+    dat<- data.frame(.x)
+    ind<- which(!is.na(dat$dt) & dat$dt > int)
+    ind2<- ind + 1
+
+    for (i in 1:length(ind)) {
+      if (dat$dt[ind[i]] >= 2*int) {
+
+        vec.length<- floor(dat$dt[ind[i]]/int)  #find multiple of int in dt to determine seq length
+        seq.dates<- seq(dat$date[ind[i]], dat$date[ind2[i]],
+                        by = paste(int, units))[1:vec.length]
+        tmp1<- as.data.frame(lapply(dat[ind[i],], rep, length(seq.dates)))
+        tmp1$date<- seq.dates
+        tmp1$dt<- int
+        NA.names<- which(!(names(tmp1) %in% c("id","date","dt")))
+        tmp1[2:nrow(tmp1),NA.names]<- NA  #insert NAs for added obs
+
+        dat[seq(ind[i]+vec.length, nrow(dat)+vec.length-1),]<- dat[ind2[i]:nrow(dat),]
+        dat[ind[i]:(ind[i]+vec.length-1),]<- tmp1
+
+        ind<- ind + (vec.length - 1)  #update index
+        ind2<- ind2 + (vec.length - 1)  #update index
+
+      } else {
+        dat<- dat
+      }
+    }
+
+
+    #update dt column and remove any duplicate rows
+    dat$dt<- c(as.numeric(difftime(dat$date, dplyr::lag(dat$date), units = units))[-1], NA)
+    dat<- dplyr::distinct(dat, date, .keep_all = TRUE)
+
+    dat
+  })
+
+  dat.out<- dplyr::bind_rows(dat.list)
+
+  dat.out
 }

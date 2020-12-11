@@ -185,7 +185,7 @@ estimate will be identified.</p></td>
 <span class='co'>#future::plan(future::multisession)  #run all MCMC chains in parallel</span>
 <span class='va'>dat.res</span><span class='op'>&lt;-</span> <span class='fu'><a href='segment_behavior.html'>segment_behavior</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>tracks.list2</span>, ngibbs <span class='op'>=</span> <span class='va'>ngibbs</span>, nbins <span class='op'>=</span> <span class='va'>nbins</span>,
                            alpha <span class='op'>=</span> <span class='va'>alpha</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 20.781 sec elapsed</div><div class='input'>
+</div><div class='output co'>#&gt; 19.048 sec elapsed</div><div class='input'>
 
 <span class='co'># Determine MAP iteration for selecting breakpoints and store breakpoints</span>
 <span class='va'>MAP.est</span><span class='op'>&lt;-</span> <span class='fu'>get_MAP</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat.res</span><span class='op'>$</span><span class='va'>LML</span>, nburn <span class='op'>=</span> <span class='va'>ngibbs</span><span class='op'>/</span><span class='fl'>2</span><span class='op'>)</span>
