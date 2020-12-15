@@ -28,7 +28,8 @@
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
 #' #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
-#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
+#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC",
+#'                               units = "secs")
 #'
 #' #create list from data frame
 #' tracks.list<- df_to_list(dat = tracks, ind = "id")
@@ -201,7 +202,8 @@ round_track_time = function(dat, id, int, tol, time.zone = "UTC", units) {
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
 #' #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
-#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
+#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC",
+#'                               units = "secs")
 #'
 #' #create list from data frame
 #' tracks.list<- df_to_list(dat = tracks, ind = "id")
@@ -978,7 +980,7 @@ prep_data=function(dat, coord.names, id) {
 #'
 #' #round times to nearest interval
 #' tracks.red<- round_track_time(dat = tracks.red, id = "id", int = c(3600, 7200, 10800, 14400),
-#'                               tol = 300)
+#'                               tol = 300, units = "secs")
 #'
 #' #insert NA gaps
 #' dat.out<- insert_NAs(tracks.red, int = 3600, units = "secs")

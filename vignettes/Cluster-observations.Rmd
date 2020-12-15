@@ -63,7 +63,8 @@ sort(table(leroy2$dt), decreasing = TRUE)[1:20]  #15 min (900 s) is primary dt
 
 
 #Round times w/in 2 min of 15 min interval
-leroy3<- round_track_time(dat = leroy2, id = "id", int = 900, tol = 120, time.zone = "UTC")
+leroy3<- round_track_time(dat = leroy2, id = "id", int = 900, tol = 120, time.zone = "UTC",
+                          units = "secs")
 sort(table(leroy3$dt), decreasing = TRUE)[1:20]
 
 
