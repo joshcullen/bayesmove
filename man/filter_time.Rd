@@ -39,7 +39,8 @@ tracks<- tracks[tracks$id == "id1",]
 tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 
 #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
-tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
+tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC",
+                              units = "secs")
 
 #create list from data frame
 tracks.list<- df_to_list(dat = tracks, ind = "id")

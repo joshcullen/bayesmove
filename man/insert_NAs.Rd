@@ -39,7 +39,7 @@ tracks.red<- prep_data(dat = tracks.red, coord.names = c("x","y"), id = "id")
 
 #round times to nearest interval
 tracks.red<- round_track_time(dat = tracks.red, id = "id", int = c(3600, 7200, 10800, 14400),
-                              tol = 300)
+                              tol = 300, units = "secs")
 
 #insert NA gaps
 dat.out<- insert_NAs(tracks.red, int = 3600, units = "secs")
