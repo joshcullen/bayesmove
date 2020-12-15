@@ -1,14 +1,7 @@
-## Resubmission
-This is a resubmission. In this version I have:
-
-* Added an on.exit() call immediately within functions where I adjust par() for plotting.
-
-* Unwrapped some examples that used \dontrun{} and changed others to \donttest{} if they took > 5 s. However, the examples wrapped with \donttest{} were still checked by --run-donttest when pushed to Travis-CI and AppVeyor.
-
 ## Test environments
-* local OS X install (and on travis-ci), R 4.0.2
-* ubuntu-16.04 devel and release (on travis-ci and R-hub), R 4.0.2
-* windows devel and release (on appveyor and win-builder), R 4.0.2
+* local OS X install (and using github actions), R 4.0.3
+* ubuntu-20.04 devel and release (using github actions and R-hub), R 4.0.3
+* windows devel and release (using github actions and win-builder), R 4.0.3
 
 ## R CMD check results
 0 ERRORS | 0 WARNINGS | 1 NOTE

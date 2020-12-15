@@ -9,6 +9,7 @@
 * Update plot_breakpoints_behav() to account for non-consecutive `time` variable.
 * Update some function arguments to be compatible with {furrr} package (>= 0.2.0).
 * Update prep_data() to also calculate net-squared displacement
+* Update method by which round_track_time() calculates new date and add argument for units
 
 
 # bayesmove 0.1.0 (2020-09-21)

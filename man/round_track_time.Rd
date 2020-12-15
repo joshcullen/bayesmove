@@ -4,7 +4,7 @@
 \alias{round_track_time}
 \title{Round time to nearest interval}
 \usage{
-round_track_time(dat, id, int, tol, time.zone = "UTC")
+round_track_time(dat, id, int, tol, time.zone = "UTC", units)
 }
 \arguments{
 \item{dat}{A data frame that contains the sampling interval of the
@@ -21,6 +21,10 @@ that were specified.}
 \item{time.zone}{character. Specify the time zone for which the date-times
 were recorded. Set to UTC by default. Refer to \code{base::OlsonNames} to view
 all possible time zones.}
+
+\item{units}{character. The units of the selected time interval \code{int},
+which can be selected from one of "secs", "mins", "hours", "days", or
+"weeks".}
 }
 \value{
 A data frame where \code{dt} and \code{date} are both adjusted based
@@ -47,6 +51,7 @@ tracks<- tracks[tracks$id == "id1",]
 tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 
 #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
-tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
+tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC",
+                          units = "secs")
 
 }

@@ -10,7 +10,8 @@ test_that("time is filtered and dt and date are updated", {
 
   #create data frame
   dat<- data.frame(id, date, dt, step, angle)
-  dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC")
+  dat<- round_track_time(dat = dat, id = "id", int = 3600, tol = 15, time.zone = "UTC",
+                         units = "secs")
 
   #create list
   dat.list<- df_to_list(dat = dat, ind = "id")

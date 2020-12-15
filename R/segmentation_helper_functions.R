@@ -89,6 +89,9 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #' @param time.zone character. Specify the time zone for which the date-times
 #'   were recorded. Set to UTC by default. Refer to \code{base::OlsonNames} to view
 #'   all possible time zones.
+#' @param units character. The units of the selected time interval \code{int},
+#'   which can be selected from one of "secs", "mins", "hours", "days", or
+#'   "weeks".
 #'
 #' @return A data frame where \code{dt} and \code{date} are both adjusted based
 #'   upon the rounding of time intervals according to the specified tolerance.
@@ -105,10 +108,11 @@ discrete_move_var=function(dat, lims, varIn, varOut){
 #' tracks<- prep_data(dat = tracks, coord.names = c("x","y"), id = "id")
 #'
 #' #round times to nearest interval of interest (e.g. 3600 s or 1 hr)
-#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC")
+#' tracks<- round_track_time(dat = tracks, id = "id", int = 3600, tol = 180, time.zone = "UTC",
+#'                           units = "secs")
 #'
 #' @export
-round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
+round_track_time = function(dat, id, int, tol, time.zone = "UTC", units) {
 
   dat<- df_to_list(dat, ind = id)
   for (i in 1:length(dat)) {
@@ -141,7 +145,21 @@ round_track_time = function(dat, id, int, tol, time.zone = "UTC") {
     }
     dat[[i]]$dt<- tmp[,1]
 
-    tmp.date<- cumsum(c(as.numeric(dat[[i]]$date[1]), dat[[i]]$dt[-nrow(dat[[i]])]))
+
+    if (units == "secs") {
+      tmp.dt<- lubridate::seconds(dat[[i]]$dt)
+    } else if (units == "mins") {
+      tmp.dt<- lubridate::seconds(dat[[i]]$dt)*60
+    } else if (units == "hours") {
+      tmp.dt<- lubridate::seconds(dat[[i]]$dt)*60*60
+    } else if (units == "days") {
+      tmp.dt<- lubridate::seconds(dat[[i]]$dt)*60*60*24
+    } else if (units == "weeks") {
+      tmp.dt<- lubridate::seconds(dat[[i]]$dt)*60*60*24*7
+    } else {
+      stop("Units must be either secs, mins, hours, days, or weeks")
+    }
+    tmp.date<- cumsum(c(as.numeric(dat[[i]]$date[1]), tmp.dt[-length(tmp.dt)]))
     dat[[i]]$date<- tmp.date %>%
       as.POSIXct(origin = '1970-01-01', tz = time.zone)
   }
