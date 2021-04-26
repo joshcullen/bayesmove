@@ -120,7 +120,7 @@ samp_move=function(breakpt, max.time, dat, alpha, nbins, ndata.types){
 
   breakpt.old<- breakpt
   p<- length(breakpt)
-  new.brk<- sample(2:max.time, size=1)  #don't propose a new.brk at brkpt = 1
+  new.brk<- sample(2:(max.time-1), size=1)  #don't propose a new.brk at brkpt = 1 or max.time
   brk.augmented<- sort(unique(c(breakpt.old, new.brk)))
 
   p0<- 1

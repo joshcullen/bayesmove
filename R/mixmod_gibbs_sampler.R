@@ -1,15 +1,15 @@
 #' Cluster observations into behavioral states
 #'
-#' This function performs a Gibbs sampler within a mixture model to estimate the
+#' This function uses a Gibbs sampler within a mixture model to estimate the
 #' optimal number of behavioral states, the state-dependent distributions, and
 #' to assign behavioral states to each observation. This model does not assume
 #' an underlying mechanistic process.
 #'
-#' The mixture model analyzes all animal IDs pooled together, thus providing
-#' population-level estimates of behavioral states.
+#' The mixture model analyzes all animal IDs pooled together, thus providing a
+#' population-level estimate of behavioral states.
 #'
-#' @param dat A data frame that only contains columns for the animal IDs as well
-#'   as each of the discretized movement variables.
+#' @param dat A data frame that **only** contains columns for the discretized
+#'   movement variables.
 #' @param alpha numeric. A single value used to specify the hyperparameter for
 #'   the prior distribution.
 #' @param ngibbs numeric. The total number of iterations of the MCMC chain.
@@ -20,8 +20,10 @@
 #' @return A list of model results is returned where elements include the
 #'   \code{phi} matrix for each data stream, \code{theta} matrix, log likelihood
 #'   estimates for each iteration of the MCMC chain \code{loglikel}, a list of
-#'   the latent cluster estimates for each observation \code{z}, and a vector
-#'   \code{gamma1} of estimates for the gamma hyperparameter.
+#'   the MAP estimates of the latent states for each observation \code{z.MAP}, a
+#'   matrix of the whole posterior of state assignments per observation
+#'   \code{z.posterior}, and a vector \code{gamma1} of estimates for the gamma
+#'   hyperparameter.
 #' @examples
 #' \donttest{
 #' data(tracks.list)
@@ -30,7 +32,7 @@
 #' tracks.list<- dplyr::bind_rows(tracks.list)
 #'
 #' #only retain id and discretized step length (SL) and turning angle (TA) columns
-#' tracks<- subset(tracks.list, select = c(id, SL, TA))
+#' tracks<- subset(tracks.list, select = c(SL, TA))
 #'
 #'
 #' set.seed(1)
@@ -47,10 +49,10 @@
 #'
 #' @export
 cluster_obs=function(dat, alpha, ngibbs, nmaxclust, nburn){
-  ind<- which(names(dat) == "id")
-  dat<- dat[,-ind]  #remove `id` from data frame
+
   nobs=nrow(dat)
   ndata.types=ncol(dat)
+
 
   #initial values
   z=sample(1:nmaxclust,size=nobs,replace=T)
@@ -76,7 +78,7 @@ cluster_obs=function(dat, alpha, ngibbs, nmaxclust, nburn){
   store.theta=matrix(NA,ngibbs,nmaxclust)
   store.loglikel=rep(NA,ngibbs)
   store.gamma1=rep(NA,ngibbs)
-  store.z<- list()
+  store.z=matrix(0,nobs,nmaxclust)
 
   #run gibbs sampler
   max.llk=-Inf
@@ -86,6 +88,7 @@ cluster_obs=function(dat, alpha, ngibbs, nmaxclust, nburn){
   pb <- progress::progress_bar$new(
     format = " iteration (:current/:total) [:bar] :percent [Elapsed: :elapsed, Remaining: :eta]",
     total = ngibbs, clear = FALSE, width = 100)
+
 
   for (i in 1:ngibbs){
     pb$tick()  #create progress bar
@@ -121,7 +124,10 @@ cluster_obs=function(dat, alpha, ngibbs, nmaxclust, nburn){
     store.theta[i,]=theta
     store.loglikel[i]=llk
     store.gamma1[i]=gamma1
-    store.z[[i]]=z
+
+    if (i> nburn){
+      store.z=StoreZ(z=z-1,store_z=store.z,nobs=nobs)
+    }
 
     #re-order clusters
     if (i < nburn & i%%50==0){
@@ -142,8 +148,13 @@ cluster_obs=function(dat, alpha, ngibbs, nmaxclust, nburn){
     }
   }
 
+  if (i > nburn & llk>max.llk){
+    z.MAP=z
+    max.llk=llk
+  }
 
   list(phi=store.phi,theta=store.theta,
-       loglikel=store.loglikel,z=store.z,
+       loglikel=store.loglikel,z.MAP=z.MAP,
+       z.posterior=store.z,
        gamma1=store.gamma1)
 }

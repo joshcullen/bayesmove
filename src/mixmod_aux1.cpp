@@ -32,3 +32,20 @@ IntegerMatrix SummarizeDat(IntegerVector z, IntegerVector dat, int ncateg,
   }
   return nmat;
 }
+
+
+//' This function helps store z from all iterations after burn in
+//'
+//' @param z An integer vector.
+//' @param store_z An integer matrix.
+//' @param nobs An integer.
+//'
+//'
+// [[Rcpp::export]]
+IntegerMatrix StoreZ(IntegerVector z, IntegerMatrix store_z, int nobs) {
+
+  for(int i=0; i<nobs;i++){
+    store_z(i,z[i])=store_z(i,z[i])+1;
+  }
+  return store_z;
+}

@@ -63,7 +63,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -77,12 +77,12 @@
 
       
 
-      </header><script src="Prepare-data-for-analysis_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Prepare-data-for-analysis_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Prepare data for analysis</h1>
             
-            <h4 class="date">11 December 2020</h4>
+            <h4 class="date">26 April 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Prepare-data-for-analysis.Rmd"><code>vignettes/Prepare-data-for-analysis.Rmd</code></a></small>
       <div class="hidden name"><code>Prepare-data-for-analysis.Rmd</code></div>
@@ -109,10 +109,10 @@
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
 
 <span class="co"># Load data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
@@ -156,7 +156,8 @@
 <p><img src="Prepare-data-for-analysis_files/figure-html/hist-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Based on this histogram, it appears that 3600 s (1 hour) is likely the primary time interval, where some observations slightly deviate from this exact interval. I will now round all time intervals (dt) and dates to reflect this rounding of times within a given tolerance window. In this example, I will choose 3 minutes (180 s) as the tolerance on which to round observations close to the primary time interval (3600 s).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">tracks</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, id <span class="op">=</span> <span class="st">"id"</span>, int <span class="op">=</span> <span class="fl">3600</span>, tol <span class="op">=</span> <span class="fl">180</span>, time.zone <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span>
+<span class="va">tracks</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, id <span class="op">=</span> <span class="st">"id"</span>, int <span class="op">=</span> <span class="fl">3600</span>, tol <span class="op">=</span> <span class="fl">180</span>, time.zone <span class="op">=</span> <span class="st">"UTC"</span>,
+                          units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
 <span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt</span>
@@ -244,7 +245,7 @@
                  varOut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL"</span>, <span class="st">"TA"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>The plots below show the limits used to define the bins for each continuous variable, as well as what these distributions look like after discretization. First, step lengths will be shown:</p>
 <p><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-SL-1.png" width="672"></p>
-<pre><code>#&gt; `summarise()` regrouping output by 'key' (override with `.groups` argument)</code></pre>
+<pre><code>#&gt; `summarise()` has grouped output by 'key'. You can override using the `.groups` argument.</code></pre>
 <p><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-SL-2.png" width="672"></p>
 <p>And next the plots for turning angles:</p>
 <p><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-TA-1.png" width="672"><img src="Prepare-data-for-analysis_files/figure-html/distrib-lims-TA-2.png" width="672"></p>

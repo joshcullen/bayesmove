@@ -4,7 +4,7 @@
 \alias{behav_gibbs_sampler}
 \title{Internal function that runs RJMCMC on a single animal ID}
 \usage{
-behav_gibbs_sampler(dat, ngibbs, nbins, alpha, breakpt)
+behav_gibbs_sampler(dat, ngibbs, nbins, alpha, breakpt, p)
 }
 \arguments{
 \item{dat}{A data frame that only contains columns for the animal IDs and for
@@ -22,6 +22,9 @@ which corresponds with a vague prior on the Dirichlet distribution.}
 
 \item{breakpt}{numeric. A vector of breakpoints if pre-specifying where they
 may occur, otherwise \code{NULL}.}
+
+\item{p}{An object storing information from
+\code{progressr::progessor} to produce a progress bar.}
 }
 \value{
 A list of the breakpoints, the number of breakpoints, and the log

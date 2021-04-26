@@ -60,11 +60,13 @@ ngibbs<- 10000
 # Set the number of bins used to discretize each data stream
 nbins<- c(5,8)
 
-
-future::plan(multisession)  #run all MCMC chains in parallel
-                    #refer to future::plan() for more details
+progressr::handlers(progressr::handler_progress(clear = FALSE))
+future::plan(multisession, workers = 3)  #run all MCMC chains in parallel
+                                         #refer to future::plan() for more details
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
                            alpha = alpha)
+
+future::plan(future::sequential)  #return to single core
 ```
 
 

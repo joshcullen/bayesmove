@@ -7,8 +7,8 @@
 cluster_obs(dat, alpha, ngibbs, nmaxclust, nburn)
 }
 \arguments{
-\item{dat}{A data frame that only contains columns for the animal IDs as well
-as each of the discretized movement variables.}
+\item{dat}{A data frame that **only** contains columns for the discretized
+movement variables.}
 
 \item{alpha}{numeric. A single value used to specify the hyperparameter for
 the prior distribution.}
@@ -24,18 +24,20 @@ clusters to test.}
 A list of model results is returned where elements include the
   \code{phi} matrix for each data stream, \code{theta} matrix, log likelihood
   estimates for each iteration of the MCMC chain \code{loglikel}, a list of
-  the latent cluster estimates for each observation \code{z}, and a vector
-  \code{gamma1} of estimates for the gamma hyperparameter.
+  the MAP estimates of the latent states for each observation \code{z.MAP}, a
+  matrix of the whole posterior of state assignments per observation
+  \code{z.posterior}, and a vector \code{gamma1} of estimates for the gamma
+  hyperparameter.
 }
 \description{
-This function performs a Gibbs sampler within a mixture model to estimate the
+This function uses a Gibbs sampler within a mixture model to estimate the
 optimal number of behavioral states, the state-dependent distributions, and
 to assign behavioral states to each observation. This model does not assume
 an underlying mechanistic process.
 }
 \details{
-The mixture model analyzes all animal IDs pooled together, thus providing
-population-level estimates of behavioral states.
+The mixture model analyzes all animal IDs pooled together, thus providing a
+population-level estimate of behavioral states.
 }
 \examples{
 \donttest{
@@ -45,7 +47,7 @@ data(tracks.list)
 tracks.list<- dplyr::bind_rows(tracks.list)
 
 #only retain id and discretized step length (SL) and turning angle (TA) columns
-tracks<- subset(tracks.list, select = c(id, SL, TA))
+tracks<- subset(tracks.list, select = c(SL, TA))
 
 
 set.seed(1)

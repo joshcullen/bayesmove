@@ -108,7 +108,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -129,20 +129,21 @@
       <small>Source: <a href='https://github.com/joshcullen/bayesmove/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="bayesmove-020-2020-12-01" class="section level1">
+    <div id="bayesmove-020-2021-04-26" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
-<a href="#bayesmove-020-2020-12-01" class="anchor"></a>bayesmove 0.2.0 (2020-12-01)<small> Unreleased </small>
+<a href="#bayesmove-020-2021-04-26" class="anchor"></a>bayesmove 0.2.0 (2021-04-26)<small> Unreleased </small>
 </h1>
 <ul>
 <li>Add cluster_obs() function to make observation-level inference of behavioral states.</li>
 <li>Add Shiny app as shiny_tracks() function to dynamically explore telemetry data within and among individuals.</li>
-<li>Add arguments to get_behav_hist() to specify order of states and iteration of MAP estimate for mixture-model results (observation-level behavioral states).</li>
 <li>Add insert_NAs() function to insert NAs for creation of regular time series.</li>
 <li>Export get_MAP_internal() function for use within workflow for observation-level behavior estimation using cluster_obs().</li>
 <li>Update assign_tseg_internal() to account for non-consecutive <code>time1</code> variable.</li>
 <li>Update plot_breakpoints_behav() to account for non-consecutive <code>time</code> variable.</li>
 <li>Update some function arguments to be compatible with {furrr} package (&gt;= 0.2.0).</li>
+<li>Update API for viewing progress bar in segment_behavior() via {progressr}.</li>
 <li>Update prep_data() to also calculate net-squared displacement</li>
+<li>Update method by which round_track_time() calculates new date and add argument for units</li>
 </ul>
 </div>
     <div id="bayesmove-010-2020-09-21" class="section level1">

@@ -52,7 +52,8 @@ Suggests:
     shinyWidgets,
     xts,
     htmltools,
-    shinythemes
+    shinythemes,
+    progressr
 Language: en-US
 RoxygenNote: 7.1.1
 LinkingTo: 

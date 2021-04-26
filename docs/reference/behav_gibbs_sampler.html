@@ -112,7 +112,7 @@ simultaneously." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -141,7 +141,7 @@ sampler for each iteration of the MCMC chain. It is called by
 simultaneously.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>behav_gibbs_sampler</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>ngibbs</span>, <span class='va'>nbins</span>, <span class='va'>alpha</span>, <span class='va'>breakpt</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>behav_gibbs_sampler</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>ngibbs</span>, <span class='va'>nbins</span>, <span class='va'>alpha</span>, <span class='va'>breakpt</span>, <span class='va'>p</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,6 +171,11 @@ which corresponds with a vague prior on the Dirichlet distribution.</p></td>
       <th>breakpt</th>
       <td><p>numeric. A vector of breakpoints if pre-specifying where they
 may occur, otherwise <code>NULL</code>.</p></td>
+    </tr>
+    <tr>
+      <th>p</th>
+      <td><p>An object storing information from
+<code>progressr::progessor</code> to produce a progress bar.</p></td>
     </tr>
     </table>
 

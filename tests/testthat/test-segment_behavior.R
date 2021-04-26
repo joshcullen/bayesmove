@@ -1,9 +1,5 @@
 test_that("segmentation model can effectively segment a dataset and return results", {
 
-  # skip_on_appveyor()
-  # skip_on_travis()
-  # skip_on_cran()
-
   #simulate data
   step<- rgamma(500, c(1, 2.5, 10), c(1, 1, 1))
   angle<- runif(500, -pi, pi)
@@ -38,8 +34,10 @@ test_that("segmentation model can effectively segment a dataset and return resul
   #perform segmentation w/o pre-specifying breakpoints
   dat.list.filt1<- lapply(dat.list.filt,
                           function(x) subset(x, select = c(id, SL, TA)))
-  dat.res1<- segment_behavior(data = dat.list.filt1, ngibbs = 1000, nbins = c(5,8),
-                              alpha = 1)
+  progressr::with_progress({
+    dat.res1<- segment_behavior(data = dat.list.filt1, ngibbs = 1000, nbins = c(5,8),
+                                alpha = 1)
+  })
 
   expect_length(dat.res1, 4)
   expect_type(dat.res1, "list")

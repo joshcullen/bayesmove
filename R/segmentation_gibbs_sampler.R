@@ -16,6 +16,8 @@
 #'   which corresponds with a vague prior on the Dirichlet distribution.
 #' @param breakpt numeric. A vector of breakpoints if pre-specifying where they
 #'   may occur, otherwise \code{NULL}.
+#' @param p An object storing information from
+#'   \code{progressr::progessor} to produce a progress bar.
 #'
 #' @return A list of the breakpoints, the number of breakpoints, and the log
 #'   marginal likelihood at each MCMC iteration, as well as the time it took the
@@ -26,7 +28,7 @@
 #'
 #'
 #'
-behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
+behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt, p) {
 
   start.time<- Sys.time()  #start timer
 
@@ -68,6 +70,9 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 
   end.time<- Sys.time()
   elapsed.time<- difftime(end.time, start.time, units = "min")  #end timer
+
+  p()  #print progress bar
+
 
   list(breakpt=res.brks, nbrks=res.nbrks, LML=res.LML, elapsed.time=elapsed.time)
 }
@@ -128,9 +133,11 @@ behav_gibbs_sampler=function(dat, ngibbs, nbins, alpha, breakpt) {
 #' ngibbs<- 1000
 #' nbins<- c(5,8)
 #'
-#' future::plan(future::multisession)  #run all MCMC chains in parallel
+#' future::plan(future::multisession, workers = 3)  #run all MCMC chains in parallel
+#'
 #' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
-#'                            alpha = alpha)
+#'                                alpha = alpha)
+#'
 #'
 #' future::plan(future::sequential)  #return to single core
 #' }
@@ -144,13 +151,17 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   if (is.null(names(data)))
     stop("Must provide names for list elements of `data` argument.")
 
-  tictoc::tic()  #start timer
-  mod<- furrr::future_map2(data, breakpt,
-                           ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
-                                                         alpha = alpha, breakpt = .y),
-                   .progress = TRUE, .options = furrr::furrr_options(seed = T))
-  tictoc::toc()  #provide elapsed time
+  progressr::with_progress({
+    #set up progress bar
+    p<- progressr::progressor(steps = length(data))
 
+    tictoc::tic()  #start timer
+    mod<- furrr::future_map2(data, breakpt,
+                             ~behav_gibbs_sampler(dat = .x, ngibbs = ngibbs, nbins = nbins,
+                                                  alpha = alpha, breakpt = .y, p = p),
+                             .options = furrr::furrr_options(seed = T))
+
+  })
 
 
 
@@ -181,6 +192,8 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   names(elapsed.time)<- "time"
   elapsed.time<- elapsed.time %>%
     dplyr::mutate_at("time", as.character)
+
+  tictoc::toc()  #provide elapsed time
 
 
   list(brkpts = brkpts, nbrks = nbrks, LML = LML, elapsed.time = elapsed.time)

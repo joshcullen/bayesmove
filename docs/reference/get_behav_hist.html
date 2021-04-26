@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract bin estimates from Latent Dirichlet Allocation model — get_behav_hist • bayesmove</title>
+<title>Extract bin estimates from Latent Dirichlet Allocation or mixture model — get_behav_hist • bayesmove</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Extract bin estimates from Latent Dirichlet Allocation model — get_behav_hist" />
+<meta property="og:title" content="Extract bin estimates from Latent Dirichlet Allocation or mixture model — get_behav_hist" />
 <meta property="og:description" content="Pulls model results for the estimates of bin proportions per movement
 variable from the posterior distribution. This can be used for visualization
 of movement variable distribution for each behavior estimated." />
@@ -111,7 +111,7 @@ of movement variable distribution for each behavior estimated." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -128,7 +128,7 @@ of movement variable distribution for each behavior estimated." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract bin estimates from Latent Dirichlet Allocation model</h1>
+    <h1>Extract bin estimates from Latent Dirichlet Allocation or mixture model</h1>
     <small class="dont-index">Source: <a href='https://github.com/joshcullen/bayesmove/blob/master/R/LDA_helper_functions.R'><code>R/LDA_helper_functions.R</code></a></small>
     <div class="hidden name"><code>get_behav_hist.Rd</code></div>
     </div>
@@ -139,7 +139,7 @@ variable from the posterior distribution. This can be used for visualization
 of movement variable distribution for each behavior estimated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_behav_hist</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>nburn</span>, <span class='va'>ngibbs</span>, <span class='va'>nmaxclust</span>, <span class='va'>var.names</span>, <span class='va'>ord</span>, <span class='va'>MAP.iter</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_behav_hist</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>nburn</span>, <span class='va'>ngibbs</span>, <span class='va'>nmaxclust</span>, <span class='va'>var.names</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,8 +147,8 @@ of movement variable distribution for each behavior estimated.</p>
     <tr>
       <th>dat</th>
       <td><p>The list object returned by the LDA model
-(<code><a href='cluster_segments.html'>cluster_segments</a></code>). Used for extracting the element
-<em>phi</em>.</p></td>
+(<code><a href='cluster_segments.html'>cluster_segments</a></code>) or mixture model
+(<code><a href='cluster_obs.html'>cluster_obs</a></code>). Used for extracting the element <em>phi</em>.</p></td>
     </tr>
     <tr>
       <th>nburn</th>
@@ -167,21 +167,7 @@ attribute behaviors.</p></td>
       <th>var.names</th>
       <td><p>character. A vector of names used for each of the movement
 variables. Must be in the same order as were listed within the data frame
-returned by <code><a href='summarize_tsegs.html'>summarize_tsegs</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>ord</th>
-      <td><p>numeric. A vector of the column numbers by which to reorganize
-<em>phi</em> based upon the <em>theta</em> vector from the MAP estimate. The
-<em>theta</em> vector should have been sorted in decreasing order. Only
-needed when evaluating results from observation-level clustering via
-<code><a href='cluster_obs.html'>cluster_obs</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>MAP.iter</th>
-      <td><p>numeric. The iteration that represents the MAP estimate (as
-identified using <code><a href='get_MAP_internal.html'>get_MAP_internal</a></code>) from the observation-level
-clustering model via <code><a href='cluster_obs.html'>cluster_obs</a></code>.</p></td>
+returned by <code><a href='summarize_tsegs.html'>summarize_tsegs</a></code> (if running LDA model).</p></td>
     </tr>
     </table>
 

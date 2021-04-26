@@ -127,30 +127,22 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 }
 #------------------------------------------------
 
-#' Extract bin estimates from Latent Dirichlet Allocation model
+#' Extract bin estimates from Latent Dirichlet Allocation or mixture model
 #'
 #' Pulls model results for the estimates of bin proportions per movement
 #' variable from the posterior distribution. This can be used for visualization
 #' of movement variable distribution for each behavior estimated.
 #'
 #' @param dat The list object returned by the LDA model
-#'   (\code{\link{cluster_segments}}). Used for extracting the element
-#'   \emph{phi}.
+#'   (\code{\link{cluster_segments}}) or mixture model
+#'   (\code{\link{cluster_obs}}). Used for extracting the element \emph{phi}.
 #' @param nburn numeric. The length of the burn-in phase.
 #' @param ngibbs numeric. The total number of iterations of the MCMC chain.
 #' @param nmaxclust numeric. The maximum number of clusters on which to
 #'   attribute behaviors.
 #' @param var.names character. A vector of names used for each of the movement
 #'   variables. Must be in the same order as were listed within the data frame
-#'   returned by \code{\link{summarize_tsegs}}.
-#' @param ord numeric. A vector of the column numbers by which to reorganize
-#'   \emph{phi} based upon the \emph{theta} vector from the MAP estimate. The
-#'   \emph{theta} vector should have been sorted in decreasing order. Only
-#'   needed when evaluating results from observation-level clustering via
-#'   \code{\link{cluster_obs}}.
-#' @param MAP.iter numeric. The iteration that represents the MAP estimate (as
-#'   identified using \code{\link{get_MAP_internal}}) from the observation-level
-#'   clustering model via \code{\link{cluster_obs}}.
+#'   returned by \code{\link{summarize_tsegs}} (if running LDA model).
 #'
 #' @return A data frame that contains columns for bin number, behavioral state,
 #'   proportion represented by a given bin, and movement variable name. This is
@@ -184,22 +176,15 @@ extract_prop=function(res, ngibbs, nburn, nmaxclust) {
 #'
 #' @importFrom rlang .data
 #' @export
-get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names, ord, MAP.iter) {
+get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 
   #summarize cluster results by frequency and proportion
   behav.list<- list()
   for (i in 1:length(dat$phi)) {
 
-    if ("z" %in% names(dat)) {  #for mixture model
-      tmp<- matrix(dat$phi[[i]][MAP.iter,], 1, ncol(dat$phi[[i]]))
-      tmp1<- matrix(tmp, ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
-      tmp1<- tmp1[,as.numeric(ord)]
-
-    } else {  #for LDA
-      tmp<- matrix(dat$phi[[i]][(nburn+1):ngibbs,], length((nburn+1):ngibbs),
+    tmp<- matrix(dat$phi[[i]][(nburn+1):ngibbs,], length((nburn+1):ngibbs),
                    ncol(dat$phi[[i]]))
-      tmp1<- matrix(colMeans(tmp), ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
-    }
+    tmp1<- matrix(colMeans(tmp), ncol(tmp) / nmaxclust, nmaxclust, byrow = T)
 
     behav.list[[i]]<- data.frame(bin = 1:nrow(tmp1), tmp1) %>%
       dplyr::rename_at(dplyr::vars(tidyr::starts_with('X')), ~as.character(1:ncol(tmp1))) %>%

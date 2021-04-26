@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Cluster observations into behavioral states — cluster_obs" />
-<meta property="og:description" content="This function performs a Gibbs sampler within a mixture model to estimate the
+<meta property="og:description" content="This function uses a Gibbs sampler within a mixture model to estimate the
 optimal number of behavioral states, the state-dependent distributions, and
 to assign behavioral states to each observation. This model does not assume
 an underlying mechanistic process." />
@@ -112,7 +112,7 @@ an underlying mechanistic process." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -135,7 +135,7 @@ an underlying mechanistic process." />
     </div>
 
     <div class="ref-description">
-    <p>This function performs a Gibbs sampler within a mixture model to estimate the
+    <p>This function uses a Gibbs sampler within a mixture model to estimate the
 optimal number of behavioral states, the state-dependent distributions, and
 to assign behavioral states to each observation. This model does not assume
 an underlying mechanistic process.</p>
@@ -148,8 +148,8 @@ an underlying mechanistic process.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dat</th>
-      <td><p>A data frame that only contains columns for the animal IDs as well
-as each of the discretized movement variables.</p></td>
+      <td><p>A data frame that **only** contains columns for the discretized
+movement variables.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -176,12 +176,14 @@ clusters to test.</p></td>
     <p>A list of model results is returned where elements include the
   <code>phi</code> matrix for each data stream, <code>theta</code> matrix, log likelihood
   estimates for each iteration of the MCMC chain <code>loglikel</code>, a list of
-  the latent cluster estimates for each observation <code>z</code>, and a vector
-  <code>gamma1</code> of estimates for the gamma hyperparameter.</p>
+  the MAP estimates of the latent states for each observation <code>z.MAP</code>, a
+  matrix of the whole posterior of state assignments per observation
+  <code>z.posterior</code>, and a vector <code>gamma1</code> of estimates for the gamma
+  hyperparameter.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The mixture model analyzes all animal IDs pooled together, thus providing
-population-level estimates of behavioral states.</p>
+    <p>The mixture model analyzes all animal IDs pooled together, thus providing a
+population-level estimate of behavioral states.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
@@ -191,7 +193,7 @@ population-level estimates of behavioral states.</p>
 <span class='va'>tracks.list</span><span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_rows</a></span><span class='op'>(</span><span class='va'>tracks.list</span><span class='op'>)</span>
 
 <span class='co'>#only retain id and discretized step length (SL) and turning angle (TA) columns</span>
-<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>tracks.list</span>, select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>SL</span>, <span class='va'>TA</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>tracks.list</span>, select <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>SL</span>, <span class='va'>TA</span><span class='op'>)</span><span class='op'>)</span>
 
 
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>

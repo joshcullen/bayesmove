@@ -62,3 +62,14 @@ SummarizeDat <- function(z, dat, ncateg, nbehav, nobs) {
     .Call(`_bayesmove_SummarizeDat`, z, dat, ncateg, nbehav, nobs)
 }
 
+#' This function helps store z from all iterations after burn in
+#'
+#' @param z An integer vector.
+#' @param store_z An integer matrix.
+#' @param nobs An integer.
+#'
+#'
+StoreZ <- function(z, store_z, nobs) {
+    .Call(`_bayesmove_StoreZ`, z, store_z, nobs)
+}
+

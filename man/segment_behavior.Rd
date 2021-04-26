@@ -72,9 +72,11 @@ alpha<- 1
 ngibbs<- 1000
 nbins<- c(5,8)
 
-future::plan(future::multisession)  #run all MCMC chains in parallel
+future::plan(future::multisession, workers = 3)  #run all MCMC chains in parallel
+
 dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
-                           alpha = alpha)
+                               alpha = alpha)
+
 
 future::plan(future::sequential)  #return to single core
 }

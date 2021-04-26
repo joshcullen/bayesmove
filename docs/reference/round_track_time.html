@@ -116,7 +116,7 @@ dates are of class POSIXct." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -149,7 +149,7 @@ and dates must be labeled <code>dt</code> and <code>date</code>, respectively, w
 dates are of class <code>POSIXct</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>round_track_time</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>id</span>, <span class='va'>int</span>, <span class='va'>tol</span>, time.zone <span class='op'>=</span> <span class='st'>"UTC"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>round_track_time</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>id</span>, <span class='va'>int</span>, <span class='va'>tol</span>, time.zone <span class='op'>=</span> <span class='st'>"UTC"</span>, <span class='va'>units</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,6 +179,12 @@ that were specified.</p></td>
 were recorded. Set to UTC by default. Refer to <code><a href='https://rdrr.io/r/base/timezones.html'>base::OlsonNames</a></code> to view
 all possible time zones.</p></td>
     </tr>
+    <tr>
+      <th>units</th>
+      <td><p>character. The units of the selected time interval <code>int</code>,
+which can be selected from one of "secs", "mins", "hours", "days", or
+"weeks".</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -197,7 +203,8 @@ all possible time zones.</p></td>
 <span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'><a href='prep_data.html'>prep_data</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>tracks</span>, coord.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>,<span class='st'>"y"</span><span class='op'>)</span>, id <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span>
 
 <span class='co'>#round times to nearest interval of interest (e.g. 3600 s or 1 hr)</span>
-<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'>round_track_time</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>tracks</span>, id <span class='op'>=</span> <span class='st'>"id"</span>, int <span class='op'>=</span> <span class='fl'>3600</span>, tol <span class='op'>=</span> <span class='fl'>180</span>, time.zone <span class='op'>=</span> <span class='st'>"UTC"</span><span class='op'>)</span>
+<span class='va'>tracks</span><span class='op'>&lt;-</span> <span class='fu'>round_track_time</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>tracks</span>, id <span class='op'>=</span> <span class='st'>"id"</span>, int <span class='op'>=</span> <span class='fl'>3600</span>, tol <span class='op'>=</span> <span class='fl'>180</span>, time.zone <span class='op'>=</span> <span class='st'>"UTC"</span>,
+                          units <span class='op'>=</span> <span class='st'>"secs"</span><span class='op'>)</span>
 
 </div></pre>
   </div>

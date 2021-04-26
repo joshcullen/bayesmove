@@ -2,14 +2,14 @@
 % Please edit documentation in R/LDA_helper_functions.R
 \name{get_behav_hist}
 \alias{get_behav_hist}
-\title{Extract bin estimates from Latent Dirichlet Allocation model}
+\title{Extract bin estimates from Latent Dirichlet Allocation or mixture model}
 \usage{
-get_behav_hist(dat, nburn, ngibbs, nmaxclust, var.names, ord, MAP.iter)
+get_behav_hist(dat, nburn, ngibbs, nmaxclust, var.names)
 }
 \arguments{
 \item{dat}{The list object returned by the LDA model
-(\code{\link{cluster_segments}}). Used for extracting the element
-\emph{phi}.}
+(\code{\link{cluster_segments}}) or mixture model
+(\code{\link{cluster_obs}}). Used for extracting the element \emph{phi}.}
 
 \item{nburn}{numeric. The length of the burn-in phase.}
 
@@ -20,17 +20,7 @@ attribute behaviors.}
 
 \item{var.names}{character. A vector of names used for each of the movement
 variables. Must be in the same order as were listed within the data frame
-returned by \code{\link{summarize_tsegs}}.}
-
-\item{ord}{numeric. A vector of the column numbers by which to reorganize
-\emph{phi} based upon the \emph{theta} vector from the MAP estimate. The
-\emph{theta} vector should have been sorted in decreasing order. Only
-needed when evaluating results from observation-level clustering via
-\code{\link{cluster_obs}}.}
-
-\item{MAP.iter}{numeric. The iteration that represents the MAP estimate (as
-identified using \code{\link{get_MAP_internal}}) from the observation-level
-clustering model via \code{\link{cluster_obs}}.}
+returned by \code{\link{summarize_tsegs}} (if running LDA model).}
 }
 \value{
 A data frame that contains columns for bin number, behavioral state,
