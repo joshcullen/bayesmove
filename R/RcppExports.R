@@ -49,6 +49,19 @@ CumSumInv <- function(ntsegm, nmaxclust, z) {
     .Call(`_bayesmove_CumSumInv`, ntsegm, nmaxclust, z)
 }
 
+#' Internal function that summarizes
+#'
+#' @param VecVals A vector of bin values.
+#' @param Breakpts A vector if breakpoints.
+#' @param nobs The number of observations.
+#' @param nbins The number of bins for a given data stream.
+#' @param nbreak The number of estimated breakpoints.
+#'
+#'
+summarize1 <- function(VecVals, Breakpts, nobs, nbins, nbreak) {
+    .Call(`_bayesmove_summarize1`, VecVals, Breakpts, nobs, nbins, nbreak)
+}
+
 #' Internal function that generates nmat matrix to help with multinomial draws
 #'
 #' @param z An integer vector.

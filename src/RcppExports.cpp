@@ -62,6 +62,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// summarize1
+IntegerMatrix summarize1(IntegerVector VecVals, IntegerVector Breakpts, int nobs, int nbins, int nbreak);
+RcppExport SEXP _bayesmove_summarize1(SEXP VecValsSEXP, SEXP BreakptsSEXP, SEXP nobsSEXP, SEXP nbinsSEXP, SEXP nbreakSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type VecVals(VecValsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Breakpts(BreakptsSEXP);
+    Rcpp::traits::input_parameter< int >::type nobs(nobsSEXP);
+    Rcpp::traits::input_parameter< int >::type nbins(nbinsSEXP);
+    Rcpp::traits::input_parameter< int >::type nbreak(nbreakSEXP);
+    rcpp_result_gen = Rcpp::wrap(summarize1(VecVals, Breakpts, nobs, nbins, nbreak));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SummarizeDat
 IntegerMatrix SummarizeDat(IntegerVector z, IntegerVector dat, int ncateg, int nbehav, int nobs);
 RcppExport SEXP _bayesmove_SummarizeDat(SEXP zSEXP, SEXP datSEXP, SEXP ncategSEXP, SEXP nbehavSEXP, SEXP nobsSEXP) {
@@ -96,6 +111,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bayesmove_rmultinom2", (DL_FUNC) &_bayesmove_rmultinom2, 4},
     {"_bayesmove_SampleZAgg", (DL_FUNC) &_bayesmove_SampleZAgg, 7},
     {"_bayesmove_CumSumInv", (DL_FUNC) &_bayesmove_CumSumInv, 3},
+    {"_bayesmove_summarize1", (DL_FUNC) &_bayesmove_summarize1, 5},
     {"_bayesmove_SummarizeDat", (DL_FUNC) &_bayesmove_SummarizeDat, 5},
     {"_bayesmove_StoreZ", (DL_FUNC) &_bayesmove_StoreZ, 3},
     {NULL, NULL, 0}

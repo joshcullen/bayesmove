@@ -7,13 +7,13 @@ citEntry(entry = "Manual",
   title        = "{bayesmove}: Non-Parametric Bayesian Analyses of Animal Movement",
   author       = personList(as.person("Joshua Cullen"),
                    as.person("Denis Valle")),
-  year         = "2020",
+  year         = "2021",
   note         = note,
   url          = "https://joshcullen.github.io/bayesmove/",
 
   textVersion  =
-  paste("Cullen JA, Valle DR (2020).",
+  paste("Cullen JA, Valle DR (2021).",
         "bayesmove: Non-Parametric Bayesian Analysis of Animal Movement.",
-        "R Package version 0.1.0.",
+        "R Package version 0.2.1.",
         "URL https://joshcullen.github.io/bayesmove/.")
 )

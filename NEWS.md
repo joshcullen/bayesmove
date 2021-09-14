@@ -1,3 +1,7 @@
+# bayesmove 0.2.1 (2021-09-14)
+* Greatly improved speed of segmentation model by adding internal function summarize1 in C++ and updated get_summary_stats().
+* Updated shiny_tracks to improve responsiveness to changes in the time window.
+
 # bayesmove 0.2.0 (2021-04-26)
 
 * Add cluster_obs() function to make observation-level inference of behavioral states.

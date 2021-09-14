@@ -130,3 +130,29 @@ IntegerMatrix CumSumInv(int ntsegm, int nmaxclust, IntegerMatrix z){
   }
   return(res);
 }
+
+//' Internal function that summarizes
+//'
+//' @param VecVals A vector of bin values.
+//' @param Breakpts A vector if breakpoints.
+//' @param nobs The number of observations.
+//' @param nbins The number of bins for a given data stream.
+//' @param nbreak The number of estimated breakpoints.
+//'
+//'
+// [[Rcpp::export]]
+IntegerMatrix summarize1(IntegerVector VecVals, IntegerVector Breakpts,
+                         int nobs, int nbins, int nbreak) {
+  IntegerMatrix res(nbreak,nbins);
+  int j=0;
+  for(int i=0; i<nobs;i++){
+    if (i>Breakpts[j]){
+      j=j+1;
+    }
+
+    if (!IntegerVector::is_na(VecVals[i])){
+    res(j,VecVals[i])=res(j,VecVals[i])+1;
+    }
+  }
+  return(res);
+}
