@@ -477,9 +477,7 @@ find_breaks=function(dat, ind) {
 #' Visualize trace-plots of the number of breakpoints estimated by the model as
 #' well as the log marginal likelihood (LML) for each animal ID.
 #'
-#' @param data A data frame containing values at each iteration of the MCMC
-#'   chain where each row holds data for a specific animal ID.
-#' @param ngibbs numeric. The total number of iterations of the MCMC chain.
+#' @param data A list of model results that is returned as output from \code{\link{segment_behavior}}.
 #' @param type character. The type of data that are being plotted from the
 #'   Bayesian segmentation model results. Takes either 'nbrks' for the number of
 #'   breakpoints or 'LML' for the log marginal likelihood.
@@ -490,37 +488,59 @@ find_breaks=function(dat, ind) {
 #'
 #'
 #' @examples
-#' #simulate data
+#' #load data
+#' data(tracks.list)
+#'
+#' #only retain id and discretized step length (SL) and turning angle (TA) columns
+#' tracks.list2<- purrr::map(tracks.list,
+#'                    subset,
+#'                   select = c(id, SL, TA))
+#'
+#'
+#' set.seed(1)
+#'
+#' # Define model params
+#' alpha<- 1
 #' ngibbs<- 1000
-#' y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
-#' dat<- matrix(c(1, y), 1, 1001)
-#' dat<- data.frame(dat)
-#' names(dat)[1]<- "id"
+#' nbins<- c(5,8)
+#'
+#' future::plan(future::multisession, workers = 3)  #run all MCMC chains in parallel
+#'
+#' dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+#'                                alpha = alpha)
+#'
+#' future::plan(future::sequential)  #return to single core
+#'
 #'
 #' #run function
-#' traceplot(data = dat, ngibbs = ngibbs, type = "LML")
+#' traceplot(data = dat.res, type = "nbrks")
+#' traceplot(data = dat.res, type = "LML")
 #'
 #' @importFrom graphics "par"
 #' @importFrom graphics "plot"
 #' @export
-traceplot=function(data, ngibbs, type) {
+traceplot=function(data, type) {
 
   oldpar<- par(no.readonly = TRUE)  #store original parameters
   on.exit(par(oldpar))  #exit w/ original parameters
 
-  identity<- data$id
+  identity<- names(data[["brkpts"]])
 
   ifelse(length(identity) == 1, par(mfrow=c(1,1)),
          ifelse(length(identity) == 2, par(mfrow=c(1,2)), par(mfrow=c(2,2))))
 
   for (i in 1:length(identity)) {
     par(ask=TRUE)
-    plot(x=1:ngibbs, y=data[i,-1], type = "l",
+    ngibbs<- length(data[["brkpts"]][[i]])
+    plot(x = 1:ngibbs,
+         y = na.omit(as.numeric(data[[type]][i,-1])),
+         type = "l",
          xlab = "Iteration",
          ylab = ifelse(type == "nbrks", "# of Breakpoints",
                        ifelse(type == "LML","Log Marginal Likelihood",
                               stop("Need to select one of 'nbrks' or 'LML' for plotting"))),
          main = paste(identity[i]))
+    abline(v = ngibbs/2, col = "red", lwd = 2)
   }
 }
 

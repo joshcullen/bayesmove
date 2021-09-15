@@ -1,6 +1,7 @@
 # bayesmove 0.2.1 (2021-09-14)
 * Greatly improved speed of segmentation model by adding internal function summarize1 in C++ and updated get_summary_stats().
 * Updated shiny_tracks to improve responsiveness to changes in the time window.
+* Updated traceplot() to automatically determine the number of MCMC iterations and add a line denoting the burn-in period.
 
 # bayesmove 0.2.0 (2021-04-26)
 
