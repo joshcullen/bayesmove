@@ -151,6 +151,10 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   if (is.null(names(data)))
     stop("Must provide names for list elements of `data` argument.")
 
+  # define aesthetics of progress bar
+  progressr::handlers(progressr::handler_progress(incomplete=".", complete="*",
+                                                  current="o", clear = FALSE))
+
   progressr::with_progress({
     #set up progress bar
     p<- progressr::progressor(steps = length(data))
