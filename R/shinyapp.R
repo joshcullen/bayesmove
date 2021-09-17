@@ -197,9 +197,9 @@ server <- function(data, epsg) {
 
       # define start and end times for filtering the data
       start<- strptime(input$lineplot_date_window[[1]], format = "%Y-%m-%dT%H:%M:%S",
-                       tz = tz(data$date))
+                       tz = lubridate::tz(data$date))
       end<- strptime(input$lineplot_date_window[[2]], format = "%Y-%m-%dT%H:%M:%S",
-                     tz = tz(data$date))
+                     tz = lubridate::tz(data$date))
 
       # subset dat.filt() by time window
       if (start == min(dat.filt()$date) & end == max(dat.filt()$date)) {
