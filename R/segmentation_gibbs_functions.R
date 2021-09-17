@@ -21,33 +21,25 @@
 #'
 #'
 #'
+
 get_summary_stats=function(breakpt, dat, max.time, nbins, ndata.types){
 
-  breakpt1<- c(1, breakpt, max.time)
-  n<- length(breakpt1)
-
   #get summarized results
-  res<- list()
+  res1<- list()
+  breakpt1<- c(breakpt, max.time)
+  nbreakpt<- length(breakpt1)
+
+  #summarize per data stream
   for (j in 1:ndata.types){
-    #initialize matrix
-    res[[j]]<- matrix(0, n-1, nbins[j])
-
-    #get summary for each interval
-    for (i in 2:n){
-      if (i < n)
-        ind<- breakpt1[i-1]:(breakpt1[i]-1)
-      if (i == n)
-        ind<- breakpt1[i-1]:(breakpt1[i])
-
-      tmp<- dat[ind,j]
-      tmp1<- table(tmp)
-      ind<- as.numeric(names(tmp1))
-      res[[j]][i-1,ind]<- tmp1
-    }
+    val1<- dat[,j]
+    tmp<- summarize1(VecVals = val1-1, Breakpts = breakpt1-1,
+                   nobs = max.time, nbins = nbins[j], nbreak = nbreakpt)
+    res1[[j]]<- tmp
   }
 
-  res
+  res1
 }
+
 #---------------------------------------------
 
 #' Internal function that calculates the log marginal likelihood of each model

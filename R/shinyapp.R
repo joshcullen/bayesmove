@@ -192,19 +192,25 @@ server <- function(data, epsg) {
 
 
     # Export reactive data for selected time window
-    reacted.data<- reactive({
-      req(input$lineplot_date_window)  #to prevent warning from 'if' expression
+    reacted.data<- eventReactive(list(dat.filt(), input$lineplot_date_window), {
+      req(input$lineplot_date_window)  #to prevent warning from 'if' expression below
 
-      start=strptime(input$lineplot_date_window[[1]], format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
-      end=strptime(input$lineplot_date_window[[2]], format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
+      # define start and end times for filtering the data
+      start<- strptime(input$lineplot_date_window[[1]], format = "%Y-%m-%dT%H:%M:%S",
+                       tz = lubridate::tz(data$date))
+      end<- strptime(input$lineplot_date_window[[2]], format = "%Y-%m-%dT%H:%M:%S",
+                     tz = lubridate::tz(data$date))
 
-      if (start == min(dat.filt()$date) & end == max(dat.filt()$date)){
+      # subset dat.filt() by time window
+      if (start == min(dat.filt()$date) & end == max(dat.filt()$date)) {
         dat.filt()
       } else {
         subset = dplyr::filter(dat.filt(), date >= start & date <= end)
         return(subset)
       }
-    })
+    }) %>%
+      debounce(millis = 500)  #add delay so map doesn't hang up
+
 
     # Map tracks for selected time window
     output$map <- renderLeaflet({

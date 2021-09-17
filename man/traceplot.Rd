@@ -4,13 +4,10 @@
 \alias{traceplot}
 \title{View trace-plots of output from Bayesian segmentation model}
 \usage{
-traceplot(data, ngibbs, type)
+traceplot(data, type)
 }
 \arguments{
-\item{data}{A data frame containing values at each iteration of the MCMC
-chain where each row holds data for a specific animal ID.}
-
-\item{ngibbs}{numeric. The total number of iterations of the MCMC chain.}
+\item{data}{A list of model results that is returned as output from \code{\link{segment_behavior}}.}
 
 \item{type}{character. The type of data that are being plotted from the
 Bayesian segmentation model results. Takes either 'nbrks' for the number of
@@ -26,14 +23,32 @@ Visualize trace-plots of the number of breakpoints estimated by the model as
 well as the log marginal likelihood (LML) for each animal ID.
 }
 \examples{
-#simulate data
+#load data
+data(tracks.list)
+
+#only retain id and discretized step length (SL) and turning angle (TA) columns
+tracks.list2<- purrr::map(tracks.list,
+                   subset,
+                  select = c(id, SL, TA))
+
+
+set.seed(1)
+
+# Define model params
+alpha<- 1
 ngibbs<- 1000
-y<- (-1000 * 501:1500)/(-500 + 501:1500) + rnorm(ngibbs, 0, 0.1)
-dat<- matrix(c(1, y), 1, 1001)
-dat<- data.frame(dat)
-names(dat)[1]<- "id"
+nbins<- c(5,8)
+
+future::plan(future::multisession, workers = 3)  #run all MCMC chains in parallel
+
+dat.res<- segment_behavior(data = tracks.list2, ngibbs = ngibbs, nbins = nbins,
+                               alpha = alpha)
+
+future::plan(future::sequential)  #return to single core
+
 
 #run function
-traceplot(data = dat, ngibbs = ngibbs, type = "LML")
+traceplot(data = dat.res, type = "nbrks")
+traceplot(data = dat.res, type = "LML")
 
 }

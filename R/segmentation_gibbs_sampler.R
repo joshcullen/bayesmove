@@ -151,6 +151,10 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   if (is.null(names(data)))
     stop("Must provide names for list elements of `data` argument.")
 
+  # define aesthetics of progress bar
+  progressr::handlers(progressr::handler_progress(incomplete=".", complete="*",
+                                                  current="o", clear = FALSE))
+
   progressr::with_progress({
     #set up progress bar
     p<- progressr::progressor(steps = length(data))
@@ -170,20 +174,24 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
 
   nbrks<- purrr::map_dfr(mod, 2) %>%
     unlist() %>%
-    matrix(.data, nrow = length(mod), ncol = (ngibbs + 1), byrow = T) %>%
-    data.frame()  #create DF of number of breakpoints by ID
-  names(nbrks)<- c('id', paste0("Iter_", 1:ngibbs))
-  ncol.nbrks<- ncol(nbrks)
-  nbrks[,2:ncol.nbrks]<- apply(nbrks[,2:ncol.nbrks], 2, function(x) as.numeric(as.character(x)))
+    matrix(.data, nrow = length(mod), ncol = (ngibbs + 1), byrow = T)
+  id1<- nbrks[,1]  #store IDs
+  nbrks2<- nbrks[,-1]  #store only nbrks
+  nbrks2<- matrix(as.numeric(nbrks2), nrow = length(mod), byrow = F) %>%  #convert to numeric
+    data.frame(stringsAsFactors = FALSE)  #create DF of number of breakpoints by ID
+  nbrks2<- cbind(as.character(id1), nbrks2)
+  names(nbrks2)<- c('id', paste0("Iter_", 1:ngibbs))
 
 
   LML<- purrr::map_dfr(mod, 3) %>%
     unlist() %>%
-    matrix(.data, nrow = length(mod), ncol = (ngibbs + 1), byrow = T) %>%
-    data.frame()  #create DF of LML by ID
-  names(LML)<- c('id', paste0("Iter_", 1:ngibbs))
-  ncol.LML<- ncol(LML)
-  LML[,2:ncol.LML]<- apply(LML[,2:ncol.LML], 2, function(x) as.numeric(as.character(x)))
+    matrix(.data, nrow = length(mod), ncol = (ngibbs + 1), byrow = T)
+  id1<- LML[,1]  #store IDs
+  LML2<- LML[,-1]  #store only LML
+  LML2<- matrix(as.numeric(LML2), nrow = length(mod), byrow = F) %>%  #convert to numeric
+    data.frame(stringsAsFactors = FALSE)  #create DF of LML by ID
+  LML2<- cbind(as.character(id1), LML2)
+  names(LML2)<- c('id', paste0("Iter_", 1:ngibbs))
 
 
   elapsed.time<- purrr::map_dfr(mod, 4) %>%
@@ -196,5 +204,5 @@ segment_behavior=function(data, ngibbs, nbins, alpha,
   tictoc::toc()  #provide elapsed time
 
 
-  list(brkpts = brkpts, nbrks = nbrks, LML = LML, elapsed.time = elapsed.time)
+  list(brkpts = brkpts, nbrks = nbrks2, LML = LML2, elapsed.time = elapsed.time)
 }
