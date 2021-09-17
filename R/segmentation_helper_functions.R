@@ -488,6 +488,7 @@ find_breaks=function(dat, ind) {
 #'
 #'
 #' @examples
+#' \donttest{
 #' #load data
 #' data(tracks.list)
 #'
@@ -515,6 +516,7 @@ find_breaks=function(dat, ind) {
 #' #run function
 #' traceplot(data = dat.res, type = "nbrks")
 #' traceplot(data = dat.res, type = "LML")
+#' }
 #'
 #' @importFrom graphics "par"
 #' @importFrom graphics "plot"

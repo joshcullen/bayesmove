@@ -23,6 +23,7 @@ Visualize trace-plots of the number of breakpoints estimated by the model as
 well as the log marginal likelihood (LML) for each animal ID.
 }
 \examples{
+\donttest{
 #load data
 data(tracks.list)
 
@@ -50,5 +51,6 @@ future::plan(future::sequential)  #return to single core
 #run function
 traceplot(data = dat.res, type = "nbrks")
 traceplot(data = dat.res, type = "LML")
+}
 
 }

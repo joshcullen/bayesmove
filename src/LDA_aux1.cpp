@@ -131,7 +131,7 @@ IntegerMatrix CumSumInv(int ntsegm, int nmaxclust, IntegerMatrix z){
   return(res);
 }
 
-//' Internal function that summarizes
+//' Internal function that summarizes bin distributions of track segments
 //'
 //' @param VecVals A vector of bin values.
 //' @param Breakpts A vector if breakpoints.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{summarize1}
 \alias{summarize1}
-\title{Internal function that summarizes}
+\title{Internal function that summarizes bin distributions of track segments}
 \usage{
 summarize1(VecVals, Breakpts, nobs, nbins, nbreak)
 }
@@ -18,5 +18,5 @@ summarize1(VecVals, Breakpts, nobs, nbins, nbreak)
 \item{nbreak}{The number of estimated breakpoints.}
 }
 \description{
-Internal function that summarizes
+Internal function that summarizes bin distributions of track segments
 }
