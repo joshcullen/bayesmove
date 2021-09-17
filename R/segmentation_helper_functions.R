@@ -518,6 +518,7 @@ find_breaks=function(dat, ind) {
 #'
 #' @importFrom graphics "par"
 #' @importFrom graphics "plot"
+#' @importFrom graphics "abline"
 #' @export
 traceplot=function(data, type) {
 
