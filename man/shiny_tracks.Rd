@@ -13,12 +13,11 @@ date}, but can include any other variables of interest.}
 \item{epsg}{numeric. The coordinate reference system (CRS) as an EPSG code.}
 }
 \description{
-This Shiny application allows for the exploration of individual movement
-patterns, as well as those of all tracked individuals. Options are available
-to interactively filter the plotted tracks by a selected time period of a
-given variable. Additionally, collections of individuals can be plotted
-simultaneously and these tracks can be filtered to only display movements
-within a given period of time.
+This Shiny application allows for the exploration of animal movement
+patterns. Options are available to interactively filter the plotted tracks by
+a selected time period of a given variable, which is then displayed on an
+interactive map. Additionally, a data table is shown with options to filter
+and export this table once satisfied.
 }
 \details{
 Currently, the time series plot shown for the exploration of individual

@@ -1,11 +1,10 @@
 #' Dynamically explore tracks within Shiny app
 #'
-#' This Shiny application allows for the exploration of individual movement
-#' patterns, as well as those of all tracked individuals. Options are available
-#' to interactively filter the plotted tracks by a selected time period of a
-#' given variable. Additionally, collections of individuals can be plotted
-#' simultaneously and these tracks can be filtered to only display movements
-#' within a given period of time.
+#' This Shiny application allows for the exploration of animal movement
+#' patterns. Options are available to interactively filter the plotted tracks by
+#' a selected time period of a given variable, which is then displayed on an
+#' interactive map. Additionally, a data table is shown with options to filter
+#' and export this table once satisfied.
 #'
 #' Currently, the time series plot shown for the exploration of individual
 #' tracks cannot display variables of class \code{character} or \code{factor}.
@@ -44,68 +43,61 @@ shiny_tracks = function(data, epsg){
 #### Define UI ####
 ###################
 
-ui <- function(data, epsg) {
-  navbarPage("Exploration of Animal Telemetry Data",
-             theme = shinythemes::shinytheme("flatly"),
-             tabPanel("Explore data",
-                      sidebarLayout(
-                        sidebarPanel(selectInput('animal_id', label = 'Select an ID',
-                                                 choices = unique(data$id),
-                                                 selected = unique(data$id)[1]),
-                                     selectInput('var', label = 'Select a Variable',
-                                                 choices = names(data)[names(data) != "id"],
-                                                 selected = names(data)[names(data) != "id"][1]),
-                                     p("Use the ", strong("Explore data"), " tab to explore temporal patterns of user selected variables from the loaded data frame for each ID in the dataset. At minimum, the data frame must have columns labeled ", code("id, x, y, date"), ", but can accommodate others as well. The ", code("date"), " column must be stored in ISO format (i.e., YYYY-MM-DD) of class ", code("POSIXct"), ". Click and drag on the lineplot to highlight the corresponding time range on the neighboring map.", style = "font-family: 'times'; font-si16pt"),
-                                     p("Click the ", strong("View all tracks"), " tab to view tracks for all individuals. This provides a quick overview of all track segments separately and allows for filtering tracks by time.", style = "font-family: 'times'; font-si16pt"),
-                                     br(),
-                                     br(),
-                                     p("Application author: ",
-                                       a("Josh Cullen", href = "https://joshcullen.github.io/"),
+  ui <- function(data, epsg) {
+    navbarPage("Exploration of Animal Telemetry Data",
+               theme = shinythemes::shinytheme("flatly"),
 
-                                       tags$br(),
+               tabPanel("About",
+                        fluidRow(
+                          column(width = 8, offset = 2, h4(strong("How to use this app"))),
+                          column(width = 8, offset = 2, p("This Shiny app is intended for use in exploration of animal movement patterns as well as for filtering data to meet the user's needs. At a minimum, the loaded data frame must have columns labeled ", code("id, x, y, date"), ", but can accommodate others as well. The ", code("date"), " column must be stored in ISO format (i.e., YYYY-MM-DD) of class ", code("POSIXct"), "."),
+                                 br(),
+                                 p("Under the 'Explore the data' header of the sidebar panel, select which track IDs you would like to visualize and the variable for which you would like to explore a time series. Click and drag on the lineplot to highlight the corresponding time range on the neighboring map. Additionally, a table of the data is printed beneath the map, which you can dynamically filter using sliders and other widgets under the 'Filter data table' header of the sidebar panel. This filtered table can then either be copied or downloaded (as a CSV file) through the buttons at the top of the table."),
+                                 br(),
+                                 p("Please report any issues on the", a(tags$strong("GitHub repo"), href="https://github.com/joshcullen/bayesmove/issues"), ". If interested in additional features as part of this app, please send suggestions to joshcullen10 [at] gmail [dot] com.")
+                          )  #close column() for text
+                        )  #close fluidRow
+               ),  #close "About" tabPanel
 
-                                       a("University of Florida", href = "http://www.ufl.edu"),
-                                       style = "font-family: 'times'; font-si16pt")
-                        ),
+               tabPanel("Explore data",
+                        sidebarLayout(
+                          sidebarPanel(
+                            tags$h4(strong("Explore the data")),
 
-                        mainPanel(dygraphOutput("lineplot"),
-                                  leafletOutput('map'))
-                      )
-             ),
-             tabPanel("View all tracks",
-                      sidebarLayout(
-                        sidebarPanel(
-                          shinyWidgets::pickerInput(
-                            inputId = "select_ids",
-                            label = "Select/deselect by ID",
-                            choices = unique(data$id),
-                            selected = unique(data$id),
-                            options = list(
-                              `actions-box` = TRUE),
-                            multiple = TRUE
-                          ),
-                          p("Use the ", strong("Explore data"), " tab to explore temporal patterns of user selected variables from the loaded data frame for each ID in the dataset. At minimum, the data frame must have columns labeled ", code("id, x, y, date"), ", but can accommodate others as well. The ", code("date"), " column must be stored in ISO format (i.e., YYYY-MM-DD) of class ", code("POSIXct"), ". Click and drag on the lineplot to highlight the corresponding time range on the neighboring map.", style = "font-family: 'times'; font-si16pt"),
-                          p("Click the ", strong("View all tracks"), " tab to view tracks for all individuals. This provides a quick overview of all track segments separately and allows for filtering tracks by time.", style = "font-family: 'times'; font-si16pt"),
-                          br(),
-                          br(),
-                          p("Application author: ",
-                            a("Josh Cullen", href = "https://joshcullen.github.io/"),
+                            #dropdown widget for selecting IDs to viz time series
+                            shinyWidgets::pickerInput(
+                              inputId = "select_ids",
+                              label = "Select/deselect by ID",
+                              choices = unique(data$id),
+                              selected = unique(data$id),
+                              options = list(
+                                `actions-box` = TRUE),
+                              multiple = TRUE
+                            ),
 
-                            tags$br(),
+                            #dropdown widget for selecting variable to viz time series
+                            selectInput('var', label = 'Select a variable',
+                                        choices = names(data)[!(names(data) %in% c("id","date"))],
+                                        selected = names(data)[!(names(data) %in%
+                                                                   c("id","date"))][1]),
+                            br(),
 
-                            a("University of Florida", href = "http://www.ufl.edu"),
-                            style = "font-family: 'times'; font-si16pt")),
+                            tags$h4(strong("Filter data table")),
 
-                        mainPanel(sliderInput(inputId = "range", label = NULL,
-                                                  min = min(data$date),
-                                                  max = max(data$date),
-                                                  value = range(data$date), width = '100%',
-                                                  step = 90),
-                                  leafletOutput('map_all'))
-                      )
-             )
-  )
-}
+                            #widget/module for filtering by each column of dataframe
+                            datamods::filter_data_ui("filtering", max_height = "500px")
+
+                          ),  #close sidebar panel
+
+                          mainPanel(
+                            dygraphOutput("lineplot"),
+                            leafletOutput('map'),
+                            DT::dataTableOutput("tab")
+                          )  #close main panel
+                        )  #close sidebar layout
+               )  #close "Explore data" tab panel
+    )  #close navbar page
+  }
 
 
 
@@ -126,6 +118,8 @@ server <- function(data, epsg) {
     data$date<- lubridate::as_datetime(data$date)
 
 
+
+
     #############################################
     ### Update sidebar and make reactive data ###
     #############################################
@@ -133,39 +127,12 @@ server <- function(data, epsg) {
     ### 'Explore data' tab
 
     # Filter by ID
-    dat.filt <- reactive({
-      d<- data[data$id == input$animal_id, ]
+    dat.filt <- eventReactive(input$select_ids, {
+      d<- data[data$id %in% input$select_ids, ]
 
       return(d)
     })
 
-
-
-
-    ### 'View all tracks' tab
-
-    # Make reactive data for selected IDs
-    dat.list<- reactive({
-      d.list<- split(data, data$id)  #split data into list by ID
-      d2<- dplyr::bind_rows(d.list[input$select_ids])  #only keep selected IDs
-
-      return(d2)
-    })
-
-    #make reactive data based on slider input
-    dat.filt2<- reactive({
-      dat<- dat.list()
-      dat<- dat[dat$date >= input$range[1] & dat$date <= input$range[2], ]  #only keep w/in range
-
-      #format data where each ID is a linestring
-      dat.sf<- sf::st_as_sf(dat, coords = c("x","y"), crs = epsg) %>%
-        sf::st_transform(4326) %>%
-        dplyr::group_by(id) %>%
-        dplyr::summarize(do_union=F) %>%
-        sf::st_cast("LINESTRING")
-
-      return(dat.sf)
-    })
 
 
 
@@ -176,19 +143,34 @@ server <- function(data, epsg) {
     ### Generate output for 'Explore data' ###
     ##########################################
 
+
+
     # Lineplot
     output$lineplot<- renderDygraph({
 
-      dygraph(xts::xts(x = dat.filt()[,input$var], order.by = dat.filt()$date)) %>%
-        dySeries(label = input$var, strokeWidth = 1.5) %>%
+      dat.ts<- dat.filt() %>%
+        dplyr::group_by(id) %>%
+        dplyr::select(id, date, input$var) %>%
+        tidyr::pivot_wider(names_from = id, values_from = input$var)
+
+      dat.xts<- xts::xts(x = dat.ts[,-1], order.by = dat.ts$date)
+
+      dygraph(dat.xts) %>%
+        dySeries(strokeWidth = 1.5) %>%
+        dyGroup(names(dat.xts), color = viridis::viridis(ncol(dat.xts))) %>%  #need to do this step for proper ordering of colors
         dyAxis("y", label = input$var, axisLabelFontSize = 16, axisLabelWidth = 75) %>%
         dyRangeSelector(dateWindow = NULL) %>%
-        dyOptions(axisLineWidth = 1.5, drawGrid = FALSE, colors = "black") %>%
+        dyOptions(axisLineWidth = 1.5, drawGrid = FALSE) %>%
+        dyHighlight(highlightCircleSize = 5,
+                    highlightSeriesBackgroundAlpha = 0.2,
+                    hideOnMouseOut = FALSE) %>%
         dyLegend(width = 270) %>%
         dyUnzoom() %>%
         dyCrosshair(direction = "vertical")
 
     })
+
+
 
 
     # Export reactive data for selected time window
@@ -215,23 +197,22 @@ server <- function(data, epsg) {
     # Map tracks for selected time window
     output$map <- renderLeaflet({
 
+      # transform projection of coordinates to WGS84 and change from sf to data.frame
       dat.filt.sf<- sf::st_as_sf(dat.filt(), coords = c("x","y"), crs = epsg) %>%
         sf::st_transform(4326) %>%
-        sf::st_cast("LINESTRING")
+        dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                      y = unlist(purrr::map(.data$geometry, 2))) %>%
+        sf::st_drop_geometry()
 
 
-      leaflet(data = dat.filt.sf, options = leafletOptions(preferCanvas = TRUE)) %>%
+      map1<- leaflet(data = dat.filt.sf,
+                     options = leafletOptions(preferCanvas = TRUE)) %>%
         addProviderTiles(providers$Esri.OceanBasemap, group = "Ocean Basemap",
                          options = tileOptions(continuous_world = F)) %>%
         addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery",
                          options = tileOptions(continuous_world = F)) %>%
-        addProviderTiles(providers$CartoDB.DarkMatterNoLabels, group = "Dark Map",
+        addProviderTiles(providers$OpenStreetMap, group = "Open Street Map",
                          options = tileOptions(continuous_world = F)) %>%
-        addPolylines(lng = as.numeric(sf::st_coordinates(dat.filt.sf)[,1]),
-                     lat = as.numeric(sf::st_coordinates(dat.filt.sf)[,2]),
-                     weight = 2,
-                     color = "lightgrey",
-                     opacity = 0.4) %>%
         addMeasure(position = "topleft",
                    primaryLengthUnit = "kilometers",
                    primaryAreaUnit = "hectares",
@@ -241,22 +222,39 @@ server <- function(data, epsg) {
                    toggleDisplay = TRUE,
                    position = "bottomleft") %>%
         addScaleBar() %>%
-        addLayersControl(baseGroups = c("World Imagery", "Ocean Basemap", "Dark Map"),
+        addLayersControl(baseGroups = c("World Imagery", "Ocean Basemap", "Open Street Map"),
+                         overlayGroups = c("Tracks_full", "Tracks_filter"),
                          options = layersControlOptions(collapsed = TRUE))
+
+      # add full-length tracks per ID
+      for (i in unique(dat.filt.sf$id)){
+        map1 <- map1 %>%
+          addPolylines(data = dat.filt.sf[dat.filt.sf$id == i,],
+                       lng = ~x,
+                       lat = ~y,
+                       weight = 2,
+                       color = "lightgrey",
+                       opacity = 0.4)
+      }
+
+      map1  #print map
+
     })
 
 
 
-
+    # REACTIVELY UPDATE MAP
     observe({
-
-      # UPDATED MAP
       req(reacted.data()) # Do this if reacted.data() is not null
 
 
+      # transform projection of coordinates to WGS84 and change from sf to data.frame
       dat.filt.sf<- sf::st_as_sf(dat.filt(), coords = c("x","y"), crs = epsg) %>%
         sf::st_transform(4326) %>%
-        sf::st_cast("LINESTRING")
+        dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                      y = unlist(purrr::map(.data$geometry, 2))) %>%
+        sf::st_drop_geometry()
+
 
       # Track w/in time window
       df<- reactive({
@@ -264,11 +262,14 @@ server <- function(data, epsg) {
 
         dat.sf<- sf::st_as_sf(df, coords = c("x","y"), crs = epsg) %>%
           sf::st_transform(4326) %>%
-          sf::st_cast("LINESTRING")
+          dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                        y = unlist(purrr::map(.data$geometry, 2))) %>%
+          sf::st_drop_geometry()
 
         dat.sf
 
       })
+
 
       # First point of filtered track
       df.start.pt<- reactive({
@@ -276,11 +277,17 @@ server <- function(data, epsg) {
 
         dat.sf<- sf::st_as_sf(df, coords = c("x","y"), crs = epsg) %>%
           sf::st_transform(4326) %>%
+          dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                        y = unlist(purrr::map(.data$geometry, 2))) %>%
+          sf::st_drop_geometry() %>%
+          dplyr::group_by(id) %>%
           dplyr::slice(1)
+
 
         dat.sf
 
       })
+
 
       # Last point of filtered track
       df.end.pt<- reactive({
@@ -288,7 +295,11 @@ server <- function(data, epsg) {
 
         dat.sf<- sf::st_as_sf(df, coords = c("x","y"), crs = epsg) %>%
           sf::st_transform(4326) %>%
-          dplyr::slice(nrow(df))
+          dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                        y = unlist(purrr::map(.data$geometry, 2))) %>%
+          sf::st_drop_geometry() %>%
+          dplyr::group_by(id) %>%
+          dplyr::slice(n())
 
         dat.sf
 
@@ -298,85 +309,88 @@ server <- function(data, epsg) {
 
 
       # Clear old selection on map, and add new selection
-      leafletProxy('map', data = df()) %>%
+      map2<- leafletProxy('map', data = df()) %>%
         clearControls() %>%
         clearShapes() %>%
         clearMarkers() %>%
-        fitBounds(as.numeric(sf::st_bbox(df())[1]),
-                  as.numeric(sf::st_bbox(df())[2]),
-                  as.numeric(sf::st_bbox(df())[3]),
-                  as.numeric(sf::st_bbox(df())[4])) %>%
-        addPolylines(lng = as.numeric(sf::st_coordinates(dat.filt.sf)[,1]),
-                     lat = as.numeric(sf::st_coordinates(dat.filt.sf)[,2]),
-                     weight = 2,
-                     color = "lightgrey",
-                     opacity = 0.4) %>%
-        addPolylines(lng = as.numeric(sf::st_coordinates(df())[,1]),
-                     lat = as.numeric(sf::st_coordinates(df())[,2]),
-                     weight = 2,
-                     color = "darkturquoise",
-                     opacity = 0.8) %>%
+        fitBounds(min(df()$x, na.rm = TRUE),
+                  min(df()$y, na.rm = TRUE),
+                  max(df()$x, na.rm = TRUE),
+                  max(df()$y, na.rm = TRUE)) %>%
         addCircleMarkers(data = df.start.pt(),
+                         lng = ~x,
+                         lat = ~y,
                          fillColor = "#5EF230",
                          stroke = FALSE,
                          fillOpacity = 0.8) %>%
         addCircleMarkers(data = df.end.pt(),
+                         lng = ~x,
+                         lat = ~y,
                          fillColor = "red",
                          stroke = FALSE,
-                         fillOpacity = 0.8)
+                         fillOpacity = 0.8) %>%
+        addLegend(colors = viridis::viridis(dplyr::n_distinct(df()$id)),
+                  labels = unique(df()$id),
+                  opacity = 1)
+
+      # add full-length and time-filtered tracks per ID
+      for (i in 1:dplyr::n_distinct(df()$id)){
+        map2 <- map2 %>%
+          addPolylines(data = dat.filt.sf[dat.filt.sf$id == unique(dat.filt.sf$id)[i],],
+                       lng = ~x,
+                       lat = ~y,
+                       weight = 2,
+                       color = "lightgrey",
+                       opacity = 0.4,
+                       group = "Tracks_full")
+      }
+
+      # add time-filtered tracks per ID
+      for (i in 1:dplyr::n_distinct(df()$id)){
+        map2 <- map2 %>%
+          addPolylines(data = df()[df()$id == unique(df()$id)[i],],
+                       lng = ~x,
+                       lat = ~y,
+                       weight = 2,
+                       color = viridis::viridis(dplyr::n_distinct(df()$id))[i],
+                       opacity = 0.8,
+                       group = "Tracks_filter")
+      }
+
+      map2  #print updated map
 
     })
 
 
 
+    # Filtering inputs for table
+    res_filter <- datamods::filter_data_server(
+      id = "filtering",
+      data = reactive(data),
+      name = reactive("data"),
+      vars = reactive(names(data)),
+      widget_num = "slider",
+      widget_date = "slider",
+      label_na = "Missing"
+    )
 
 
+    # Table
+    output$tab<- DT::renderDataTable(
+      res_filter$filtered(),   #filtered data goes here
 
+      server = FALSE,
+      extensions = "Buttons",
+      options = list(paging = TRUE,
+                     scrollX=TRUE,
+                     searching = TRUE,
+                     ordering = TRUE,
+                     dom = 'Bfrtip',
+                     buttons = c('copy', 'csv'),
+                     pageLength=10,
+                     lengthMenu=c(10,25,100) )
+    )
 
-
-    #############################################
-    ### Generate output for 'View all tracks' ###
-    #############################################
-
-    # Create map
-    output$map_all <- renderLeaflet({
-
-      #set palette
-      pal1<- colorFactor(palette = "viridis", domain = dat.filt2()$id)
-
-      labs<- sprintf("<strong>ID %s</strong><br/>", dat.filt2()$id) %>%
-        lapply(htmltools::HTML)
-
-
-      leaflet(data = dat.filt2()) %>%
-        addProviderTiles(providers$Esri.OceanBasemap, group = "Ocean Basemap",
-                         options = tileOptions(continuous_world = F)) %>%
-        addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery",
-                         options = tileOptions(continuous_world = F)) %>%
-        addProviderTiles(providers$CartoDB.DarkMatterNoLabels, group = "Dark Map",
-                         options = tileOptions(continuous_world = F)) %>%
-        clearControls() %>%
-        clearShapes() %>%
-        fitBounds(as.numeric(sf::st_bbox(dat.filt2())[1]),
-                  as.numeric(sf::st_bbox(dat.filt2())[2]),
-                  as.numeric(sf::st_bbox(dat.filt2())[3]),
-                  as.numeric(sf::st_bbox(dat.filt2())[4])) %>%
-        addPolylines(data = dat.filt2(),
-                     weight = 2,
-                     color = ~pal1(id),
-                     label = labs) %>%
-        leaflet::addLegend("bottomright",
-                           pal = pal1,
-                           values = dat.filt2()$id,
-                           title = "ID",
-                           opacity = 1) %>%
-        addMiniMap(tiles = providers$Esri.OceanBasemap,
-                   toggleDisplay = TRUE,
-                   position = "bottomleft") %>%
-        addScaleBar() %>%
-        addLayersControl(baseGroups = c("Ocean Basemap", "World Imagery", "Dark Map"),
-                         options = layersControlOptions(collapsed = TRUE), position = "topleft")
-    })
 
   }
 }

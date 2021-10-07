@@ -54,7 +54,10 @@ Suggests:
     xts,
     htmltools,
     shinythemes,
-    progressr
+    progressr,
+    DT,
+    datamods,
+    viridis
 Language: en-US
 RoxygenNote: 7.1.1
 LinkingTo: 

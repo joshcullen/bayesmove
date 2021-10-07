@@ -43,7 +43,9 @@ not assume an underlying Markov property or use a mechanistic process
 This package also includes features to check model convergence based on
 the log-likelihood for each MCMC iteration. Model output are often
 returned in a format that is `tidyverse`-friendly, which allows for easy
-visualization using `ggplot2`.
+visualization using `ggplot2`. Additionally, a Shiny app can be launched
+to dynamically and interactively explore animal movement data, including
+options to filter and export data from the app.
 
 ## Installation
 
