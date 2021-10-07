@@ -36,10 +36,12 @@ Imports:
     tidyr (>= 1.0.0),
     magrittr,
     future (>= 1.15.1),
+    progressr,
     shiny,
     dygraphs (>= 1.1.0),
     leaflet (>= 2.0.0),
-    sf (>= 0.9-6)
+    sf (>= 0.9-6),
+    shinyWidgets
 URL: https://github.com/joshcullen/bayesmove, https://joshcullen.github.io/bayesmove/
 BugReports: https://github.com/joshcullen/bayesmove/issues
 Suggests: 
@@ -50,11 +52,9 @@ Suggests:
     rmarkdown,
     ggforce,
     RcppArmadillo,
-    shinyWidgets,
     xts,
     htmltools,
     shinythemes,
-    progressr,
     DT,
     datamods,
     viridis

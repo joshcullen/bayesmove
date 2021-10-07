@@ -52,8 +52,11 @@ options to filter and export data from the app.
 You can install the latest CRAN release with:
 
 ``` r
-install.packages("bayesmove")
+install.packages("bayesmove", dependencies = c("Imports","LinkingTo","Suggests"))
 ```
+
+which will ensure that all packages needed to run the Shiny app are
+installed.
 
 You can install the latest **stable** version of the package from GitHub
 with:
