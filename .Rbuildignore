@@ -12,3 +12,4 @@
 ^vignettes$
 ^CRAN-RELEASE$
 ^vignettes/articles$
+^revdep$
