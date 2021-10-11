@@ -6,9 +6,6 @@
 ## R CMD check results
 0 ERRORS | 0 WARNINGS | 1 NOTE
 
-* checking checking CRAN incoming feasiblity ... NOTE
-  Maintainer: 'Joshua Cullen <joshcullen10@gmail.com>'
-  
 * Possibly misspelled words in DESCRIPTION:
   al (19:64)
   doi (19:76)
