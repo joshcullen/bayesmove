@@ -10,7 +10,7 @@ status](https://www.r-pkg.org/badges/version/bayesmove)](https://CRAN.R-project.
 [![R build
 status](https://github.com/joshcullen/bayesmove/workflows/R-CMD-check/badge.svg)](https://github.com/joshcullen/bayesmove/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/joshcullen/bayesmove/branch/master/graph/badge.svg)](https://codecov.io/gh/joshcullen/bayesmove?branch=master)
+coverage](https://codecov.io/gh/joshcullen/bayesmove/branch/master/graph/badge.svg)](https://app.codecov.io/gh/joshcullen/bayesmove?branch=master)
 [![CRAN monthly
 downloads](https://cranlogs.r-pkg.org/badges/bayesmove)](https://CRAN.R-project.org/package=bayesmove)
 [![CRAN total
@@ -42,7 +42,7 @@ similar to that from state-space and hidden Markov models, this
 observation-level model does not assume an underlying Markov property or
 use a mechanistic process (e.g., correlated random walk). Additional
 details about the M4 method can be found in Cullen et al. (2021)
-[doi:10.1101/2020.11.05.3697](https://doi.org/10.1101/2020.11.05.369702).
+[doi:10.1111/2041-210X.13745](https://doi.org/10.1111/2041-210X.13745).
 
 This package also includes features to check model convergence based on
 the log-likelihood for each MCMC iteration. Model output are often

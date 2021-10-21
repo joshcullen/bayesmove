@@ -64,25 +64,19 @@ shiny_tracks = function(data, epsg){
                           sidebarPanel(
                             tags$h4(strong("Explore the data")),
 
-                            #dropdown widget for selecting IDs to viz time series
-                            shinyWidgets::pickerInput(
-                              inputId = "select_ids",
-                              label = "Select/deselect by ID",
-                              choices = unique(data$id),
-                              selected = unique(data$id),
-                              options = list(
-                                `actions-box` = TRUE),
-                              multiple = TRUE
-                            ),
-
                             #dropdown widget for selecting variable to viz time series
                             selectInput('var', label = 'Select a variable',
-                                        choices = names(data)[!(names(data) %in% c("id","date"))],
+                                        choices = names(data)[!(names(data) %in%
+                                                                  c("id","date"))],
                                         selected = names(data)[!(names(data) %in%
                                                                    c("id","date"))][1]),
+                            #radio button to map either lines or points
+                            radioButtons("radio", label = "Trajectory type",
+                                         choices = c("lines", "points"),
+                                         selected = "lines"),
                             br(),
 
-                            tags$h4(strong("Filter data table")),
+                            tags$h4(strong("Filter the data")),
 
                             #widget/module for filtering by each column of dataframe
                             datamods::filter_data_ui("filtering", max_height = "500px")
@@ -126,14 +120,16 @@ server <- function(data, epsg) {
 
     ### 'Explore data' tab
 
-    # Filter by ID
-    dat.filt <- eventReactive(input$select_ids, {
-      d<- data[data$id %in% input$select_ids, ]
-
-      return(d)
-    })
-
-
+    # Filtering inputs for the app
+    res_filter <- datamods::filter_data_server(
+      id = "filtering",
+      data = reactive(data),
+      name = reactive("data"),
+      vars = reactive(names(data)),
+      widget_num = "slider",
+      widget_date = "slider",
+      label_na = "Missing"
+    )
 
 
 
@@ -148,10 +144,12 @@ server <- function(data, epsg) {
     # Lineplot
     output$lineplot<- renderDygraph({
 
-      dat.ts<- dat.filt() %>%
+      dat.ts<- res_filter$filtered() %>%
         dplyr::group_by(id) %>%
         dplyr::select(id, date, input$var) %>%
-        tidyr::pivot_wider(names_from = id, values_from = input$var)
+        dplyr::mutate(row = row_number()) %>%
+        tidyr::pivot_wider(names_from = id, values_from = input$var) %>%
+        dplyr::select(-row)
 
       dat.xts<- xts::xts(x = dat.ts[,-1], order.by = dat.ts$date)
 
@@ -174,7 +172,7 @@ server <- function(data, epsg) {
 
 
     # Export reactive data for selected time window
-    reacted.data<- eventReactive(list(dat.filt(), input$lineplot_date_window), {
+    reacted.data<- eventReactive(list(res_filter$filtered(), input$lineplot_date_window), {
       req(input$lineplot_date_window)  #to prevent warning from 'if' expression below
 
       # define start and end times for filtering the data
@@ -184,10 +182,10 @@ server <- function(data, epsg) {
                      tz = lubridate::tz(data$date))
 
       # subset dat.filt() by time window
-      if (start == min(dat.filt()$date) & end == max(dat.filt()$date)) {
-        dat.filt()
+      if (start == min(res_filter$filtered()$date) & end == max(res_filter$filtered()$date)) {
+        res_filter$filtered()
       } else {
-        subset = dplyr::filter(dat.filt(), date >= start & date <= end)
+        subset = dplyr::filter(res_filter$filtered(), date >= start & date <= end)
         return(subset)
       }
     }) %>%
@@ -195,51 +193,66 @@ server <- function(data, epsg) {
 
 
     # Map tracks for selected time window
-    output$map <- renderLeaflet({
+    observeEvent(input$radio, {  #update based on whether plotting points or lines
 
-      # transform projection of coordinates to WGS84 and change from sf to data.frame
-      dat.filt.sf<- sf::st_as_sf(dat.filt(), coords = c("x","y"), crs = epsg) %>%
-        sf::st_transform(4326) %>%
-        dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
-                      y = unlist(purrr::map(.data$geometry, 2))) %>%
-        sf::st_drop_geometry()
+      output$map <- renderLeaflet({
+
+        # transform projection of coordinates to WGS84 and change from sf to data.frame
+        dat.filt.sf<- sf::st_as_sf(res_filter$filtered(), coords = c("x","y"), crs = epsg) %>%
+          sf::st_transform(4326) %>%
+          dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                        y = unlist(purrr::map(.data$geometry, 2))) %>%
+          sf::st_drop_geometry()
 
 
-      map1<- leaflet(data = dat.filt.sf,
-                     options = leafletOptions(preferCanvas = TRUE)) %>%
-        addProviderTiles(providers$Esri.OceanBasemap, group = "Ocean Basemap",
-                         options = tileOptions(continuous_world = F)) %>%
-        addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery",
-                         options = tileOptions(continuous_world = F)) %>%
-        addProviderTiles(providers$OpenStreetMap, group = "Open Street Map",
-                         options = tileOptions(continuous_world = F)) %>%
-        addMeasure(position = "topleft",
-                   primaryLengthUnit = "kilometers",
-                   primaryAreaUnit = "hectares",
-                   activeColor = "#3D535D",
-                   completedColor = "#7D4479") %>%
-        addMiniMap(tiles = providers$Esri.OceanBasemap,
-                   toggleDisplay = TRUE,
-                   position = "bottomleft") %>%
-        addScaleBar() %>%
-        addLayersControl(baseGroups = c("World Imagery", "Ocean Basemap", "Open Street Map"),
-                         overlayGroups = c("Tracks_full", "Tracks_filter"),
-                         options = layersControlOptions(collapsed = TRUE))
+        map1<- leaflet(data = dat.filt.sf,
+                       options = leafletOptions(preferCanvas = TRUE)) %>%
+          addProviderTiles(providers$Esri.OceanBasemap, group = "Ocean Basemap",
+                           options = tileOptions(continuous_world = F)) %>%
+          addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery",
+                           options = tileOptions(continuous_world = F)) %>%
+          addProviderTiles(providers$OpenStreetMap, group = "Open Street Map",
+                           options = tileOptions(continuous_world = F)) %>%
+          addMeasure(position = "topleft",
+                     primaryLengthUnit = "kilometers",
+                     primaryAreaUnit = "hectares",
+                     activeColor = "#3D535D",
+                     completedColor = "#7D4479") %>%
+          addMiniMap(tiles = providers$Esri.OceanBasemap,
+                     toggleDisplay = TRUE,
+                     position = "bottomleft") %>%
+          addScaleBar() %>%
+          addLayersControl(baseGroups = c("World Imagery", "Ocean Basemap", "Open Street Map"),
+                           overlayGroups = c("Tracks_full", "Tracks_filter"),
+                           options = layersControlOptions(collapsed = TRUE))
 
-      # add full-length tracks per ID
-      for (i in unique(dat.filt.sf$id)){
-        map1 <- map1 %>%
-          addPolylines(data = dat.filt.sf[dat.filt.sf$id == i,],
-                       lng = ~x,
-                       lat = ~y,
-                       weight = 2,
-                       color = "lightgrey",
-                       opacity = 0.4)
-      }
 
-      map1  #print map
+        # add full-length tracks per ID
+        if (input$radio == "lines") {  #if wanting to plot tracks as lines
+          for (i in unique(dat.filt.sf$id)){
+            map1 <- map1 %>%
+              addPolylines(data = dat.filt.sf[dat.filt.sf$id == i,],
+                           lng = ~x,
+                           lat = ~y,
+                           weight = 2,
+                           color = "lightgrey",
+                           opacity = 0.4)
+          }
+        } else {  #if wanting to plot tracks as points
+          map1 <- map1 %>%
+            addCircleMarkers(data = dat.filt.sf,
+                             lng = ~x,
+                             lat = ~y,
+                             radius = 3,
+                             fillColor = "lightgrey",
+                             stroke = FALSE,
+                             fillOpacity = 0.3)
+        }
 
-    })
+        map1  #print map
+
+      })  #close renderLeaflet
+    })  #close observeEvent for radio button
 
 
 
@@ -249,7 +262,7 @@ server <- function(data, epsg) {
 
 
       # transform projection of coordinates to WGS84 and change from sf to data.frame
-      dat.filt.sf<- sf::st_as_sf(dat.filt(), coords = c("x","y"), crs = epsg) %>%
+      dat.filt.sf<- sf::st_as_sf(res_filter$filtered(), coords = c("x","y"), crs = epsg) %>%
         sf::st_transform(4326) %>%
         dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
                       y = unlist(purrr::map(.data$geometry, 2))) %>%
@@ -333,46 +346,66 @@ server <- function(data, epsg) {
                   labels = unique(df()$id),
                   opacity = 1)
 
-      # add full-length and time-filtered tracks per ID
-      for (i in 1:dplyr::n_distinct(df()$id)){
-        map2 <- map2 %>%
-          addPolylines(data = dat.filt.sf[dat.filt.sf$id == unique(dat.filt.sf$id)[i],],
-                       lng = ~x,
-                       lat = ~y,
-                       weight = 2,
-                       color = "lightgrey",
-                       opacity = 0.4,
-                       group = "Tracks_full")
-      }
 
-      # add time-filtered tracks per ID
-      for (i in 1:dplyr::n_distinct(df()$id)){
-        map2 <- map2 %>%
-          addPolylines(data = df()[df()$id == unique(df()$id)[i],],
-                       lng = ~x,
-                       lat = ~y,
-                       weight = 2,
-                       color = viridis::viridis(dplyr::n_distinct(df()$id))[i],
-                       opacity = 0.8,
-                       group = "Tracks_filter")
+      # add full-length tracks per ID
+      if (input$radio == "lines") {  #tracks as lines
+
+        for (i in 1:dplyr::n_distinct(df()$id)){
+          map2 <- map2 %>%
+            addPolylines(data = dat.filt.sf[dat.filt.sf$id == unique(dat.filt.sf$id)[i],],
+                         lng = ~x,
+                         lat = ~y,
+                         weight = 2,
+                         color = "lightgrey",
+                         opacity = 0.4,
+                         group = "Tracks_full")
+        }
+
+        # add time-filtered tracks per ID
+        for (i in 1:dplyr::n_distinct(df()$id)){
+          map2 <- map2 %>%
+            addPolylines(data = df()[df()$id == unique(df()$id)[i],],
+                         lng = ~x,
+                         lat = ~y,
+                         weight = 2,
+                         color = viridis::viridis(dplyr::n_distinct(df()$id))[i],
+                         opacity = 0.8,
+                         group = "Tracks_filter")
+        }
+
+      } else {  #tracks as points
+
+        # add full-length tracks per ID
+        for (i in 1:dplyr::n_distinct(df()$id)){
+          map2 <- map2 %>%
+            addCircleMarkers(data = dat.filt.sf[dat.filt.sf$id == unique(dat.filt.sf$id)[i],],
+                             lng = ~x,
+                             lat = ~y,
+                             radius = 3,
+                             fillColor = "lightgrey",
+                             stroke = FALSE,
+                             fillOpacity = 0.3,
+                             group = "Tracks_full")
+        }
+
+        # add time-filtered tracks per ID
+        for (i in 1:dplyr::n_distinct(df()$id)){
+          map2 <- map2 %>%
+            addCircleMarkers(data = df()[df()$id == unique(df()$id)[i],],
+                             lng = ~x,
+                             lat = ~y,
+                             radius = 3,
+                             fillColor = viridis::viridis(dplyr::n_distinct(df()$id))[i],
+                             stroke = FALSE,
+                             fillOpacity = 0.6,
+                             group = "Tracks_filter")
+        }
       }
 
       map2  #print updated map
 
     })
 
-
-
-    # Filtering inputs for table
-    res_filter <- datamods::filter_data_server(
-      id = "filtering",
-      data = reactive(data),
-      name = reactive("data"),
-      vars = reactive(names(data)),
-      widget_num = "slider",
-      widget_date = "slider",
-      label_na = "Missing"
-    )
 
 
     # Table
