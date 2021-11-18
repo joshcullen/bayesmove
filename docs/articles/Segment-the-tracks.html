@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -77,12 +77,12 @@
 
       
 
-      </header><script src="Segment-the-tracks_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="Segment-the-tracks_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Segment the tracks</h1>
             
-            <h4 class="date">26 April 2021</h4>
+            <h4 class="date">18 November 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Segment-the-tracks.Rmd"><code>vignettes/Segment-the-tracks.Rmd</code></a></small>
       <div class="hidden name"><code>Segment-the-tracks.Rmd</code></div>
@@ -175,28 +175,28 @@
                            alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span>
 
 <span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/future/man/sequential.html">sequential</a></span><span class="op">)</span>  <span class="co">#return to single core</span></pre></div>
-<p>Now that each of the tracks have been segmented, we need to inspect the trace-plots for the log marginal likelihood to determine whether the model converged or not. Additionally, we can inspect a traceplot of the number of estimated breakpoints per iteration of the RJMCMC for each ID.</p>
+<p>Now that each of the tracks have been segmented, we need to inspect the trace-plots for the log marginal likelihood to determine whether the model converged or not. Additionally, we can inspect a traceplot of the number of estimated breakpoints per iteration of the RJMCMC for each ID. Red vertical lines denote the burn-in period for this set of samples, which is set to 50% of <code>ngibbs</code> by default.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Trace-plots for the number of breakpoints per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">nbrks</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></pre></div>
-<p><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-1.png" width="312"><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-2.png" width="312"><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-3.png" width="312"></p>
+<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></pre></div>
+<p><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-1.png" width="672"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></pre></div>
-<p><img src="Segment-the-tracks_files/figure-html/LML-traceplots-1.png" width="312"><img src="Segment-the-tracks_files/figure-html/LML-traceplots-2.png" width="312"><img src="Segment-the-tracks_files/figure-html/LML-traceplots-3.png" width="312"></p>
+<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></pre></div>
+<p><img src="Segment-the-tracks_files/figure-html/LML-traceplots-1.png" width="672"></p>
 <p>It appears that the models have converged based on the traceplots of the log marginal likelihoods for all IDs. If this was not the case, the model would need to be re-run with a greater number of iterations for <code>ngibbs</code>. It also appears that most IDs likely have 30-40 breakpoints, but the exact number and position of these breakpoints will be determined by selecting the <em>maximum a posteriori</em> (MAP) estimate for each animal ID. This is performed as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="co"># Determine MAP for selecting breakpoints</span>
 <span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span>
 <span class="va">MAP.est</span>
-<span class="co">#&gt; [1] 9941 9911 9084</span>
+<span class="co">#&gt; [1] 9126 9910 8667</span>
 
 <span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span>
 
 <span class="co"># How many breakpoints estimated per ID?</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; id1 id2 id3 </span>
-<span class="co">#&gt;  37  47  34</span></pre></div>
+<span class="co">#&gt;  39  49  38</span></pre></div>
 <p>The object <code>MAP.est</code> is storing the iteration at which the MAP estimate occurs for each ID, whereas <code>brkpts</code> is a data frame that stores all of the breakpoints per ID. We can plot these breakpoints over the discretized data streams to inspect how well this appears to match changes in these values.</p>
 </div>
 <div id="breakpoint-visualization" class="section level2">

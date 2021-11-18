@@ -128,7 +128,8 @@ server <- function(data, epsg) {
       vars = reactive(names(data)),
       widget_num = "slider",
       widget_date = "slider",
-      label_na = "Missing"
+      label_na = "Missing",
+      drop_ids = FALSE
     )
 
 

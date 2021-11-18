@@ -89,7 +89,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -108,7 +108,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/joshcullen/bayesmove">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -129,9 +129,28 @@
       <small>Source: <a href='https://github.com/joshcullen/bayesmove/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bayesmove-022-2021-11-01" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.2">
+<a href="#bayesmove-022-2021-11-01" class="anchor"></a>bayesmove 0.2.2 (2021-11-01)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fixed bug with Shiny app where it would return error based on number and/or frequency of unique IDs</li>
+</ul>
+</div>
+    <div id="bayesmove-021-2021-10-07" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.1">
+<a href="#bayesmove-021-2021-10-07" class="anchor"></a>bayesmove 0.2.1 (2021-10-07)<small> 2021-10-22 </small>
+</h1>
+<ul>
+<li>Greatly improved speed of segmentation model by adding internal function summarize1 in C++ and updated get_summary_stats().</li>
+<li>Updated shiny_tracks by improving responsiveness to changes in the time window, adding a data table with options to filter, and the ability to explore the time series and map of multiple IDs at once.</li>
+<li>Updated traceplot() to automatically determine the number of MCMC iterations and add a line denoting the burn-in period.</li>
+<li>Updated progress bar in segment_behavior() to prevent it from disappearing.</li>
+</ul>
+</div>
     <div id="bayesmove-020-2021-04-26" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
-<a href="#bayesmove-020-2021-04-26" class="anchor"></a>bayesmove 0.2.0 (2021-04-26)<small> Unreleased </small>
+<a href="#bayesmove-020-2021-04-26" class="anchor"></a>bayesmove 0.2.0 (2021-04-26)<small> 2021-04-26 </small>
 </h1>
 <ul>
 <li>Add cluster_obs() function to make observation-level inference of behavioral states.</li>

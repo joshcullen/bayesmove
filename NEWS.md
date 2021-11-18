@@ -1,3 +1,6 @@
+# bayesmove 0.2.2 (2021-11-01)
+* Fixed bug with Shiny app where it would return error based on number and/or frequency of unique IDs
+
 # bayesmove 0.2.1 (2021-10-07)
 * Greatly improved speed of segmentation model by adding internal function summarize1 in C++ and updated get_summary_stats().
 * Updated shiny_tracks by improving responsiveness to changes in the time window, adding a data table with options to filter, and the ability to explore the time series and map of multiple IDs at once.

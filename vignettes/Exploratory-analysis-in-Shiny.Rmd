@@ -1,6 +1,9 @@
 ---
 title: "Exploratory analysis in Shiny"
 date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
 ---
 
 ```{r, include = FALSE}
@@ -8,7 +11,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width=7,
-  fig.retina=2
+  fig.retina=2,
+  fig.align = 'center'
 )
 ```
 
@@ -19,121 +23,190 @@ The creation of maps is essential to understanding animal movement patterns over
 
 During the data exploration stage, it is particularly useful to become familiar with relationships between movement patterns and covariates of interest. However, this process can be difficult when practitioners only rely on static maps that obscure the temporal pattern exhibited by an organism.
 
-As an example, below is a static plot of the `fisher` dataset (LaPoint et al., 2013) included within the `move` package. The land use basemap was downloaded from the supporting material from Muff et al. (2019).
+As an example, below is a static plot of the `sese` (southern elephant seal) dataset (Jonsen et al., 2019) included within the `foieGras` package (Jonsen and Patterson, 2020).
 
 
-```{r load, message=FALSE, eval=FALSE}
+```{r load, message=FALSE, eval=TRUE, class.source = 'fold-show'}
 library(bayesmove)
-library(move)
+library(foieGras)
+library(sf)
+library(rnaturalearth)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
 
 # Load data
-data(fishers)
+data(sese)
+
+# Change column names to match required names for shiny_tracks()
+# Change projection to calculate step lengths, turning angles, and net-squared displacement metrics
+sese.sf<- sese %>% 
+  rename(x = lon, y = lat) %>% 
+  st_as_sf(., coords = c("x","y"), crs = 4326) %>% 
+  st_transform(crs = "+proj=laea +lat_0=-90 +lon_0=75 +ellps=WGS84 +units=km +no_defs") %>% 
+  dplyr::mutate(x = unlist(purrr::map(.data$geometry, 1)),
+                      y = unlist(purrr::map(.data$geometry, 2)))
+
+# Convert back to data.frame w/ projected coordinates
+sese2<- sese.sf %>% 
+        sf::st_drop_geometry()
+
+# Convert sf object to MULTILINESTRING
+sese.sf<- sese.sf %>% 
+  group_by(id) %>%
+  summarize(do_union = FALSE) %>%
+  st_cast("MULTILINESTRING")
+
+# Define bounding box of seal tracks
+bbox<- st_bbox(sese.sf)
+
+
+# Calculate step lengths, turning angles, and net squared displacement
+sese3<- prep_data(dat = sese2, coord.names = c("x","y"), id = "id")
+  
+
+# Load land spatial data
+world<- ne_countries(scale = 110, returnclass = "sf") %>% 
+  st_transform("+proj=laea +lat_0=-90 +lon_0=75 +ellps=WGS84 +units=km +no_defs")
+
 
 # View static tracks
-lines(fishers, col = "black", lwd = 2)
+ggplot() +
+  geom_sf(data = world, fill = "grey45") +
+  geom_sf(data = sese.sf, aes(color = id), size = 1) +
+  scale_color_brewer(palette = "Dark2", guide = F) +
+  theme_minimal() +
+  coord_sf(xlim = bbox[c(1,3)], ylim = bbox[c(2,4)])
 ```
 
-```{r load data, message=FALSE, echo=FALSE}
-library(bayesmove)
-library(move)
-library(dplyr)
-library(ggplot2)
-library(lubridate)
 
-# Load data
-data(fishers)
-```
-<p align="center">
-<img src="Shiny-Fig01.png" width="400">
-</p>
+It is apparent that these southern elephant seals are central-place foragers and are undertaking a looping migration. However, it is unclear how long these individuals were tracked, if they all performed migratory movements at the exact same time, and how long they spent at foraging locations before continuing to travel in a fast and directed behavior.
 
-Even with an underlying basemap, it is apparent that these movement patterns are difficult to discern other than these fishers move within a confined home range and typically avoid developed areas (red). It is also unclear how long these individuals were tracked and whether they exhibited regular movement across the home range each day or at different periods of the study.
-
-While we could potentially subset these data to create a grid of plots at some time interval of interest (e.g., days, months, seasons, years), this can take unnecessarily long to try different combinations for one or multiple tagged individuals. Additionally, it would be difficult to explore patterns in the intrinsic properties of movement itself (e.g., identify episodic periods of high site fidelity, looping forays, or what locations animals move to during periods of thermal stress). Therefore, we have created a R Shiny application within the `bayesmove` package to dynamically explore animal movement patterns.
+While we could potentially subset these data to create a grid of plots at some time interval of interest (e.g., days, months, seasons, years), this can take unnecessarily long to try different combinations for one or multiple tagged individuals. Additionally, it would be difficult to explore patterns in the intrinsic properties of movement itself (e.g., identify episodic periods of high site fidelity, looping movements, or relationships in spatiotemporal patterns between individual animals). Therefore, we have created a R Shiny application within the `bayesmove` package to dynamically explore animal movement patterns.
 
 
 ## Dynamic exploration of animal movement patterns
 
-Users can quickly render their data in the Shiny app using the `shiny_tracks()` function, which only requires a data frame and an EPSG code to map the tracks. At a minimum, this data frame must have columns labeled 'id', 'x', 'y', and 'date' where 'date' is of class `POSIXct`. Any other variables can also be included within the data frame, but only time series of numeric values can be visualized and filtered as of now.
+Users can quickly render their data in the Shiny app using the `shiny_tracks()` function, which only requires a data frame and an EPSG code (or PROJ string) to map the tracks. At a minimum, this data frame must have columns labeled 'id', 'x', 'y', and 'date' where 'date' is of class `POSIXct`. Any other variables can also be included within the data frame, but only time series of numeric values can be currently be visualized and explored.
 
-In this example, coordinates recorded in WGS84 UTM 18N are used since they are measured in meters, which allows for intuitive understanding for calculated step lengths and net-squared displacement. Upon first running the function, users should be brought to a page that allows dynamic exploration of individual movement patterns:
+In this example, the Lambert Azimuthal Equal Area, WGS84 projection ("+proj=laea +lat_0=-90 +lon_0=75 +ellps=WGS84 +units=km +no_defs") is used since the coordinate units are in kilometers, which provides an intuitive set of units for step lengths and net-squared displacement. Upon first running the function, users are brought to a page that lists instructions and information for using the app (in the 'About' tab). Clicking on the 'Explore data' tab allows dynamic exploration of movement patterns from multiple individuals:
 
-```{r first step, eval=FALSE}
-# Convert from `Move` object to data frame
-fishers2<- data.frame(fishers) %>% 
-  mutate(id = trackId(fishers)) %>% 
-  rename(date = study.local.timestamp)
-
-# Calculate step lengths, turning angles, and net squared displacement
-fishers2<- prep_data(dat = fishers2, coord.names = c("utm.easting","utm.northing"),
-                     id = "id")
-
+```{r first step, eval=FALSE, class.source = 'fold-show'}
 # Run Shiny app
-shiny_tracks(data = fishers2, epsg = 32618)
+shiny_tracks(data = sese3, epsg = "+proj=laea +lat_0=-90 +lon_0=75 +ellps=WGS84 +units=km +no_defs")
 
 ```
 
 ```{r second step, echo=FALSE}
-# Convert from `Move` object to data frame
-fishers2<- data.frame(fishers) %>% 
-  mutate(id = trackId(fishers)) %>% 
-  rename(date = study.local.timestamp)
-
-# Calculate step lengths, turning angles, and net squared displacement
-fishers2<- prep_data(dat = fishers2, coord.names = c("utm.easting","utm.northing"),
-                     id = "id")
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig1.png')
+# knitr::include_graphics('shiny-fig2.png')
 ```
+<p align="center">
+<img src="shiny-fig1.png" width="600">
+</p>
 
-<img src="Shiny-Fig1.png">
-<br>
-<br>
-This screenshot shows the general layout of the Shiny app, which has two tabs: the first is for exploration of individual movement patterns and the second is for the exploration of all individuals simultaneously.
-
-We can see on the sidebar that there is a dropdown menu to change which animal ID to explore and another dropdown menu to visualize the time series of a given variable in the data frame, which is shown as the plot at the top. Since the first column in the data frame (apart from 'id') is shown initially, you will see the numeric form of a time variable. The map shown below is the entire track for 'Leroy', where the green dot is the starting location and the red dot is the ending location.
-
-To dynamically explore a more interesting variable, such as net-squared displacement, we can change the variable in the dropdown menu and then click and drag on the time series plot to only highlight a particular time period of interest on the map.
+<p align="center">
+<img src="shiny-fig2.png" width="600">
+</p>
 <br>
 <br>
 
-<img src="Shiny-Fig2.png">
-<br><br><br>
-<img src="Shiny-Fig3.png">
-<br><br><br>
-<img src="Shiny-Fig4.png">
+This screenshot shows the general layout of the Shiny app, which let's users select a variable to dynamically explore, filter variables from their dataset, and visualize a time series plot as well as an interactive map of these data. Additionally, users can toggle between visualizing their set of locations as lines or points. To provide a concrete example, let's explore the southern elephant seal data further.
 
-<br>
-<br>
-Each of these screenshots shows a different period selected over this time series. The first and third maps show a foray behavior where Leroy takes approximately 1 day to move across his home range and return to his starting location. The second screenshot shows very little movement during the morning until noon, after which leroy starts to move again. Other variables and IDs could also be explored. It may even be useful to zoom in on the satellite basemap to see exactly what type of land cover is being traversed or occupied.
+We can see on the sidebar that there are two main headers that break up this panel: 1) Explore the data, and 2) Filter the data. Under the 'Explore the data' header, you can select any variables from your data frame (besides `id` or `date`) to visualize an interactive time series. Additionally, a radio button is provided to toggle between mapping your spatial coordinates as a trajectory (line) or as a set of points on the interactive Leaflet map.
 
-***
+Let's say we were interested in exploring the East-West movement patterns of all 5 individuals: we would click on the "Select a variable" dropdown menu at the top and change this to `x`.
+<br>
+<br>
+```{r third step, echo=FALSE}
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig3.png')
 
-In addition to dynamic exploration of individuals, it may also be useful to explore how multiple individuals move over time, especially if interactions among individuals are suspected. We can visualize these patterns in the 'View all tracks' tab.
+```
+<p align="center">
+<img src="shiny-fig3.png" width="600">
+</p>
+<br>
+<br>
+From this time series plot, we can see that two IDs ("ct36-E-09" and "ct36-F-09") were transmitting only during 2009, whereas the remaining three IDs were all transmitting over the same period of time in 2015. Additionally, it is also very obvious that these seals are moving in a variety of directions from the island of Kerguelen. The line plot and the tracks on the Leaflet map are both colored by ID, where green circles denote starting locations and red circles denote ending locations. 
+
+To dynamically explore a more interesting variable, such as net-squared displacement (NSD), we can change the variable in the dropdown menu and then click and drag on the time series plot to only highlight a particular time period of interest on the map (e.g., 2015).
+<br>
+<br>
+```{r fourth step, echo=FALSE}
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig4.png')
+
+```
+<p align="center">
+<img src="shiny-fig4.png" width="600">
+</p>
+<br>
+<br>
+We now see a zoomed in version of the time series plot of NSD and only the three IDs tagged in 2015 showing up on the Leaflet map. This example demonstrates that updating the time window of the time series plot will impact the map, but does not impact the table that displays the dataset below (which can be confirmed if you scroll down and observe the total number of entries reported beneath the table). If interested in filtering this dataset to export only the tracks from 2015, you would have to either 1) remove the two IDs tagged in 2009, or 2) adjust the date range slider under the "Filter the data" header. An example where the data is filtered by ID is shown below, where the number of retained (vs removed) observations is shown circled in red. *Clicking on the `id` window will bring up options to include the previously removed IDs*.
+<br>
+<br>
+```{r fifth step, echo=FALSE}
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig5.png')
+
+```
+<p align="center">
+<img src="shiny-fig5.png" width="600">
+</p>
+<br>
+<br>
+When inspecting the plot of NSD over time, we can see a pattern where NSD is essentially zero at the beginning (February) and end (September) of the time series, but in between it is gradually increasing to its maximum value during the austral fall/winter before gradually decreasing to zero by the austral spring. This is useful to know, but we can inspect even finer temporal resolution patterns of these movements, particularly at their greatest extent (i.e., April to June). To do so, all we have to do is click and drag on the plot for this time window and the Leaflet map will update the extent of the zoomed-in tracks, as well as showing the full tracks in grey while the "highlighted" time window is shown in color.
+<br>
+<br>
+```{r sixth step, echo=FALSE}
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig6.png')
+
+```
+<p align="center">
+<img src="shiny-fig6.png" width="600">
+</p>
+<br>
+<br>
+With this new time window selected, we can pan around and zoom-in to each ID. The green and red circles denote the first and last location for the selected time window, which has now been updated.
+<br>
+<br>
+```{r seventh step, echo=FALSE}
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig7.png')
+
+```
+<p align="center">
+<img src="shiny-fig7.png" width="600">
+</p>
+<br>
+<br>
+Additionally, the basemap can be adjusted and the tracks can be toggled on and off (including whether you prefer to view only the highlighted portion of the track, the full track length, or both).
+<br>
+<br>
+```{r eigth step, echo=FALSE}
+## Need to add code to import screenshot
+# knitr::include_graphics('shiny-fig8.png')
+
+```
+<p align="center">
+<img src="shiny-fig8.png" width="600">
+</p>
+<br>
+<br>
+If you wanted to filter a subset of your data (using the sliders and inputs under the 'Filter the data' header of the sidebar) to export for later use, you can either copy the entire table by clicking on the "Copy" button, or download a CSV file of the filtered data by clicking the "CSV" button.
 <br>
 <br>
 
-<img src="Shiny-Fig5.png">
-<br>
-<br>
-In this module of the Shiny app, users can select/deselect multiple IDs to visualize. For this `fishers` dataset, there are only 2 individuals. Additionally the slider at the top can be dragged to change the size and position of the time window of interest. This action will dynamically update the map to only include IDs that were tracked during the time period of interest.
-<br>
-<br>
-
-<img src="Shiny-Fig6.png">
-<br><br><br>
-<img src="Shiny-Fig7.png">
-<br>
-<br>
-If any other features are desired (e.g., loading raster layers, filtering of selected variables, exporting a filtered set of observations, etc), feel free to send requests by e-mail (joshcullen10 [at] gmail [dot] com) or submit as an issue on the GitHub page for `bayesmove`.
+An online version of this app can be found [here](https://joshcullen.shinyapps.io/segmentation_of_NSD). If any other features are desired (e.g., loading raster layers, choosing among multiple color palettes, etc), feel free to send requests by e-mail (joshcullen10 [at] gmail [dot] com) or submit as an issue on the GitHub page for `bayesmove`.
 
 
 
 ## References
 
-LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Animal behavior, cost-based corridor models, and real corridors. *Landscape Ecology*, 28(8), 1615–1630. [doi:10.1007/s10980-013-9910-0](http://dx.doi.org/10.1007/s10980-013-9910-0).
+Jonsen ID, McMahon CR, Patterson TA, Auger-Methe M, Harcourt R, Hindell MA, Bestley S. (2019). Movement responses to environment: fast inference of variation among southern elephant seals with a mixed effects model. *Ecology*, 100:e02566. [doi:10.1002/ecy.2566](https://doi.org/10.1002/ecy.2566).
 
-LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Data from: Animal behavior, cost-based corridor models, and real corridors. *Movebank Data Repository*. [doi:10.5441/001/1.2tp2j43g](http://dx.doi.org/10.5441/001/1.2tp2j43g).
+Jonsen I, Patterson T. (2020). foieGras: fit latent variable movement models to animal tracking data for location quality control and behavioural inference. *Zenodo*. [doi:10.5281/zenodo.3899972](https://doi.org/10.5281/zenodo.3899972)
 
-Muff, Stefanie; Signer, Johannes; Fieberg, John R. (2019). R Code and Output Supporting "Accounting for individual-specific variation in habitat-selection studies: Efficient estimation of mixed-effects models using Bayesian or frequentist computation". Retrieved from the Data Repository for the University of Minnesota, https://doi.org/10.13020/8bhv-dz98.

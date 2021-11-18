@@ -70,33 +70,29 @@ future::plan(future::sequential)  #return to single core
 ```
 
 
-Now that each of the tracks have been segmented, we need to inspect the trace-plots for the log marginal likelihood to determine whether the model converged or not. Additionally, we can inspect a traceplot of the number of estimated breakpoints per iteration of the RJMCMC for each ID.
+Now that each of the tracks have been segmented, we need to inspect the trace-plots for the log marginal likelihood to determine whether the model converged or not. Additionally, we can inspect a traceplot of the number of estimated breakpoints per iteration of the RJMCMC for each ID. Red vertical lines denote the burn-in period for this set of samples, which is set to 50% of `ngibbs` by default.
 
 ```{r, eval=FALSE}
 # Trace-plots for the number of breakpoints per ID
-traceplot(data = dat.res$nbrks, ngibbs = ngibbs, type = "nbrks")
+traceplot(data = dat.res, type = "nbrks")
 ```
 
-```{r nbrks-traceplots, echo=FALSE, fig.width=3.25}
-par(mar=c(4.1,4.1,2,1))
+```{r nbrks-traceplots, echo=FALSE, fig.width=7}
+par(mar=c(4.1,4.1,2,1), ask=FALSE)
 
-for (i in 1:nrow(dat.res$nbrks)) {
-  traceplot(data = dat.res$nbrks[i, ], ngibbs = ngibbs, type = "nbrks")
-}
+traceplot(data = dat.res, type = "nbrks")
 ```
 
 
 ```{r, eval=FALSE}
 # Trace-plots for the log marginal likelihood (LML) per ID
-traceplot(data = dat.res$LML, ngibbs = ngibbs, type = "LML")
+traceplot(data = dat.res, type = "LML")
 ```
 
-```{r LML-traceplots, echo=FALSE, fig.width=3.25}
-par(mar=c(4.1,4.1,2,1))
+```{r LML-traceplots, echo=FALSE, fig.width=7}
+par(mar=c(4.1,4.1,2,1), ask=FALSE)
 
-for (i in 1:nrow(dat.res$LML)) {
-  traceplot(data = dat.res$LML[i, ], ngibbs = ngibbs, type = "LML")
-}
+traceplot(data = dat.res, type = "LML")
 ```
 
 

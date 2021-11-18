@@ -8,7 +8,6 @@
 
 * Possibly misspelled words in DESCRIPTION:
   al (19:64)
-  doi (19:76)
   et (19:61)
 
 The words listed here are spelled correctly and are also included in the WORDLIST file. This is my third submission of the 'bayesmove' package to CRAN.
