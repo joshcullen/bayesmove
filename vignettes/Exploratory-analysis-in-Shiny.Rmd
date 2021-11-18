@@ -99,15 +99,15 @@ shiny_tracks(data = sese3, epsg = "+proj=laea +lat_0=-90 +lon_0=75 +ellps=WGS84 
 
 ```{r second step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig1.png')
-# knitr::include_graphics('shiny-fig2.png')
+# knitr::include_graphics('Shiny-Fig1.png')
+# knitr::include_graphics('Shiny-Fig2.png')
 ```
 <p align="center">
-<img src="shiny-fig1.png" width="600">
+<img src="Shiny-Fig1.png" width="600">
 </p>
 
 <p align="center">
-<img src="shiny-fig2.png" width="600">
+<img src="Shiny-Fig2.png" width="600">
 </p>
 <br>
 <br>
@@ -121,11 +121,11 @@ Let's say we were interested in exploring the East-West movement patterns of all
 <br>
 ```{r third step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig3.png')
+# knitr::include_graphics('Shiny-Fig3.png')
 
 ```
 <p align="center">
-<img src="shiny-fig3.png" width="600">
+<img src="Shiny-Fig3.png" width="600">
 </p>
 <br>
 <br>
@@ -136,11 +136,11 @@ To dynamically explore a more interesting variable, such as net-squared displace
 <br>
 ```{r fourth step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig4.png')
+# knitr::include_graphics('Shiny-Fig4.png')
 
 ```
 <p align="center">
-<img src="shiny-fig4.png" width="600">
+<img src="Shiny-Fig4.png" width="600">
 </p>
 <br>
 <br>
@@ -149,11 +149,11 @@ We now see a zoomed in version of the time series plot of NSD and only the three
 <br>
 ```{r fifth step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig5.png')
+# knitr::include_graphics('Shiny-Fig5.png')
 
 ```
 <p align="center">
-<img src="shiny-fig5.png" width="600">
+<img src="Shiny-Fig5.png" width="600">
 </p>
 <br>
 <br>
@@ -162,11 +162,11 @@ When inspecting the plot of NSD over time, we can see a pattern where NSD is ess
 <br>
 ```{r sixth step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig6.png')
+# knitr::include_graphics('Shiny-Fig6.png')
 
 ```
 <p align="center">
-<img src="shiny-fig6.png" width="600">
+<img src="Shiny-Fig6.png" width="600">
 </p>
 <br>
 <br>
@@ -175,11 +175,11 @@ With this new time window selected, we can pan around and zoom-in to each ID. Th
 <br>
 ```{r seventh step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig7.png')
+# knitr::include_graphics('Shiny-Fig7.png')
 
 ```
 <p align="center">
-<img src="shiny-fig7.png" width="600">
+<img src="Shiny-Fig7.png" width="600">
 </p>
 <br>
 <br>
@@ -188,11 +188,11 @@ Additionally, the basemap can be adjusted and the tracks can be toggled on and o
 <br>
 ```{r eigth step, echo=FALSE}
 ## Need to add code to import screenshot
-# knitr::include_graphics('shiny-fig8.png')
+# knitr::include_graphics('Shiny-Fig8.png')
 
 ```
 <p align="center">
-<img src="shiny-fig8.png" width="600">
+<img src="Shiny-Fig8.png" width="600">
 </p>
 <br>
 <br>

@@ -161,31 +161,31 @@
 <span class="co"># Run Shiny app</span>
 <span class="fu"><a href="../reference/shiny_tracks.html">shiny_tracks</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sese3</span>, epsg <span class="op">=</span> <span class="st">"+proj=laea +lat_0=-90 +lon_0=75 +ellps=WGS84 +units=km +no_defs"</span><span class="op">)</span></pre></div>
 <p align="center">
-<img src="shiny-fig1.png" width="600"></p>
+<img src="Shiny-Fig1.png" width="600"></p>
 <p align="center">
-<img src="shiny-fig2.png" width="600"></p>
+<img src="Shiny-Fig2.png" width="600"></p>
 <p><br><br></p>
 <p>This screenshot shows the general layout of the Shiny app, which let’s users select a variable to dynamically explore, filter variables from their dataset, and visualize a time series plot as well as an interactive map of these data. Additionally, users can toggle between visualizing their set of locations as lines or points. To provide a concrete example, let’s explore the southern elephant seal data further.</p>
 <p>We can see on the sidebar that there are two main headers that break up this panel: 1) Explore the data, and 2) Filter the data. Under the ‘Explore the data’ header, you can select any variables from your data frame (besides <code>id</code> or <code>date</code>) to visualize an interactive time series. Additionally, a radio button is provided to toggle between mapping your spatial coordinates as a trajectory (line) or as a set of points on the interactive Leaflet map.</p>
 <p>Let’s say we were interested in exploring the East-West movement patterns of all 5 individuals: we would click on the “Select a variable” dropdown menu at the top and change this to <code>x</code>. <br><br></p>
 <p align="center">
-<img src="shiny-fig3.png" width="600"></p>
+<img src="Shiny-Fig3.png" width="600"></p>
 <p><br><br> From this time series plot, we can see that two IDs (“ct36-E-09” and “ct36-F-09”) were transmitting only during 2009, whereas the remaining three IDs were all transmitting over the same period of time in 2015. Additionally, it is also very obvious that these seals are moving in a variety of directions from the island of Kerguelen. The line plot and the tracks on the Leaflet map are both colored by ID, where green circles denote starting locations and red circles denote ending locations.</p>
 <p>To dynamically explore a more interesting variable, such as net-squared displacement (NSD), we can change the variable in the dropdown menu and then click and drag on the time series plot to only highlight a particular time period of interest on the map (e.g., 2015). <br><br></p>
 <p align="center">
-<img src="shiny-fig4.png" width="600"></p>
+<img src="Shiny-Fig4.png" width="600"></p>
 <p><br><br> We now see a zoomed in version of the time series plot of NSD and only the three IDs tagged in 2015 showing up on the Leaflet map. This example demonstrates that updating the time window of the time series plot will impact the map, but does not impact the table that displays the dataset below (which can be confirmed if you scroll down and observe the total number of entries reported beneath the table). If interested in filtering this dataset to export only the tracks from 2015, you would have to either 1) remove the two IDs tagged in 2009, or 2) adjust the date range slider under the “Filter the data” header. An example where the data is filtered by ID is shown below, where the number of retained (vs removed) observations is shown circled in red. <em>Clicking on the <code>id</code> window will bring up options to include the previously removed IDs</em>. <br><br></p>
 <p align="center">
-<img src="shiny-fig5.png" width="600"></p>
+<img src="Shiny-Fig5.png" width="600"></p>
 <p><br><br> When inspecting the plot of NSD over time, we can see a pattern where NSD is essentially zero at the beginning (February) and end (September) of the time series, but in between it is gradually increasing to its maximum value during the austral fall/winter before gradually decreasing to zero by the austral spring. This is useful to know, but we can inspect even finer temporal resolution patterns of these movements, particularly at their greatest extent (i.e., April to June). To do so, all we have to do is click and drag on the plot for this time window and the Leaflet map will update the extent of the zoomed-in tracks, as well as showing the full tracks in grey while the “highlighted” time window is shown in color. <br><br></p>
 <p align="center">
-<img src="shiny-fig6.png" width="600"></p>
+<img src="Shiny-Fig6.png" width="600"></p>
 <p><br><br> With this new time window selected, we can pan around and zoom-in to each ID. The green and red circles denote the first and last location for the selected time window, which has now been updated. <br><br></p>
 <p align="center">
-<img src="shiny-fig7.png" width="600"></p>
+<img src="Shiny-Fig7.png" width="600"></p>
 <p><br><br> Additionally, the basemap can be adjusted and the tracks can be toggled on and off (including whether you prefer to view only the highlighted portion of the track, the full track length, or both). <br><br></p>
 <p align="center">
-<img src="shiny-fig8.png" width="600"></p>
+<img src="Shiny-Fig8.png" width="600"></p>
 <p><br><br> If you wanted to filter a subset of your data (using the sliders and inputs under the ‘Filter the data’ header of the sidebar) to export for later use, you can either copy the entire table by clicking on the “Copy” button, or download a CSV file of the filtered data by clicking the “CSV” button. <br><br></p>
 <p>An online version of this app can be found <a href="https://joshcullen.shinyapps.io/segmentation_of_NSD">here</a>. If any other features are desired (e.g., loading raster layers, choosing among multiple color palettes, etc), feel free to send requests by e-mail (joshcullen10 [at] gmail [dot] com) or submit as an issue on the GitHub page for <code>bayesmove</code>.</p>
 </div>
