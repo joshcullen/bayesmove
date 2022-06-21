@@ -77,12 +77,12 @@
 
       
 
-      </header><script src="Cluster-observations_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="Cluster-observations_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Cluster observations</h1>
             
-            <h4 class="date">18 November 2021</h4>
+            <h4 class="date">21 June 2022</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Cluster-observations.Rmd"><code>vignettes/Cluster-observations.Rmd</code></a></small>
       <div class="hidden name"><code>Cluster-observations.Rmd</code></div>
@@ -94,19 +94,39 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Alternative to the model that first partitions the tracks into segments and then clusters these segments into behavioral states, observations can be directly clustered into behavioral states using a different model. This (mixture) model also incorporates the non-parametric Bayesian approach that analyzes binned data streams and uses a truncated stick-breaking prior to determine the optimal number of states, but does so in a single stage.</p>
-<p>This modeling approach provides results similar to that of state-space and hidden Markov models, but does not assume any Markov property or include a mechanistic process that drives state transitions (e.g., a correlated random walk). This model simply clusters observations together based on the discretized data streams. Therefore, this method provides fast and flexible inference on behavioral states from telemetry data, where individuals are pooled together to make population-level estimates.</p>
+<p>Alternative to the model that first partitions the tracks into
+segments and then clusters these segments into behavioral states,
+observations can be directly clustered into behavioral states using a
+different model. This (mixture) model also incorporates the
+non-parametric Bayesian approach that analyzes binned data streams and
+uses a truncated stick-breaking prior to determine the optimal number of
+states, but does so in a single stage.</p>
+<p>This modeling approach provides results similar to that of
+state-space and hidden Markov models, but does not assume any Markov
+property or include a mechanistic process that drives state transitions
+(e.g., a correlated random walk). This model simply clusters
+observations together based on the discretized data streams. Therefore,
+this method provides fast and flexible inference on behavioral states
+from telemetry data, where individuals are pooled together to make
+population-level estimates.</p>
 </div>
 <div id="empirical-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#empirical-example" class="anchor"></a>Empirical example</h2>
-<p>This example will demonstrate the steps taken to prepare and analyze an empirical telemetry dataset for a single individual fisher <em>Martes pennanti</em> (<code>leroy</code>) available in the <code>move</code> package (LaPoint et al., 2013; Kranstauber et al., 2020) for the estimation of observation-level behavioral states.</p>
+<p>This example will demonstrate the steps taken to prepare and analyze
+an empirical telemetry dataset for a single individual fisher <em>Martes
+pennanti</em> (<code>leroy</code>) available in the <code>move</code>
+package (LaPoint et al., 2013; Kranstauber et al., 2020) for the
+estimation of observation-level behavioral states.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bartk.gitlab.io/move/">move</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'raster' was built under R version 4.0.5</span>
 <span class="co">#&gt; Warning: multiple methods tables found for 'distance'</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.0.5</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'tidyr' was built under R version 4.0.5</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
 
@@ -140,7 +160,12 @@
 <div id="prepare-the-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#prepare-the-data" class="anchor"></a>Prepare the data</h3>
-<p>To start off, we are going to calculate step lengths and turning angles from the data, as well as time intervals to determine the primary time step. Additionally, step length and turning angle distributions will be explored to determine how to bin these data streams. Observations will be filtered to only retain those recorded at the primary time step.</p>
+<p>To start off, we are going to calculate step lengths and turning
+angles from the data, as well as time intervals to determine the primary
+time step. Additionally, step length and turning angle distributions
+will be explored to determine how to bin these data streams.
+Observations will be filtered to only retain those recorded at the
+primary time step.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="co"># Calculate step lengths (step), turning angles (angle), and time step (dt) </span>
 <span class="va">leroy2</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/prep_data.html">prep_data</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy2</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"utm.easting"</span>,<span class="st">"utm.northing"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span>
@@ -170,8 +195,26 @@
 <span class="co"># Filter observations to keep only those recorded at 15 min (900 s)</span>
 <span class="va">leroy.filt</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_time.html">filter_time</a></span><span class="op">(</span>dat.list <span class="op">=</span> <span class="va">leroy.list</span>, int <span class="op">=</span> <span class="fl">900</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="va">bind_rows</span></pre></div>
-<p><br><br> Now, let’s bin step lengths and turning angles for analysis by the mixture model. Data streams can be binned in a variety of ways (i.e., number of bins, binning method), so it is up to the practitioner to decide what makes sense for their data. The objective is to properly characterize the bulk of the density distribution and add extreme values into a single bin to represent the tail of the distribution (if present).</p>
-<p>If the data stream is constrained within a range of values (i.e., 0 to 1, <span class="math inline">\(-\pi\)</span> to <span class="math inline">\(\pi\)</span>), it makes sense to use bins of equal widths. The number of bins should be “enough” to properly characterize any peaks in the distribution. If the data is unbounded or has a single bound (e.g., positive real numbers), then binning may be accomplished in multiple ways. One method could be to use equal bin widths until the start of the distribution’s tail, after which all extreme values are grouped into a single large bin. Additionally, users may want to use quantiles to group pre-specified proportions of the data stream into bins. In this vignette, I’ll be using equal bin widths to discretize turning angles (bounded by <span class="math inline">\(-\pi\)</span> and <span class="math inline">\(\pi\)</span>), but quantiles to discretize step lengths (lower bound of 0).</p>
+<p><br><br> Now, let’s bin step lengths and turning angles for analysis
+by the mixture model. Data streams can be binned in a variety of ways
+(i.e., number of bins, binning method), so it is up to the practitioner
+to decide what makes sense for their data. The objective is to properly
+characterize the bulk of the density distribution and add extreme values
+into a single bin to represent the tail of the distribution (if
+present).</p>
+<p>If the data stream is constrained within a range of values (i.e., 0
+to 1, <span class="math inline">\(-\pi\)</span> to <span class="math inline">\(\pi\)</span>), it makes sense to use bins of equal
+widths. The number of bins should be “enough” to properly characterize
+any peaks in the distribution. If the data is unbounded or has a single
+bound (e.g., positive real numbers), then binning may be accomplished in
+multiple ways. One method could be to use equal bin widths until the
+start of the distribution’s tail, after which all extreme values are
+grouped into a single large bin. Additionally, users may want to use
+quantiles to group pre-specified proportions of the data stream into
+bins. In this vignette, I’ll be using equal bin widths to discretize
+turning angles (bounded by <span class="math inline">\(-\pi\)</span> and
+<span class="math inline">\(\pi\)</span>), but quantiles to discretize
+step lengths (lower bound of 0).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># View distributions of data streams</span>
 <span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">step</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></pre></div>
@@ -204,7 +247,8 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop<span class="op">=</span><span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">leroy.filt2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>  <span class="co">#if don't ungroup after grouping, ggforce won't work</span>
-<span class="co">#&gt; `summarise()` has grouped output by 'var'. You can override using the `.groups` argument.</span>
+<span class="co">#&gt; `summarise()` has grouped output by 'var'. You can override using the `.groups`</span>
+<span class="co">#&gt; argument.</span>
 
 <span class="va">param.prop</span><span class="op">&lt;-</span> <span class="va">param.prop</span><span class="op">[</span><span class="op">-</span><span class="fl">14</span>,<span class="op">]</span>
 <span class="va">param.prop</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="st">"value"</span><span class="op">]</span><span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">dist.bin.lims</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">dist.bin.lims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>
@@ -233,7 +277,8 @@
 <div id="run-the-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-the-model" class="anchor"></a>Run the model</h3>
-<p>With the data streams in the correct format, we can now run the model to cluster observations into behavioral states.</p>
+<p>With the data streams in the correct format, we can now run the model
+to cluster observations into behavioral states.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="co"># Only retain discretized step length (SL) and turning angle (TA) columns</span>
 <span class="va">leroy.sub</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">leroy.filt2</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span><span class="op">)</span>
@@ -253,7 +298,8 @@
 <span class="co"># Inspect traceplot of log-likelihood</span>
 <span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">dat.res</span><span class="op">$</span><span class="va">loglikel</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-observations_files/figure-html/run_model-1.png" width="672" style="display: block; margin: auto;"></p>
-<p><br><br> Based on this traceplot of the log-likelihood, it appears that the model converged. Now we can move on to inspect the results.</p>
+<p><br><br> Based on this traceplot of the log-likelihood, it appears
+that the model converged. Now we can move on to inspect the results.</p>
 </div>
 <div id="visualize-the-results" class="section level3">
 <h3 class="hasAnchor">
@@ -271,7 +317,11 @@
 <span class="co">#&gt; 0.5802831 0.9107538 0.9613538 0.9810943 0.9901168 0.9960240 0.9981285 0.9990904 </span>
 <span class="co">#&gt;         9        10 </span>
 <span class="co">#&gt; 0.9995524 1.0000000</span></pre></div>
-<p><br> It appears that 2 behavioral states are most likely based on the estimates from the <code>theta</code> matrix. To confirm that these states represent biologically interpretable movement patterns, we will also inspect the state-dependent distributions for all tested clusters/states.</p>
+<p><br> It appears that 2 behavioral states are most likely based on the
+estimates from the <code>theta</code> matrix. To confirm that these
+states represent biologically interpretable movement patterns, we will
+also inspect the state-dependent distributions for all tested
+clusters/states.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="co"># Extract bin estimates for each possible state from the `phi` matrix of the model results</span>
 <span class="va">behav.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_behav_hist.html">get_behav_hist</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span>,
@@ -291,15 +341,35 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>, guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span>
+<span class="co">#&gt; Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please</span>
+<span class="co">#&gt; use `guide = "none"` instead.</span></pre></div>
 <p><img src="Cluster-observations_files/figure-html/plot_distribs-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Based on the resulting distributions, it appears that the first 2 states make biological sense and can potentially be classified as ‘Encamped’ and ‘Transit’ states. This is because state 1 (Encamped) exhibits low step lengths and high turning angles (near <span class="math inline">\(\pi\)</span> radians) while state 2 (Transit) is characterized by large step lengths and low turning angles (near 0 radians). <strong>It should be noted that these broad classes of behavioral states likely include a variety of different behaviors that could not be discerned from these telemetry data alone.</strong></p>
-<p>Next, we will assign these 2 states to the associated observations. For observations that were assigned to one of the other eight states that will not be retained, they will be considered ‘Unclassified’. Similarly, observations that were omitted from the analysis (that were not recorded at a 15 min time step) will also be labeled ‘Unclassified’.</p>
+<p>Based on the resulting distributions, it appears that the first 2
+states make biological sense and can potentially be classified as
+‘Encamped’ and ‘Transit’ states. This is because state 1 (Encamped)
+exhibits low step lengths and high turning angles (near <span class="math inline">\(\pi\)</span> radians) while state 2 (Transit) is
+characterized by large step lengths and low turning angles (near 0
+radians). <strong>It should be noted that these broad classes of
+behavioral states likely include a variety of different behaviors that
+could not be discerned from these telemetry data alone.</strong></p>
+<p>Next, we will assign these 2 states to the associated observations.
+For observations that were assigned to one of the other eight states
+that will not be retained, they will be considered ‘Unclassified’.
+Similarly, observations that were omitted from the analysis (that were
+not recorded at a 15 min time step) will also be labeled
+‘Unclassified’.</p>
 </div>
 <div id="assigning-behavioral-states-to-observations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#assigning-behavioral-states-to-observations" class="anchor"></a>Assigning behavioral states to observations</h3>
-<p>There are three different ways we can assign estimates of behavioral states per observation: 1) use the MAP estimate, 2) set a threshold as the <em>x</em>% of samples from the posterior assigned to a single state, 3) assign states based on which was most frequent in the posterior (i.e., the mode). While all of these will be extracted below, the use of a threshold of posterior samples to assign states is the method that is recommended.</p>
+<p>There are three different ways we can assign estimates of behavioral
+states per observation: 1) use the MAP estimate, 2) set a threshold as
+the <em>x</em>% of samples from the posterior assigned to a single
+state, 3) assign states based on which was most frequent in the
+posterior (i.e., the mode). While all of these will be extracted below,
+the use of a threshold of posterior samples to assign states is the
+method that is recommended.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="co">## Attribute behaviors to states and extract each of the different estimates</span>
 <span class="co"># Using MAP estimate, threshold of 75% assignments from posterior, and most common state</span>
@@ -348,14 +418,15 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'z.map'</span>,<span class="st">'z.post.thresh'</span>,<span class="st">'z.post.max'</span><span class="op">)</span>,
                 <span class="va">factor</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Encamped'</span>,<span class="st">'Exploratory'</span>,<span class="st">'Transit'</span>,<span class="st">'Unclassified'</span><span class="op">)</span>
                 <span class="op">)</span><span class="op">)</span></pre></div>
-<p><br><br> Let’s inspect the number observations assigned to each state per method:</p>
+<p><br><br> Let’s inspect the number observations assigned to each
+state per method:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 
 <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>   <span class="co"># for estimates based on MAP estimate</span>
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">z.map</span><span class="op">)</span> <span class="op">%&gt;%</span> 
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 x 3</span>
+<span class="co">#&gt; # A tibble: 3 × 3</span>
 <span class="co">#&gt;   z.map            n  prop</span>
 <span class="co">#&gt;   &lt;fct&gt;        &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Encamped       437 0.476</span>
@@ -366,7 +437,7 @@
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">z.post.thresh</span><span class="op">)</span> <span class="op">%&gt;%</span> 
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 x 3</span>
+<span class="co">#&gt; # A tibble: 3 × 3</span>
 <span class="co">#&gt;   z.post.thresh     n  prop</span>
 <span class="co">#&gt;   &lt;fct&gt;         &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Encamped        365 0.397</span>
@@ -377,14 +448,24 @@
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">z.post.max</span><span class="op">)</span> <span class="op">%&gt;%</span> 
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 x 3</span>
+<span class="co">#&gt; # A tibble: 3 × 3</span>
 <span class="co">#&gt;   z.post.max       n  prop</span>
 <span class="co">#&gt;   &lt;fct&gt;        &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Encamped       541 0.589</span>
 <span class="co">#&gt; 2 Transit        285 0.310</span>
 <span class="co">#&gt; 3 Unclassified    93 0.101</span></pre></div>
-<p><br> As was expected, the method that uses a threshold (e.g., 75% of samples from posterior) resulted in the greatest proportion of Unclassified observations. However, the results from this approach are expected to be more reliable than the other two that don’t include uncertainty over the full posterior distribution (i.e., MAP estimate) or assign the state that is most frequently assigned regardless of how often that actually happens.</p>
-<p>Now finally, let’s map the results of the model. We can inspect maps for each of the different approaches to assigning behavioral states. Note the greater number of Unclassified observations for the map using the “threshold” method, but that the Encamped and Transit states appear to be more clearly defined based on spatial patterns of movement.</p>
+<p><br> As was expected, the method that uses a threshold (e.g., 75% of
+samples from posterior) resulted in the greatest proportion of
+Unclassified observations. However, the results from this approach are
+expected to be more reliable than the other two that don’t include
+uncertainty over the full posterior distribution (i.e., MAP estimate) or
+assign the state that is most frequently assigned regardless of how
+often that actually happens.</p>
+<p>Now finally, let’s map the results of the model. We can inspect maps
+for each of the different approaches to assigning behavioral states.
+Note the greater number of Unclassified observations for the map using
+the “threshold” method, but that the Encamped and Transit states appear
+to be more clearly defined based on spatial patterns of movement.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="co"># Map behavioral states for Leroy (w/ MAP estimates for states)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -452,15 +533,25 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
                              title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-observations_files/figure-html/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;"></p>
-<p>In these maps, the green circle represents the first location and the red triangle represents the final location. As with other models that estimate behavioral states on track segments, these results can be used for a variety of subsequent analyses, such as to determine behavior-specific habitat suitability (via RSFs/SSFs) or to calculate activity budgets.</p>
+<p>In these maps, the green circle represents the first location and the
+red triangle represents the final location. As with other models that
+estimate behavioral states on track segments, these results can be used
+for a variety of subsequent analyses, such as to determine
+behavior-specific habitat suitability (via RSFs/SSFs) or to calculate
+activity budgets.</p>
 </div>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<p>Kranstauber B, Smolla M, Scharf AK. (2020). move: Visualizing and Analyzing Animal Track Data. R package version 4.0.6. <a href="https://CRAN.R-project.org/package=move" class="uri">https://CRAN.R-project.org/package=move</a>.</p>
-<p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Animal behavior, cost-based corridor models, and real corridors. <em>Landscape Ecology</em>, 28(8), 1615–1630. <a href="http://dx.doi.org/10.1007/s10980-013-9910-0">doi:10.1007/s10980-013-9910-0</a>.</p>
-<p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Data from: Animal behavior, cost-based corridor models, and real corridors. <em>Movebank Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g">doi:10.5441/001/1.2tp2j43g</a>.</p>
+<p>Kranstauber B, Smolla M, Scharf AK. (2020). move: Visualizing and
+Analyzing Animal Track Data. R package version 4.0.6. <a href="https://CRAN.R-project.org/package=move" class="uri">https://CRAN.R-project.org/package=move</a>.</p>
+<p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Animal behavior,
+cost-based corridor models, and real corridors. <em>Landscape
+Ecology</em>, 28(8), 1615–1630. <a href="http://dx.doi.org/10.1007/s10980-013-9910-0">doi:10.1007/s10980-013-9910-0</a>.</p>
+<p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Data from: Animal
+behavior, cost-based corridor models, and real corridors. <em>Movebank
+Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g">doi:10.5441/001/1.2tp2j43g</a>.</p>
 </div>
   </div>
 

@@ -178,12 +178,12 @@ breakpoints or 'LML' for the log marginal likelihood.</p></td>
 <span class='va'>ngibbs</span><span class='op'>&lt;-</span> <span class='fl'>1000</span>
 <span class='va'>nbins</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>,<span class='fl'>8</span><span class='op'>)</span>
 
-<span class='fu'>future</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/future/man/plan.html'>plan</a></span><span class='op'>(</span><span class='fu'>future</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/future/man/multisession.html'>multisession</a></span>, workers <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>  <span class='co'>#run all MCMC chains in parallel</span>
+<span class='fu'>future</span><span class='fu'>::</span><span class='fu'><a href='https://future.futureverse.org/reference/plan.html'>plan</a></span><span class='op'>(</span><span class='fu'>future</span><span class='fu'>::</span><span class='va'><a href='https://future.futureverse.org/reference/multisession.html'>multisession</a></span>, workers <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>  <span class='co'>#run all MCMC chains in parallel</span>
 
 <span class='va'>dat.res</span><span class='op'>&lt;-</span> <span class='fu'><a href='segment_behavior.html'>segment_behavior</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>tracks.list2</span>, ngibbs <span class='op'>=</span> <span class='va'>ngibbs</span>, nbins <span class='op'>=</span> <span class='va'>nbins</span>,
                                alpha <span class='op'>=</span> <span class='va'>alpha</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 3.885 sec elapsed</div><div class='input'>
-<span class='fu'>future</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/future/man/plan.html'>plan</a></span><span class='op'>(</span><span class='fu'>future</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/future/man/sequential.html'>sequential</a></span><span class='op'>)</span>  <span class='co'>#return to single core</span>
+</div><div class='output co'>#&gt; 4.162 sec elapsed</div><div class='input'>
+<span class='fu'>future</span><span class='fu'>::</span><span class='fu'><a href='https://future.futureverse.org/reference/plan.html'>plan</a></span><span class='op'>(</span><span class='fu'>future</span><span class='fu'>::</span><span class='va'><a href='https://future.futureverse.org/reference/sequential.html'>sequential</a></span><span class='op'>)</span>  <span class='co'>#return to single core</span>
 
 
 <span class='co'>#run function</span>

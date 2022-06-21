@@ -1,13 +1,14 @@
-pandoc: 2.11.4
+pandoc: 2.17.1.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   Cluster-observations: Cluster-observations.html
   Cluster-track-segments: Cluster-track-segments.html
   Exploratory-analysis-in-Shiny: Exploratory-analysis-in-Shiny.html
+  Pre-specify_brkpts_and_zero-inflated_data: Pre-specify_brkpts_and_zero-inflated_data.html
   Prepare-data-for-analysis: Prepare-data-for-analysis.html
   Segment-the-tracks: Segment-the-tracks.html
-last_built: 2021-11-18T20:35Z
+last_built: 2022-06-21T17:30Z
 urls:
   reference: http://joshcullen.github.io/bayesmove/reference
   article: http://joshcullen.github.io/bayesmove/articles

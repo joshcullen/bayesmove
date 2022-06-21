@@ -209,7 +209,7 @@ animal ID. This data frame is returned by <code><a href='get_breakpts.html'>get_
 <span class='co'>#future::plan(future::multisession)  #run all MCMC chains in parallel</span>
 <span class='va'>dat.res</span><span class='op'>&lt;-</span> <span class='fu'><a href='segment_behavior.html'>segment_behavior</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>tracks.list2</span>, ngibbs <span class='op'>=</span> <span class='va'>ngibbs</span>, nbins <span class='op'>=</span> <span class='va'>nbins</span>,
                            alpha <span class='op'>=</span> <span class='va'>alpha</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 1.142 sec elapsed</div><div class='input'>
+</div><div class='output co'>#&gt; 1.353 sec elapsed</div><div class='input'>
 
 <span class='co'># Determine MAP iteration for selecting breakpoints and store breakpoints</span>
 <span class='va'>MAP.est</span><span class='op'>&lt;-</span> <span class='fu'><a href='get_MAP.html'>get_MAP</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat.res</span><span class='op'>$</span><span class='va'>LML</span>, nburn <span class='op'>=</span> <span class='va'>ngibbs</span><span class='op'>/</span><span class='fl'>2</span><span class='op'>)</span>
@@ -219,7 +219,7 @@ animal ID. This data frame is returned by <code><a href='get_breakpts.html'>get_
 <span class='co'>#run function</span>
 <span class='fu'>plot_breakpoints</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>tracks.list</span>, as_date <span class='op'>=</span> <span class='cn'>FALSE</span>, var_names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"step"</span>,<span class='st'>"angle"</span><span class='op'>)</span>,
     var_labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Step Length (m)"</span>, <span class='st'>"Turning Angle (rad)"</span><span class='op'>)</span>, brkpts <span class='op'>=</span> <span class='va'>brkpts</span><span class='op'>)</span>
-</div><div class='img'><img src='plot_breakpoints-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please use `guide = "none"` instead.</span></div><div class='img'><img src='plot_breakpoints-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>

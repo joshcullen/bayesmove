@@ -77,12 +77,12 @@
 
       
 
-      </header><script src="Cluster-track-segments_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="Cluster-track-segments_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Cluster track segments</h1>
             
-            <h4 class="date">18 November 2021</h4>
+            <h4 class="date">21 June 2022</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Cluster-track-segments.Rmd"><code>vignettes/Cluster-track-segments.Rmd</code></a></small>
       <div class="hidden name"><code>Cluster-track-segments.Rmd</code></div>
@@ -94,13 +94,21 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Once observations from all animal IDs have been assigned to track segments, these can now be clustered to <strong>(1)</strong> estimate the optimal number of states, <strong>(2)</strong> characterize the state-specific distributions of data streams, and <strong>(3)</strong> estimate the proportion of each behavior per track segment. This tutorial will show how to run the Latent Dirichlet Allocation (LDA) model, as well as how to interpret and visualize the results.</p>
+<p>Once observations from all animal IDs have been assigned to track
+segments, these can now be clustered to <strong>(1)</strong> estimate
+the optimal number of states, <strong>(2)</strong> characterize the
+state-specific distributions of data streams, and <strong>(3)</strong>
+estimate the proportion of each behavior per track segment. This
+tutorial will show how to run the Latent Dirichlet Allocation (LDA)
+model, as well as how to interpret and visualize the results.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.0.5</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'tidyr' was built under R version 4.0.5</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
 
 <span class="co"># Load data</span>
@@ -121,7 +129,10 @@
 <span class="co">#&gt;  $ SL   : num  5 5 5 5 4 2 5 2 4 5 ...</span>
 <span class="co">#&gt;  $ TA   : int  NA 5 6 5 5 1 5 8 5 4 ...</span>
 <span class="co">#&gt;  $ tseg : num  1 1 1 1 1 1 1 1 1 1 ...</span></pre></div>
-<p>Using the data frame returned by the <code>assign_tseg</code> function, we will now prepare the data for the LDA model by summarizing the number of observations assigned to each step length and turning angle bin per track segment.</p>
+<p>Using the data frame returned by the <code>assign_tseg</code>
+function, we will now prepare the data for the LDA model by summarizing
+the number of observations assigned to each step length and turning
+angle bin per track segment.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># Select only id, tseg, SL, and TA columns</span>
 <span class="va">tracks.seg2</span><span class="op">&lt;-</span> <span class="va">tracks.seg</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>,<span class="st">"tseg"</span>,<span class="st">"SL"</span>,<span class="st">"TA"</span><span class="op">)</span><span class="op">]</span>
@@ -137,7 +148,19 @@
 <span class="co">#&gt; 4 id1    4    0    1    2    3    1    0    0    0    1    2    3    0    1</span>
 <span class="co">#&gt; 5 id1    5   47   31   10    6    4   33    9    3    6    4    3    8   32</span>
 <span class="co">#&gt; 6 id1    6    0    1    6   53   31    1    2    4   40   40    3    1    0</span></pre></div>
-<p>Based on this output, we can see that each row shows the observation counts per track segment. The column names beginning with <code>y</code> denote the data streams, where <code>y1</code> is the first data stream column (SL) and <code>y1.1</code> represents the first bin of the SL variable. The same follows for turning angles, which were discretized into 8 bins and are therefore described by <code>y2.1 - y2.8</code>. This data frame contains segment-level summaries for all IDs, which will be analyzed together. This approach assumes that all individuals exhibit a common repertoire of behaviors despite nuanced inter-individual differences. Therefore, it provides a measure of estimating population-level behavioral states as long as there are a substantial number of individuals analyzed. Now the data are in the proper format to be analyzed by the LDA model.</p>
+<p>Based on this output, we can see that each row shows the observation
+counts per track segment. The column names beginning with <code>y</code>
+denote the data streams, where <code>y1</code> is the first data stream
+column (SL) and <code>y1.1</code> represents the first bin of the SL
+variable. The same follows for turning angles, which were discretized
+into 8 bins and are therefore described by <code>y2.1 - y2.8</code>.
+This data frame contains segment-level summaries for all IDs, which will
+be analyzed together. This approach assumes that all individuals exhibit
+a common repertoire of behaviors despite nuanced inter-individual
+differences. Therefore, it provides a measure of estimating
+population-level behavioral states as long as there are a substantial
+number of individuals analyzed. Now the data are in the proper format to
+be analyzed by the LDA model.</p>
 </div>
 <div id="run-the-lda-model" class="section level2">
 <h2 class="hasAnchor">
@@ -159,17 +182,27 @@
 <span class="va">res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/cluster_segments.html">cluster_segments</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">obs</span>, gamma1<span class="op">=</span><span class="va">gamma1</span>, alpha<span class="op">=</span><span class="va">alpha</span>,
                        ngibbs<span class="op">=</span><span class="va">ngibbs</span>, nmaxclust<span class="op">=</span><span class="va">nmaxclust</span>,
                        nburn<span class="op">=</span><span class="va">nburn</span>, ndata.types<span class="op">=</span><span class="va">ndata.types</span><span class="op">)</span></pre></div>
-<p>Similar to checking convergence of the segmentation model, we must also inspect a trace-plot of log likelihood from the LDA to discern if the model reached convergence.</p>
+<p>Similar to checking convergence of the segmentation model, we must
+also inspect a trace-plot of log likelihood from the LDA to discern if
+the model reached convergence.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Check traceplot of log likelihood</span>
 <span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loglikel</span>, type<span class="op">=</span><span class="st">'l'</span>, xlab <span class="op">=</span> <span class="st">"Iteration"</span>, ylab <span class="op">=</span> <span class="st">"Log Likelihood"</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/traceplot-1.png" width="672"></p>
-<p>The trace-plot of the log likelihood has reached an asymptote, denoting that the model has converged on the posterior. We can now use these results to determine the optimal number of latent behavioral states that are present, as well as to characterize these state-specific distributions, and to attribute proportions of time spent in each behavior to track segments.</p>
+<p>The trace-plot of the log likelihood has reached an asymptote,
+denoting that the model has converged on the posterior. We can now use
+these results to determine the optimal number of latent behavioral
+states that are present, as well as to characterize these state-specific
+distributions, and to attribute proportions of time spent in each
+behavior to track segments.</p>
 </div>
 <div id="interpreting-the-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interpreting-the-results" class="anchor"></a>Interpreting the results</h2>
-<p>First, we will determine the optimal number of behavioral states by evaluating the proportions of time spent in each behavior across all track segments and IDs as stored within the <code>theta</code> matrix.</p>
+<p>First, we will determine the optimal number of behavioral states by
+evaluating the proportions of time spent in each behavior across all
+track segments and IDs as stored within the <code>theta</code>
+matrix.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># Extract proportions of behaviors per track segment</span>
 <span class="va">theta.estim</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_prop.html">extract_prop</a></span><span class="op">(</span>res <span class="op">=</span> <span class="va">res</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span><span class="op">)</span>
@@ -196,7 +229,11 @@
         axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
         axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/plot-theta-1.png" width="672"></p>
-<p>Based on this boxplot, the first three clusters (or behavioral states) appear to be assigned the most frequently of the 7 possible behaviors (defined earlier by <code>nmaxclust</code>). We can also calculate the mean proportion per cluster/behavior across all track segments.</p>
+<p>Based on this boxplot, the first three clusters (or behavioral
+states) appear to be assigned the most frequently of the 7 possible
+behaviors (defined earlier by <code>nmaxclust</code>). We can also
+calculate the mean proportion per cluster/behavior across all track
+segments.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="co"># Calculate mean proportions per behavior</span>
 <span class="op">(</span><span class="va">theta.means</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">theta.estim</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
@@ -205,7 +242,15 @@
 <span class="co"># Calculate cumulative sum</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">theta.means</span><span class="op">)</span>
 <span class="co">#&gt; [1] 0.477 0.787 0.996 1.000 1.001 1.001 1.001</span></pre></div>
-<p>These summary statistics show that the first three most common behavioral states account for 99.6% of all observations from all IDs on average. Based on the previous boxplot and these results, three states appear to be the optimal number of behaviors for this dataset. <strong>It is recommended that the optimal number of states are defined as the fewest number of states that represent &gt; 90% of observations on average (which is three in this example). This should be corroborated by an inspection of the state-dependent distributions for each data stream to determine whether they make biological sense.</strong></p>
+<p>These summary statistics show that the first three most common
+behavioral states account for 99.6% of all observations from all IDs on
+average. Based on the previous boxplot and these results, three states
+appear to be the optimal number of behaviors for this dataset.
+<strong>It is recommended that the optimal number of states are defined
+as the fewest number of states that represent &gt; 90% of observations
+on average (which is three in this example). This should be corroborated
+by an inspection of the state-dependent distributions for each data
+stream to determine whether they make biological sense.</strong></p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="co"># Extract bin estimates from phi matrix</span>
 <span class="va">behav.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_behav_hist.html">get_behav_hist</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">res</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span>,
@@ -225,10 +270,32 @@
                                <span class="st">"grey35"</span>,<span class="st">"grey35"</span>,<span class="st">"grey35"</span>,<span class="st">"grey35"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span>
+<span class="co">#&gt; Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please</span>
+<span class="co">#&gt; use `guide = "none"` instead.</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/plot-distribs-1.png" width="672"></p>
-<p>In this set of distributions, it is apparent that the first three behaviors are biologically meaningful, but the last four are not. Based on the shapes of these distributions, the first state appears to represent a movement with no directional persistence and with intermediate step lengths, the second state exhibits very short step lengths that are highly tortuous, and the third state displays long and straight movements. Given these descriptions, I will be referring to state 1 as ‘area-restricted search’ (ARS), state 2 as ‘encamped’, and state 3 as ‘transit’. <strong>However, these are broad characterizations of states and it is highly likely that each one is comprised of a number of different behaviors. For example, the encamped state may include, resting, feeding, incubating eggs at a nest, or reproduction.</strong></p>
-<p>Since were are only retaining the proportion estimates for the first three behaviors stored within the <code>theta</code> matrix, we must extract and re-scale these proportion estimates for three behavioral states. Additionally, we want to assign these segment-level proportion estimates to all observations stored within each segment. Both of these steps are performed by the <code>expand_behavior</code> function, which allows the user to later merge these results with the original dataset. These results are also provided in a format for easy visualization by <code>ggplot2</code>.</p>
+<p>In this set of distributions, it is apparent that the first three
+behaviors are biologically meaningful, but the last four are not. Based
+on the shapes of these distributions, the first state appears to
+represent a movement with no directional persistence and with
+intermediate step lengths, the second state exhibits very short step
+lengths that are highly tortuous, and the third state displays long and
+straight movements. Given these descriptions, I will be referring to
+state 1 as ‘area-restricted search’ (ARS), state 2 as ‘encamped’, and
+state 3 as ‘transit’. <strong>However, these are broad characterizations
+of states and it is highly likely that each one is comprised of a number
+of different behaviors. For example, the encamped state may include,
+resting, feeding, incubating eggs at a nest, or
+reproduction.</strong></p>
+<p>Since were are only retaining the proportion estimates for the first
+three behaviors stored within the <code>theta</code> matrix, we must
+extract and re-scale these proportion estimates for three behavioral
+states. Additionally, we want to assign these segment-level proportion
+estimates to all observations stored within each segment. Both of these
+steps are performed by the <code>expand_behavior</code> function, which
+allows the user to later merge these results with the original dataset.
+These results are also provided in a format for easy visualization by
+<code>ggplot2</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="co"># Reformat proportion estimates for all track segments</span>
 <span class="va">theta.estim.long</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/expand_behavior.html">expand_behavior</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.seg</span>, theta.estim <span class="op">=</span> <span class="va">theta.estim</span>, obs <span class="op">=</span> <span class="va">obs</span>,
@@ -249,12 +316,29 @@
         panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">id</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/expand-behav-1.png" width="672"></p>
-<p>This visualization is unique to our model since we use a mixed-membership approach to clustering track segments into behavioral states. Therefore, these proportions estimates are not the probability of a single state occurring within each track segment, but rather the proportion of observations assigned to each behavioral state per track segment. Based upon the questions of interest, these proportion estimates can be aggregated at different temporal scales to develop activity budgets for the species of interest. To map these results in geographic space, we will need to merge these data with that of the original dataset.</p>
+<p>This visualization is unique to our model since we use a
+mixed-membership approach to clustering track segments into behavioral
+states. Therefore, these proportions estimates are not the probability
+of a single state occurring within each track segment, but rather the
+proportion of observations assigned to each behavioral state per track
+segment. Based upon the questions of interest, these proportion
+estimates can be aggregated at different temporal scales to develop
+activity budgets for the species of interest. To map these results in
+geographic space, we will need to merge these data with that of the
+original dataset.</p>
 </div>
 <div id="mapping-behavior-estimates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mapping-behavior-estimates" class="anchor"></a>Mapping behavior estimates</h2>
-<p>Since it is quite difficult to plot the proportion estimates for each state for all observations and all IDs on a map while still being able to interpret spatial patterns, it may be more useful to only plot the dominant behavior per track segment. Dominant behaviors are stored within the <code>behav</code> column of the new data frame that is generated by <code><a href="../reference/assign_behavior.html">assign_behavior()</a></code>. However, it is also possible to generate a separate map for each behavioral state to get a better sense of how often a given behavior is exhibited within each segment. Examples are shown below.</p>
+<p>Since it is quite difficult to plot the proportion estimates for each
+state for all observations and all IDs on a map while still being able
+to interpret spatial patterns, it may be more useful to only plot the
+dominant behavior per track segment. Dominant behaviors are stored
+within the <code>behav</code> column of the new data frame that is
+generated by <code><a href="../reference/assign_behavior.html">assign_behavior()</a></code>. However, it is also
+possible to generate a separate map for each behavioral state to get a
+better sense of how often a given behavior is exhibited within each
+segment. Examples are shown below.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="co"># Load original data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
@@ -290,7 +374,12 @@
                              title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">id</span>, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/map-behav-1.png" width="672"></p>
-<p>Maps of dominant behaviors are shown for all IDs, as well as observations labeled as <code>NA</code> that were not analyzed by the Bayesian framework. These <code>NA</code> observations were not recorded at the primary time interval (1 h or 3600 s) and were therefore excluded before analysis. To explore these tracks in different ways, I will focus on a single track (id3).</p>
+<p>Maps of dominant behaviors are shown for all IDs, as well as
+observations labeled as <code>NA</code> that were not analyzed by the
+Bayesian framework. These <code>NA</code> observations were not recorded
+at the primary time interval (1 h or 3600 s) and were therefore excluded
+before analysis. To explore these tracks in different ways, I will focus
+on a single track (id3).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="co"># Map separate track segments for 'id3'</span>
 <span class="va">tracks3</span><span class="op">&lt;-</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="st">"id3"</span><span class="op">)</span>
@@ -395,7 +484,10 @@
         legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
         legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="Cluster-track-segments_files/figure-html/map-separate-behavs-5.png" width="672"></p>
-<p>If desired, these results can be used to inform a number of <em>post hoc</em> analyses, such as behavior-specific resource (or step) selection functions, the calculation of activity budgets, or behavior-specific measures of landscape resistance.</p>
+<p>If desired, these results can be used to inform a number of <em>post
+hoc</em> analyses, such as behavior-specific resource (or step)
+selection functions, the calculation of activity budgets, or
+behavior-specific measures of landscape resistance.</p>
 </div>
   </div>
 
