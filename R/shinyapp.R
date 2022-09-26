@@ -17,7 +17,7 @@
 #'
 #' @param data A data frame that must contain columns labeled \code{id, x, y,
 #'   date}, but can include any other variables of interest.
-#' @param epsg numeric. The coordinate reference system (CRS) as an EPSG code.
+#' @param epsg numeric. The coordinate reference system (CRS) as an EPSG code or a PROJ string.
 #'
 #' @examples
 #' \dontrun{
@@ -73,7 +73,13 @@ shiny_tracks = function(data, epsg){
                             #radio button to map either lines or points
                             radioButtons("radio", label = "Trajectory type",
                                          choices = c("lines", "points"),
-                                         selected = "lines"),
+                                         selected = "points"),
+                            #widget for setting how tracks should be colored
+                            selectInput('track_col_var', label = 'Color track by:',
+                                        choices = names(data)[!(names(data) %in%
+                                                                  c("date"))],
+                                        selected = names(data)[!(names(data) %in%
+                                                                   c("date"))][1]),
                             br(),
 
                             tags$h4(strong("Filter the data")),
@@ -85,8 +91,7 @@ shiny_tracks = function(data, epsg){
 
                           mainPanel(
                             dygraphOutput("lineplot"),
-                            leafletOutput('map'),
-                            DT::dataTableOutput("tab")
+                            leafletOutput('map')
                           )  #close main panel
                         )  #close sidebar layout
                )  #close "Explore data" tab panel
@@ -219,9 +224,9 @@ server <- function(data, epsg) {
                      primaryAreaUnit = "hectares",
                      activeColor = "#3D535D",
                      completedColor = "#7D4479") %>%
-          addMiniMap(tiles = providers$Esri.OceanBasemap,
-                     toggleDisplay = TRUE,
-                     position = "bottomleft") %>%
+          # addMiniMap(tiles = providers$Esri.OceanBasemap,
+          #            toggleDisplay = TRUE,
+          #            position = "bottomleft") %>%
           addScaleBar() %>%
           addLayersControl(baseGroups = c("World Imagery", "Ocean Basemap", "Open Street Map"),
                            overlayGroups = c("Tracks_full", "Tracks_filter"),
@@ -230,24 +235,31 @@ server <- function(data, epsg) {
 
         # add full-length tracks per ID
         if (input$radio == "lines") {  #if wanting to plot tracks as lines
-          for (i in unique(dat.filt.sf$id)){
-            map1 <- map1 %>%
-              addPolylines(data = dat.filt.sf[dat.filt.sf$id == i,],
-                           lng = ~x,
-                           lat = ~y,
-                           weight = 2,
-                           color = "lightgrey",
-                           opacity = 0.4)
-          }
-        } else {  #if wanting to plot tracks as points
+
+          tracks.sf <- dat.filt.sf %>%
+            st_as_sf(., coords = c('x','y'), crs = 4326) %>%
+            group_by(id) %>%
+            summarize(do_union = FALSE) %>%
+            st_cast("MULTILINESTRING")
+
           map1 <- map1 %>%
-            addCircleMarkers(data = dat.filt.sf,
-                             lng = ~x,
-                             lat = ~y,
+              addPolylines(data = tracks.sf,
+                           color = "lightgrey",
+                           opacity = 0.4,
+                           weight = 2,
+                           label = ~paste0("ID: ", id))
+        } else {  #if wanting to plot tracks as points
+
+          tracks.sf <- dat.filt.sf %>%
+            st_as_sf(., coords = c('x','y'), crs = 4326)
+
+          map1 <- map1 %>%
+            addCircleMarkers(data = tracks.sf,
                              radius = 3,
                              fillColor = "lightgrey",
+                             opacity = 0.3,
                              stroke = FALSE,
-                             fillOpacity = 0.3)
+                             label = ~paste0("ID: ", id))
         }
 
         map1  #print map
@@ -342,88 +354,97 @@ server <- function(data, epsg) {
                          lat = ~y,
                          fillColor = "red",
                          stroke = FALSE,
-                         fillOpacity = 0.8) %>%
-        addLegend(colors = viridis::viridis(dplyr::n_distinct(df()$id)),
-                  labels = unique(df()$id),
-                  opacity = 1)
+                         fillOpacity = 0.8)
+
+
+
 
 
       # add full-length tracks per ID
       if (input$radio == "lines") {  #tracks as lines
 
-        for (i in 1:dplyr::n_distinct(df()$id)){
-          map2 <- map2 %>%
-            addPolylines(data = dat.filt.sf[dat.filt.sf$id == unique(dat.filt.sf$id)[i],],
-                         lng = ~x,
-                         lat = ~y,
-                         weight = 2,
-                         color = "lightgrey",
-                         opacity = 0.4,
-                         group = "Tracks_full")
-        }
+        tracks.sf <- dat.filt.sf %>%
+          st_as_sf(., coords = c('x','y'), crs = 4326) %>%
+          group_by(id) %>%
+          summarize(do_union = FALSE) %>%
+          st_cast("MULTILINESTRING")
 
-        # add time-filtered tracks per ID
-        for (i in 1:dplyr::n_distinct(df()$id)){
-          map2 <- map2 %>%
-            addPolylines(data = df()[df()$id == unique(df()$id)[i],],
-                         lng = ~x,
-                         lat = ~y,
-                         weight = 2,
-                         color = viridis::viridis(dplyr::n_distinct(df()$id))[i],
-                         opacity = 0.8,
-                         group = "Tracks_filter")
-        }
+        df.sf <- df() %>%
+          st_as_sf(., coords = c('x','y'), crs = 4326) %>%
+          group_by(id) %>%
+          summarize(do_union = FALSE) %>%
+          st_cast("MULTILINESTRING")
+
+
+        tracks.pal <- colorFactor("viridis", factor(df.sf$id))
+
+
+        map2 <- map2 %>%
+          addPolylines(data = tracks.sf,
+                       color = "lightgrey",
+                       opacity = 0.4,
+                       weight = 2,
+                       label = ~paste0("ID: ", id),
+                       group = "Tracks_full") %>%
+          addPolylines(data = df.sf,
+                       color = ~tracks.pal(id),
+                       opacity = 0.8,
+                       weight = 2,
+                       label = ~paste0("ID: ", id),
+                       group = "Tracks_filter") %>%
+          addLegend(colors = viridis::viridis(dplyr::n_distinct(df()$id)),
+                    labels = unique(df()$id),
+                    opacity = 1)
+
+
+
+
 
       } else {  #tracks as points
 
         # add full-length tracks per ID
-        for (i in 1:dplyr::n_distinct(df()$id)){
-          map2 <- map2 %>%
-            addCircleMarkers(data = dat.filt.sf[dat.filt.sf$id == unique(dat.filt.sf$id)[i],],
-                             lng = ~x,
-                             lat = ~y,
-                             radius = 3,
-                             fillColor = "lightgrey",
-                             stroke = FALSE,
-                             fillOpacity = 0.3,
-                             group = "Tracks_full")
+        tracks.sf <- dat.filt.sf %>%
+          st_as_sf(., coords = c('x','y'), crs = 4326)
+
+        df.sf <- df() %>%
+          st_as_sf(., coords = c('x','y'), crs = 4326, remove = FALSE)
+
+        #define color palette depending on whether discrete or continuous var
+        if (is.factor(df.sf[[input$track_col_var]]) | is.character(df.sf[[input$track_col_var]])) {
+          tracks.pal <- colorFactor("viridis", df.sf[[input$track_col_var]])
+          legend.vals <- df.sf[[input$track_col_var]]
+        } else {
+          tracks.pal <- colorNumeric("viridis", range(df.sf[[input$track_col_var]], na.rm = TRUE))
+          legend.vals <- df.sf[[input$track_col_var]]
         }
 
-        # add time-filtered tracks per ID
-        for (i in 1:dplyr::n_distinct(df()$id)){
-          map2 <- map2 %>%
-            addCircleMarkers(data = df()[df()$id == unique(df()$id)[i],],
-                             lng = ~x,
-                             lat = ~y,
-                             radius = 3,
-                             fillColor = viridis::viridis(dplyr::n_distinct(df()$id))[i],
-                             stroke = FALSE,
-                             fillOpacity = 0.6,
-                             group = "Tracks_filter")
-        }
+
+        map2 <- map2 %>%
+          addCircleMarkers(data = tracks.sf,
+                           radius = 3,
+                           fillColor = "lightgrey",
+                           opacity = 0.3,
+                           stroke = FALSE,
+                           label = ~paste0("ID: ", id),
+                           group = "Tracks_full") %>%
+          addCircleMarkers(data = df.sf,
+                           radius = 3,
+                           fillColor = tracks.pal(df.sf[[input$track_col_var]]),
+                           fillOpacity = 0.6,
+                           stroke = FALSE,
+                           label = paste0("ID: ", df.sf$id,
+                                          "<br>",input$track_col_var,": ", df.sf[[input$track_col_var]]) %>%
+                             lapply(htmltools::HTML),
+                           group = "Tracks_filter") %>%
+          addLegend(pal = tracks.pal,
+                    values = legend.vals,
+                    opacity = 1,
+                    title = input$track_col_var)
       }
 
       map2  #print updated map
 
     })
-
-
-
-    # Table
-    output$tab<- DT::renderDataTable(
-      res_filter$filtered(),   #filtered data goes here
-
-      server = FALSE,
-      extensions = "Buttons",
-      options = list(paging = TRUE,
-                     scrollX=TRUE,
-                     searching = TRUE,
-                     ordering = TRUE,
-                     dom = 'Bfrtip',
-                     buttons = c('copy', 'csv'),
-                     pageLength=10,
-                     lengthMenu=c(10,25,100) )
-    )
 
 
   }

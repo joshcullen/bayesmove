@@ -1,3 +1,7 @@
+# bayesmove 0.2.3 (2022-09-26)
+* Removed table and inset map from Shiny app
+* Added dropdown option to color mapped points by a selected variable in Shiny app; not available for mapping lines
+
 # bayesmove 0.2.2 (2021-11-01)
 * Fixed bug with Shiny app where it would return error based on number and/or frequency of unique IDs
 
