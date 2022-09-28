@@ -23,6 +23,7 @@ articles:
       - Prepare-data-for-analysis
       - Segment-the-tracks
       - Cluster-track-segments
+      - Pre-specify_brkpts_and_zero-inflated_data
   - title: "Estimate observation-level behavioral states"
     desc: >
       This vignettes provides an example workflow to estimate observation-level behavioral
