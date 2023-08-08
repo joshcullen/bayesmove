@@ -237,10 +237,10 @@ server <- function(data, epsg) {
         if (input$radio == "lines") {  #if wanting to plot tracks as lines
 
           tracks.sf <- dat.filt.sf %>%
-            st_as_sf(., coords = c('x','y'), crs = 4326) %>%
-            group_by(id) %>%
-            summarize(do_union = FALSE) %>%
-            st_cast("MULTILINESTRING")
+            sf::st_as_sf(coords = c('x','y'), crs = 4326) %>%
+            dplyr::group_by(id) %>%
+            dplyr::summarize(do_union = FALSE) %>%
+            sf::st_cast("MULTILINESTRING")
 
           map1 <- map1 %>%
               addPolylines(data = tracks.sf,
@@ -251,7 +251,7 @@ server <- function(data, epsg) {
         } else {  #if wanting to plot tracks as points
 
           tracks.sf <- dat.filt.sf %>%
-            st_as_sf(., coords = c('x','y'), crs = 4326)
+            sf::st_as_sf(coords = c('x','y'), crs = 4326)
 
           map1 <- map1 %>%
             addCircleMarkers(data = tracks.sf,
@@ -364,16 +364,16 @@ server <- function(data, epsg) {
       if (input$radio == "lines") {  #tracks as lines
 
         tracks.sf <- dat.filt.sf %>%
-          st_as_sf(., coords = c('x','y'), crs = 4326) %>%
-          group_by(id) %>%
-          summarize(do_union = FALSE) %>%
-          st_cast("MULTILINESTRING")
+          sf::st_as_sf(coords = c('x','y'), crs = 4326) %>%
+          dplyr::group_by(id) %>%
+          dplyr::summarize(do_union = FALSE) %>%
+          sf::st_cast("MULTILINESTRING")
 
         df.sf <- df() %>%
-          st_as_sf(., coords = c('x','y'), crs = 4326) %>%
-          group_by(id) %>%
-          summarize(do_union = FALSE) %>%
-          st_cast("MULTILINESTRING")
+          sf::st_as_sf(coords = c('x','y'), crs = 4326) %>%
+          dplyr::group_by(id) %>%
+          dplyr::summarize(do_union = FALSE) %>%
+          sf::st_cast("MULTILINESTRING")
 
 
         tracks.pal <- colorFactor("viridis", factor(df.sf$id))
@@ -404,10 +404,10 @@ server <- function(data, epsg) {
 
         # add full-length tracks per ID
         tracks.sf <- dat.filt.sf %>%
-          st_as_sf(., coords = c('x','y'), crs = 4326)
+          sf::st_as_sf(coords = c('x','y'), crs = 4326)
 
         df.sf <- df() %>%
-          st_as_sf(., coords = c('x','y'), crs = 4326, remove = FALSE)
+          sf::st_as_sf(coords = c('x','y'), crs = 4326, remove = FALSE)
 
         #define color palette depending on whether discrete or continuous var
         if (is.factor(df.sf[[input$track_col_var]]) | is.character(df.sf[[input$track_col_var]])) {

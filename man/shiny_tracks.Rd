@@ -10,7 +10,7 @@ shiny_tracks(data, epsg)
 \item{data}{A data frame that must contain columns labeled \code{id, x, y,
 date}, but can include any other variables of interest.}
 
-\item{epsg}{numeric. The coordinate reference system (CRS) as an EPSG code.}
+\item{epsg}{numeric. The coordinate reference system (CRS) as an EPSG code or a PROJ string.}
 }
 \description{
 This Shiny application allows for the exploration of animal movement

@@ -549,36 +549,6 @@ traceplot=function(data, type) {
 
 #---------------------------------------------
 
-#' Internal function to find the maximum a posteriori (MAP) estimate of the MCMC
-#' chain
-#'
-#' Internal function to be used by a wrapper.
-#'
-#' @param dat numeric. A vector of log marginal likelihood values for a given
-#'   animal ID.
-#' @param nburn numeric. The size of the burn-in phase after which the MAP
-#'   estimate will be identified.
-#'
-#' @return A numeric value indicating the iteration after the burn-in phase that
-#'   holds the MAP estimate.
-#'
-#'
-#'
-#' @export
-get_MAP_internal=function(dat, nburn) {
-
-  if (which.max(dat[-1]) < nburn) {
-    MAP.est<- dat[-1] %>%
-      order(decreasing = T)
-    MAP.est<- MAP.est[MAP.est > nburn][1]
-  } else {
-    MAP.est<- which.max(dat[-1])
-  }
-
-  return(MAP.est)
-}
-#---------------------------------------------
-
 #' Find the maximum a posteriori (MAP) estimate of the MCMC chain
 #'
 #' Identify the MCMC iteration that holds the MAP estimate. This will be used to
@@ -625,13 +595,12 @@ get_MAP_internal=function(dat, nburn) {
 #' }
 #'
 #' @export
-get_MAP=function(dat, nburn) {
-  MAP.est<- vector()
-  for (i in 1:nrow(dat)) {
-    MAP.est[i]<- get_MAP_internal(dat[i,], nburn)
-  }
+get_MAP = function(dat, nburn) {
 
-  MAP.est
+  tmp <- dat[,(nburn + 2):ncol(dat)]  #subset only columns after burn-in period
+  MAP.est <- as.integer(apply(tmp, 1, function(x) which.max(x)) + nburn)  #find max LML per ID
+
+  return(MAP.est)
 }
 #---------------------------------------------
 

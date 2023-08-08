@@ -1,19 +1,52 @@
-note <- sprintf("R package version %s", meta$Version)
 
+citHeader("To cite bayesmove in publications, please use:")
 
-citHeader("To cite bayesmove in publications use:")
-
-citEntry(entry = "Manual",
-  title        = "{bayesmove}: Non-Parametric Bayesian Analyses of Animal Movement",
-  author       = personList(as.person("Joshua Cullen"),
-                   as.person("Denis Valle")),
-  year         = "2021",
-  note         = note,
-  url          = "https://joshcullen.github.io/bayesmove/",
+citEntry(entry = "Article",
+  title        = "Identifying latent behavioural states in animal movement with M4, a nonparametric Bayesian method",
+  author       = personList(
+  as.person("Joshua A Cullen"),
+  as.person("Caroline L Poli"),
+  as.person("Robert J Fletcher"),
+  as.person("Denis Valle")
+  ),
+  year         = "2022",
+  journal      = "Methods in Ecology and Evolution",
+  volume       = 13,
+  number       = 2,
+  pages        = "432–446",
+  url          = "https://doi.org/10.1111/2041-210X.13745",
+  doi          = "10.1111/2041-210X.13745",
 
   textVersion  =
-  paste("Cullen JA, Valle DR (2021).",
-        "bayesmove: Non-Parametric Bayesian Analysis of Animal Movement.",
-        "R Package version 0.2.1.",
-        "URL https://joshcullen.github.io/bayesmove/.")
+  paste("Cullen JA, Poli CL, Fletcher RJ, Valle D. (2022).",
+        "Identifying latent behavioural states in animal movement with M4, a nonparametric Bayesian method.",
+        "Methods in Ecology and Evolution. 13(2):432–446.",
+        "DOI: 10.1111/2041-210X.13745.")
+)
+
+
+
+citEntry(entry = "Article",
+  title        = "Automatic selection of the number of clusters using Bayesian clustering and sparsity-inducing priors",
+  author       = personList(
+  as.person("Denis Valle"),
+  as.person("Yusuf Jameel"),
+  as.person("Brenda Betancourt"),
+  as.person("Ermias T Azeria"),
+  as.person("Nina Attis"),
+  as.person("Joshua Cullen")
+  ),
+  year         = "2022",
+  journal      = "Ecological Applications",
+  volume       = 32,
+  number       = 3,
+  pages        = "e2524",
+  url          = "https://doi.org/10.1002/eap.2524",
+  doi          = "10.1002/eap.2524",
+
+  textVersion  =
+  paste("Valle D, Jameel Y, Betancourt B, Azeria ET, Attias N, Cullen J. (2022).",
+        "Automatic selection of the number of clusters using Bayesian clustering and sparsity-inducing priors.",
+        "Ecological Applications. 32(3):e2524.",
+        "DOI: 10.1002/eap.2524.")
 )

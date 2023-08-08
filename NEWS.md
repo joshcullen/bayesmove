@@ -1,6 +1,9 @@
-# bayesmove 0.2.3 (2022-09-26)
+# bayesmove 0.2.3 (2023-08-08)
 * Removed table and inset map from Shiny app
 * Added dropdown option to color mapped points by a selected variable in Shiny app; not available for mapping lines
+* Updated speed and efficiency of get_MAP()
+* Fixed issue with expand_behavior() where wrong sample size was specified for track segments by ID
+* Updated suggested citations for use of package
 
 # bayesmove 0.2.2 (2021-11-01)
 * Fixed bug with Shiny app where it would return error based on number and/or frequency of unique IDs

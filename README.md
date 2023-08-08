@@ -24,9 +24,10 @@ non-parametric Bayesian framework, which addresses a number of
 limitations of existing segmentation methods and state-space models.
 This package currently offers two different model frameworks on which to
 make behavioral inference from animal telemetry data: 1) **the
-mixed-membership method for movement (M4)** that provides segment-level
-behavioral state estimation, and 2) **observation-level behavioral state
-estimation**.
+mixed-membership method for movement (M4)** that provides
+*segment-level* behavioral state estimation, and 2) **the mixture model
+for movement (M3)** that provides *observation-level* behavioral state
+estimation.
 
 The M4 model is a two-stage framework that first partitions individual
 tracks into segments (via reversible-jump Markov chain Monte Carlo) and
@@ -34,15 +35,17 @@ subsequently clusters these segments into latent behavioral states (via
 non-parametric Latent Dirichlet Allocation). This framework allows the
 analysis of multiple telemetry and biologging data streams, which must
 first be discretized into a set of bins before they can be analyzed. The
-model that makes behavioral inference at the observation-level also
-requires that data streams are first discretized, but then directly
-clusters these observations together into behavioral states within a
-single step (via a non-parametric mixture model). While the outcome is
-similar to that from state-space and hidden Markov models, this
-observation-level model does not assume an underlying Markov property or
-use a mechanistic process (e.g., correlated random walk). Additional
-details about the M4 method can be found in Cullen et al. (2021)
-[doi:10.1111/2041-210X.13745](https://doi.org/10.1111/2041-210X.13745).
+observation-level M3 model also requires that data streams are first
+discretized, but then directly clusters these observations together into
+behavioral states within a single step (via a non-parametric mixture
+model). While the outcome is similar to that from state-space and hidden
+Markov models, this observation-level model does not assume an
+underlying Markov property or use a mechanistic process (e.g.,
+correlated random walk). Additional details about the M4 method can be
+found in Cullen et al. (2022)
+[doi:10.1111/2041-210X.13745](https://doi.org/10.1111/2041-210X.13745),
+while further details about the M3 method can be found in Valle et
+al. (2022) [doi:10.1002/eap.2524](https://doi.org/10.1002/eap.2524).
 
 This package also includes features to check model convergence based on
 the log-likelihood for each MCMC iteration. Model output are often
@@ -80,16 +83,16 @@ remotes::install_github("joshcullen/bayesmove@dev")
 If installing from GitHub, ensure that you have a tool installed for
 compiling C++ code:
 
--   For PC’s running Windows, install
-    [Rtools](https://cran.r-project.org/bin/windows/Rtools/) if you have
-    not already done so.
+- For PC’s running Windows, install
+  [Rtools](https://cran.r-project.org/bin/windows/Rtools/) if you have
+  not already done so.
 
--   For Mac’s, install the [Command Line Tools for
-    Xcode](https://developer.apple.com/xcode/resources/) by executing
-    `xcode-select --install` in the terminal; or you can download the
-    latest version from the URL (free developer registration may be
-    required). A full Xcode install uses up a lot of disk space and is
-    not required.
+- For Mac’s, install the [Command Line Tools for
+  Xcode](https://developer.apple.com/xcode/resources/) by executing
+  `xcode-select --install` in the terminal; or you can download the
+  latest version from the URL (free developer registration may be
+  required). A full Xcode install uses up a lot of disk space and is not
+  required.
 
 ## Support
 
