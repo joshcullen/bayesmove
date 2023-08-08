@@ -15,6 +15,7 @@ coverage](https://codecov.io/gh/joshcullen/bayesmove/branch/master/graph/badge.s
 downloads](https://cranlogs.r-pkg.org/badges/bayesmove)](https://CRAN.R-project.org/package=bayesmove)
 [![CRAN total
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/bayesmove)](https://CRAN.R-project.org/package=bayesmove)
+[![R-CMD-check](https://github.com/joshcullen/bayesmove/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/joshcullen/bayesmove/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Introduction
