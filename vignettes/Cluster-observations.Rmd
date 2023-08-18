@@ -200,7 +200,7 @@ ggplot(behav.res, aes(x = bin, y = prop, fill = as.factor(behav))) +
         axis.text.x.bottom = element_text(size = 12),
         strip.text = element_text(size = 14),
         strip.text.x = element_text(face = "bold")) +
-  scale_fill_manual(values = c(viridis::viridis(2), rep("grey35", 8)), guide = FALSE) +
+  scale_fill_manual(values = c(viridis::viridis(2), rep("grey35", 8)), guide = "none") +
   scale_y_continuous(breaks = c(0.00, 0.50, 1.00)) +
   scale_x_continuous(breaks = 1:8) +
   facet_grid(behav ~ var, scales = "free_x")
@@ -256,12 +256,12 @@ leroy.states2<- leroy.states2[order(leroy.states2$obs),]
 # Assign names to states
 leroy.states2<- leroy.states2 %>% 
   mutate(across(c('z.map','z.post.thresh','z.post.max'),
-                ~case_when(. == 1 ~ "Encamped",
-                           . == 2 ~ "Transit",
-                           is.na(.) ~ "Unclassified")
+                \(x) case_when(x == 1 ~ "Encamped",
+                               x == 2 ~ "Transit",
+                               is.na(x) ~ "Unclassified")
                 )) %>% 
   mutate(across(c('z.map','z.post.thresh','z.post.max'),
-                factor, levels = c('Encamped','Exploratory','Transit','Unclassified')
+                \(x) factor(x, levels = c('Encamped','Exploratory','Transit','Unclassified'))
                 ))
 ```
 <br>
@@ -295,7 +295,7 @@ Now finally, let's map the results of the model. We can inspect maps for each of
 ```{r}
 # Map behavioral states for Leroy (w/ MAP estimates for states)
 ggplot() +
-  geom_path(data = leroy.states2, aes(x, y), color="gray60", size=0.25) +
+  geom_path(data = leroy.states2, aes(x, y), color="gray60", linewidth=0.25) +
   geom_point(data = leroy.states2, aes(x, y, fill=z.map), size=1.5, pch=21, alpha=0.7) +
   geom_point(data = leroy.states2 %>%
                group_by(id) %>%
@@ -316,7 +316,7 @@ ggplot() +
                              title.theme = element_text(size = 14)))
 # Map behavioral states for Leroy (w/ threshold of posterior samples for states)
 ggplot() +
-  geom_path(data = leroy.states2, aes(x, y), color="gray60", size=0.25) +
+  geom_path(data = leroy.states2, aes(x, y), color="gray60", linewidth=0.25) +
   geom_point(data = leroy.states2, aes(x, y, fill=z.post.thresh), size=1.5, pch=21, alpha=0.7) +
   geom_point(data = leroy.states2 %>%
                group_by(id) %>%
@@ -336,7 +336,7 @@ ggplot() +
                              title.theme = element_text(size = 14)))
 # Map behavioral states for Leroy (w/ most common states from posterior)
 ggplot() +
-  geom_path(data = leroy.states2, aes(x, y), color="gray60", size=0.25) +
+  geom_path(data = leroy.states2, aes(x, y), color="gray60", linewidth=0.25) +
   geom_point(data = leroy.states2, aes(x, y, fill=z.post.max), size=1.5, pch=21, alpha=0.7) +
   geom_point(data = leroy.states2 %>%
                group_by(id) %>%

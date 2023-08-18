@@ -23,15 +23,17 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-151357058-2"></script><script>
+<![endif]--><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Z86M853GE5"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-151357058-2');
-</script>
+  gtag('config', 'G-Z86M853GE5');
+ </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -44,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
       </span>
     </div>
 
@@ -62,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/joshcullen/bayesmove">
+  <a href="https://github.com/joshcullen/bayesmove" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
@@ -77,24 +79,24 @@
 
       
 
-      </header><script src="Pre-specify_brkpts_and_zero-inflated_data_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Pre-specifying breakpoints and dealing with
 zero-inflated variables</h1>
             
-            <h4 class="date">21 June 2022</h4>
+            <h4 data-toc-skip class="date">18 August 2023</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Pre-specify_brkpts_and_zero-inflated_data.Rmd"><code>vignettes/Pre-specify_brkpts_and_zero-inflated_data.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/HEAD/vignettes/Pre-specify_brkpts_and_zero-inflated_data.Rmd" class="external-link"><code>vignettes/Pre-specify_brkpts_and_zero-inflated_data.Rmd</code></a></small>
       <div class="hidden name"><code>Pre-specify_brkpts_and_zero-inflated_data.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>There may be instances where the dataset of interest has structure
 that should be accounted for by the model.</p>
 <p>For example, devices such as Argos satellite tags on air-breathing
@@ -106,9 +108,9 @@ burrows each day to rest, which may be denoted by the loss of a GPS
 signal until the animal re-emerges. Researchers may also just be
 interested in the diel patterns of movement exhibited by many
 species.</p>
-<div id="pre-specification-of-breakpoints" class="section level3">
-<h3 class="hasAnchor">
-<a href="#pre-specification-of-breakpoints" class="anchor"></a>Pre-specification of breakpoints</h3>
+<div class="section level3">
+<h3 id="pre-specification-of-breakpoints">Pre-specification of breakpoints<a class="anchor" aria-label="anchor" href="#pre-specification-of-breakpoints"></a>
+</h3>
 <p>Each of these examples demonstrates <em>a priori</em> knowledge about
 the species of interest or the inclusion of a variable denoting a
 specific behavior can be associated with a particular behavior. This
@@ -127,9 +129,9 @@ data streams, 2) the bins do not characterize the data streams well, and
 does not identify any underlying structure in the data streams being
 analyzed.</strong></p>
 </div>
-<div id="handling-of-zero-inflated-data-streams" class="section level3">
-<h3 class="hasAnchor">
-<a href="#handling-of-zero-inflated-data-streams" class="anchor"></a>Handling of zero-inflated data streams</h3>
+<div class="section level3">
+<h3 id="handling-of-zero-inflated-data-streams">Handling of zero-inflated data streams<a class="anchor" aria-label="anchor" href="#handling-of-zero-inflated-data-streams"></a>
+</h3>
 <p>Another characteristic of some data streams included for analysis are
 zero-inflated data streams. This means that certain variables have a
 high number of zeroes with respect to other real numbers or integers.
@@ -140,9 +142,9 @@ variable into a single bin of the discretized data stream. This also
 makes interpretation of the state-dependent distributions quite easy
 when interpreting each of the different estimated behavioral states.</p>
 </div>
-<div id="handling-of-missing-values" class="section level3">
-<h3 class="hasAnchor">
-<a href="#handling-of-missing-values" class="anchor"></a>Handling of missing values</h3>
+<div class="section level3">
+<h3 id="handling-of-missing-values">Handling of missing values<a class="anchor" aria-label="anchor" href="#handling-of-missing-values"></a>
+</h3>
 <p>While unrelated to the above topics, it is also worth mentioning that
 both state estimation models (segment-level or observation-level
 behavioral states) can handle NAs. This requires no. While there are no
@@ -156,73 +158,73 @@ zero-inflated variable using the built in <code>tracks</code> dataset in
 the <code>bayesmove</code> package.</p>
 </div>
 </div>
-<div id="prepare-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#prepare-data" class="anchor"></a>Prepare data</h2>
+<div class="section level2">
+<h2 id="prepare-data">Prepare data<a class="anchor" aria-label="anchor" href="#prepare-data"></a>
+</h2>
 <p>This tutorial works under the assumption that readers have covered
 the previous vignettes for the segmentation-level state estimation model
 since there won’t be much description on many of the steps repeated
 here. First, let’s load in the data and visualize some of its
 attributes.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
-
-<span class="co"># Check data structure</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
-<span class="co">#&gt;    id                date        x          y</span>
-<span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000</span>
-<span class="co">#&gt; 2 id1 2020-07-02 12:58:26 10.56492 -1.6654990</span>
-<span class="co">#&gt; 3 id1 2020-07-02 13:59:31 25.50174 -0.6096675</span>
-<span class="co">#&gt; 4 id1 2020-07-02 15:01:27 31.22014  9.5438464</span>
-<span class="co">#&gt; 5 id1 2020-07-02 15:59:56 36.15821 19.8737009</span>
-<span class="co">#&gt; 6 id1 2020-07-02 16:58:38 39.06810 26.4996352</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
-<span class="co">#&gt; [1] "id1" "id2" "id3"</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove" class="external-link">bayesmove</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check data structure</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id                date        x          y</span></span>
+<span><span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000</span></span>
+<span><span class="co">#&gt; 2 id1 2020-07-02 12:58:26 10.56492 -1.6654990</span></span>
+<span><span class="co">#&gt; 3 id1 2020-07-02 13:59:31 25.50174 -0.6096675</span></span>
+<span><span class="co">#&gt; 4 id1 2020-07-02 15:01:27 31.22014  9.5438464</span></span>
+<span><span class="co">#&gt; 5 id1 2020-07-02 15:59:56 36.15821 19.8737009</span></span>
+<span><span class="co">#&gt; 6 id1 2020-07-02 16:58:38 39.06810 26.4996352</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "id1" "id2" "id3"</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/plot-tracks-1.png" width="672"></p>
 <p>Now, let’s calculate step length, turning angle, net-squared
 displacement, and time step:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">tracks</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/prep_data.html">prep_data</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
-<span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt</span>
-<span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000 10.695     NA    0.000 3526</span>
-<span class="co">#&gt; 2 id1 2020-07-02 12:58:26 10.56492 -1.6654990 14.974  0.227  114.392 3664</span>
-<span class="co">#&gt; 3 id1 2020-07-02 13:59:31 25.50174 -0.6096675 11.653  0.987  650.710 3716</span>
-<span class="co">#&gt; 4 id1 2020-07-02 15:01:27 31.22014  9.5438464 11.449  0.067 1065.782 3509</span>
-<span class="co">#&gt; 5 id1 2020-07-02 15:59:56 36.15821 19.8737009  7.237  0.032 1702.380 3522</span>
-<span class="co">#&gt; 6 id1 2020-07-02 16:58:38 39.06810 26.4996352  0.119 -2.804 2228.547 3738</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tracks</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/prep_data.html">prep_data</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt</span></span>
+<span><span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000 10.695     NA    0.000 3526</span></span>
+<span><span class="co">#&gt; 2 id1 2020-07-02 12:58:26 10.56492 -1.6654990 14.974  0.227  114.392 3664</span></span>
+<span><span class="co">#&gt; 3 id1 2020-07-02 13:59:31 25.50174 -0.6096675 11.653  0.987  650.710 3716</span></span>
+<span><span class="co">#&gt; 4 id1 2020-07-02 15:01:27 31.22014  9.5438464 11.449  0.067 1065.782 3509</span></span>
+<span><span class="co">#&gt; 5 id1 2020-07-02 15:59:56 36.15821 19.8737009  7.237  0.032 1702.380 3522</span></span>
+<span><span class="co">#&gt; 6 id1 2020-07-02 16:58:38 39.06810 26.4996352  0.119 -2.804 2228.547 3738</span></span></code></pre></div>
 <p>Next, we will round time steps (and dates) to a specified interval (1
 h; 3600 s) if within 3 minutes (180 s) of this interval.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">tracks</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, id <span class="op">=</span> <span class="st">"id"</span>, int <span class="op">=</span> <span class="fl">3600</span>, tol <span class="op">=</span> <span class="fl">180</span>, time.zone <span class="op">=</span> <span class="st">"UTC"</span>,
-                          units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span>
-<span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt</span>
-<span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000 10.695     NA    0.000 3600</span>
-<span class="co">#&gt; 2 id1 2020-07-02 12:59:41 10.56492 -1.6654990 14.974  0.227  114.392 3600</span>
-<span class="co">#&gt; 3 id1 2020-07-02 13:59:41 25.50174 -0.6096675 11.653  0.987  650.710 3600</span>
-<span class="co">#&gt; 4 id1 2020-07-02 14:59:41 31.22014  9.5438464 11.449  0.067 1065.782 3600</span>
-<span class="co">#&gt; 5 id1 2020-07-02 15:59:41 36.15821 19.8737009  7.237  0.032 1702.380 3600</span>
-<span class="co">#&gt; 6 id1 2020-07-02 16:59:41 39.06810 26.4996352  0.119 -2.804 2228.547 3600</span></pre></div>
-<div id="artificially-define-resting-behavior" class="section level3">
-<h3 class="hasAnchor">
-<a href="#artificially-define-resting-behavior" class="anchor"></a>Artificially define ‘resting’ behavior</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tracks</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, id <span class="op">=</span> <span class="st">"id"</span>, int <span class="op">=</span> <span class="fl">3600</span>, tol <span class="op">=</span> <span class="fl">180</span>, time.zone <span class="op">=</span> <span class="st">"UTC"</span>,</span>
+<span>                          units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt</span></span>
+<span><span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000 10.695     NA    0.000 3600</span></span>
+<span><span class="co">#&gt; 2 id1 2020-07-02 12:59:41 10.56492 -1.6654990 14.974  0.227  114.392 3600</span></span>
+<span><span class="co">#&gt; 3 id1 2020-07-02 13:59:41 25.50174 -0.6096675 11.653  0.987  650.710 3600</span></span>
+<span><span class="co">#&gt; 4 id1 2020-07-02 14:59:41 31.22014  9.5438464 11.449  0.067 1065.782 3600</span></span>
+<span><span class="co">#&gt; 5 id1 2020-07-02 15:59:41 36.15821 19.8737009  7.237  0.032 1702.380 3600</span></span>
+<span><span class="co">#&gt; 6 id1 2020-07-02 16:59:41 39.06810 26.4996352  0.119 -2.804 2228.547 3600</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="artificially-define-resting-behavior">Artificially define ‘resting’ behavior<a class="anchor" aria-label="anchor" href="#artificially-define-resting-behavior"></a>
+</h3>
 <p>To demonstrate how to pre-specify breakpoints, I will be creating a
 synthetic variable that denotes a ‘resting’ behavioral state based on
 the step length variable. A step like this one in the creation of a
 derived variable may or may not be necessary for your particular
 dataset. In this case, I will find the lower quartile of step lengths
 and use this as the threshold to define the ‘resting’ behavior.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">$</span><span class="va">step</span>, <span class="fl">0.25</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="co">#&gt;   25% </span>
-<span class="co">#&gt; 0.106</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">$</span><span class="va">step</span>, <span class="fl">0.25</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   25% </span></span>
+<span><span class="co">#&gt; 0.106</span></span></code></pre></div>
 <p>Across all three tracks, the lower quartile is almost exactly 0.1, so
 this will be the value used as the threshold for a resting vs not
 resting state. Additionally, I will change all step length values below
@@ -233,28 +235,28 @@ observations. Since each of the state estimation models requires the
 analysis of discretized variables denoted by positive integers, I will
 create a binary <code>rest</code> variable that is denoted by 1 (“rest”)
 and 2 (“non-rest”) rather than 0 and 1.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">tracks</span> <span class="op">&lt;-</span> <span class="va">tracks</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>step <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">step</span> <span class="op">&lt;=</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="fl">0</span>,
-                          <span class="va">step</span> <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="va">step</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rest <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">step</span> <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="fl">2</span>,
-                          <span class="va">step</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span>
-  <span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tracks</span> <span class="op">&lt;-</span> <span class="va">tracks</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>step <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">step</span> <span class="op">&lt;=</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="fl">0</span>,</span>
+<span>                          <span class="va">step</span> <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="va">step</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rest <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">step</span> <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="fl">2</span>,</span>
+<span>                          <span class="va">step</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>Next, the data need to be reformatted as a list where each element is
 a different individual track. As a <code>list</code> object, the data
 will then be filtered to only retain observations at a 1 hr (3600 s)
 time interval.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># Create list from data frame</span>
-<span class="va">tracks.list</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, ind <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span>
-
-<span class="co"># Filter observations</span>
-<span class="va">tracks_filt.list</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_time.html">filter_time</a></span><span class="op">(</span>dat.list <span class="op">=</span> <span class="va">tracks.list</span>, int <span class="op">=</span> <span class="fl">3600</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Create list from data frame</span></span>
+<span><span class="va">tracks.list</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks</span>, ind <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Filter observations</span></span>
+<span><span class="va">tracks_filt.list</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_time.html">filter_time</a></span><span class="op">(</span>dat.list <span class="op">=</span> <span class="va">tracks.list</span>, int <span class="op">=</span> <span class="fl">3600</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="discretize-data-streams" class="section level3">
-<h3 class="hasAnchor">
-<a href="#discretize-data-streams" class="anchor"></a>Discretize data streams</h3>
+<div class="section level3">
+<h3 id="discretize-data-streams">Discretize data streams<a class="anchor" aria-label="anchor" href="#discretize-data-streams"></a>
+</h3>
 <p>Before the data streams can be analyzed by the model, they must first
 be discretized into bins. Further details are provided in the
 <strong>Prepare data for analysis</strong> and <strong>Cluster
@@ -263,56 +265,56 @@ has already been coded as a 1 or 2, it is already technically
 discretized. So the remainder of the work needs to be done on the other
 two data streams included in this analysis, the step lengths and turning
 angles.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co"># Define bin number and limits for turning angles</span>
-<span class="va">angle.bin.lims</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="op">-</span><span class="va">pi</span>, to<span class="op">=</span><span class="va">pi</span>, by<span class="op">=</span><span class="va">pi</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span>  <span class="co">#8 bins</span>
-
-<span class="co"># Define bin number and limits for step lengths</span>
-<span class="va">dist.bin.lims</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">[</span><span class="va">tracks</span><span class="op">$</span><span class="va">dt</span> <span class="op">==</span> <span class="fl">3600</span>,<span class="op">]</span><span class="op">$</span><span class="va">step</span>,
-                       <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.25</span>,<span class="fl">0.50</span>,<span class="fl">0.75</span>,<span class="fl">0.90</span>,<span class="fl">1</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>  <span class="co">#5 bins</span>
-
-<span class="va">angle.bin.lims</span>
-<span class="co">#&gt; [1] -3.1415927 -2.3561945 -1.5707963 -0.7853982  0.0000000  0.7853982  1.5707963</span>
-<span class="co">#&gt; [8]  2.3561945  3.1415927</span>
-
-<span class="va">dist.bin.lims</span>
-<span class="co">#&gt;       0%      25%      50%      75%      90%     100% </span>
-<span class="co">#&gt;  0.00000  0.10700  1.27900  5.73825 10.75250 25.25200</span>
-
-
-<span class="co"># Assign bins to observations</span>
-<span class="va">tracks_disc.list</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">tracks_filt.list</span>,
-                       <span class="va">discrete_move_var</span>,
-                       lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">dist.bin.lims</span>, <span class="va">angle.bin.lims</span><span class="op">)</span>,
-                       varIn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"step"</span>, <span class="st">"angle"</span><span class="op">)</span>,
-                       varOut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL"</span>, <span class="st">"TA"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Define bin number and limits for turning angles</span></span>
+<span><span class="va">angle.bin.lims</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="op">-</span><span class="va">pi</span>, to<span class="op">=</span><span class="va">pi</span>, by<span class="op">=</span><span class="va">pi</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span>  <span class="co">#8 bins</span></span>
+<span></span>
+<span><span class="co"># Define bin number and limits for step lengths</span></span>
+<span><span class="va">dist.bin.lims</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">tracks</span><span class="op">[</span><span class="va">tracks</span><span class="op">$</span><span class="va">dt</span> <span class="op">==</span> <span class="fl">3600</span>,<span class="op">]</span><span class="op">$</span><span class="va">step</span>,</span>
+<span>                       <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.25</span>,<span class="fl">0.50</span>,<span class="fl">0.75</span>,<span class="fl">0.90</span>,<span class="fl">1</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>  <span class="co">#5 bins</span></span>
+<span></span>
+<span><span class="va">angle.bin.lims</span></span>
+<span><span class="co">#&gt; [1] -3.1415927 -2.3561945 -1.5707963 -0.7853982  0.0000000  0.7853982  1.5707963</span></span>
+<span><span class="co">#&gt; [8]  2.3561945  3.1415927</span></span>
+<span></span>
+<span><span class="va">dist.bin.lims</span></span>
+<span><span class="co">#&gt;       0%      25%      50%      75%      90%     100% </span></span>
+<span><span class="co">#&gt;  0.00000  0.10700  1.27900  5.73825 10.75250 25.25200</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Assign bins to observations</span></span>
+<span><span class="va">tracks_disc.list</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">tracks_filt.list</span>,</span>
+<span>                       <span class="va">discrete_move_var</span>,</span>
+<span>                       lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">dist.bin.lims</span>, <span class="va">angle.bin.lims</span><span class="op">)</span>,</span>
+<span>                       varIn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"step"</span>, <span class="st">"angle"</span><span class="op">)</span>,</span>
+<span>                       varOut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL"</span>, <span class="st">"TA"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now that we have two new columns in the dataset representing the
 discretized step lengths (SL) and turning angles (TA), we need to create
 a 6th bin for step lengths to hold all of the zeroes. This is because
 they are currently all stored within the first bin with other non-zero
 values.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="co"># Since 0s get lumped into bin 1 for SL, need to add a 6th bin to store only 0s</span>
-<span class="va">tracks_disc.list2</span> <span class="op">&lt;-</span> <span class="va">tracks_disc.list</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">.</span>, <span class="op">~</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">.x</span>, SL <span class="op">=</span> <span class="va">SL</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co">#to shift bins over from 1-5 to 2-6</span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">.</span>, <span class="op">~</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">.x</span>, SL <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">step</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">1</span>,  <span class="co">#assign 0s to bin 1</span>
-                                    <span class="va">step</span> <span class="op">!=</span> <span class="fl">0</span> <span class="op">~</span> <span class="va">SL</span><span class="op">)</span>  <span class="co">#otherwise keep the modified SL bin</span>
-                 <span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Since 0s get lumped into bin 1 for SL, need to add a 6th bin to store only 0s</span></span>
+<span><span class="va">tracks_disc.list2</span> <span class="op">&lt;-</span> <span class="va">tracks_disc.list</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">.</span>, <span class="op">~</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">.x</span>, SL <span class="op">=</span> <span class="va">SL</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="co">#to shift bins over from 1-5 to 2-6</span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">.</span>, <span class="op">~</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">.x</span>, SL <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">step</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">~</span> <span class="fl">1</span>,  <span class="co">#assign 0s to bin 1</span></span>
+<span>                                    <span class="va">step</span> <span class="op">!=</span> <span class="fl">0</span> <span class="op">~</span> <span class="va">SL</span><span class="op">)</span>  <span class="co">#otherwise keep the modified SL bin</span></span>
+<span>                 <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div id="segment-the-tracks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#segment-the-tracks" class="anchor"></a>Segment the tracks</h2>
+<div class="section level2">
+<h2 id="segment-the-tracks">Segment the tracks<a class="anchor" aria-label="anchor" href="#segment-the-tracks"></a>
+</h2>
 <p>With the newly discretized data streams, the tracks can now be
 analyzed by the segmentation model. However, we still have yet to
 pre-sepcify the breakpoints.</p>
-<div id="pre-specify-breakpoints" class="section level3">
-<h3 class="hasAnchor">
-<a href="#pre-specify-breakpoints" class="anchor"></a>Pre-specify breakpoints</h3>
+<div class="section level3">
+<h3 id="pre-specify-breakpoints">Pre-specify breakpoints<a class="anchor" aria-label="anchor" href="#pre-specify-breakpoints"></a>
+</h3>
 <p>To pre-specify breakpoints, users will apply the
 <code><a href="../reference/find_breaks.html">find_breaks()</a></code> function. In its standard form, this function
 can only be applied to one track at a time, so we will use
-<code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code> to map this function across each of the list
+<code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code> to map this function across each of the list
 elements (i.e. different tracks). We also need to supply a character
 vector to the argument <code>ind</code>, which indicates the column name
 on which we would like to identify possible breakpoints. This function
@@ -324,216 +326,216 @@ day-of-year or Julian day.</p>
 <p>Since the pre-specified breakpoints must be supplied to the model as
 a <code>list</code>, the resulting <code>breaks</code> object shows how
 these potential breakpoints should be stored.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="co"># Only retain id, discretized step length (SL), turning angle (TA), and rest columns</span>
-<span class="va">tracks.list2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">tracks_disc.list2</span>,
-                   <span class="va">subset</span>,
-                   select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">SL</span>, <span class="va">TA</span>, <span class="va">rest</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Pre-specify breakpoints based on 'rest'</span>
-<span class="va">breaks</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">tracks.list2</span>, <span class="op">~</span><span class="fu"><a href="../reference/find_breaks.html">find_breaks</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">.</span>, ind <span class="op">=</span> <span class="st">"rest"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Only retain id, discretized step length (SL), turning angle (TA), and rest columns</span></span>
+<span><span class="va">tracks.list2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">tracks_disc.list2</span>,</span>
+<span>                   <span class="va">subset</span>,</span>
+<span>                   select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">SL</span>, <span class="va">TA</span>, <span class="va">rest</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Pre-specify breakpoints based on 'rest'</span></span>
+<span><span class="va">breaks</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">tracks.list2</span>, <span class="op">~</span><span class="fu"><a href="../reference/find_breaks.html">find_breaks</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">.</span>, ind <span class="op">=</span> <span class="st">"rest"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="run-the-segmentation-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-the-segmentation-model" class="anchor"></a>Run the segmentation model</h3>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-
-<span class="co"># Define hyperparameter for prior distribution</span>
-<span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">1</span>
-
-<span class="co"># Set number of iterations for the Gibbs sampler</span>
-<span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">50000</span>
-
-<span class="co"># Set the number of bins used to discretize each data stream</span>
-<span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">8</span>,<span class="fl">2</span><span class="op">)</span>  <span class="co">#SL, TA, rest (in the order from left to right in tracks.list2)</span>
-
-<span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/progressr/man/handlers.html">handlers</a></span><span class="op">(</span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/progressr/man/handler_progress.html">handler_progress</a></span><span class="op">(</span>clear <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/multisession.html">multisession</a></span>, workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co">#run all MCMC chains in parallel</span>
-<span class="co">#refer to future::plan() for more details</span>
-
-<span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment_behavior.html">segment_behavior</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list2</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nbins <span class="op">=</span> <span class="va">nbins</span>,
-                           alpha <span class="op">=</span> <span class="va">alpha</span>, breakpt <span class="op">=</span> <span class="va">breaks</span><span class="op">)</span>
-<span class="co">#&gt; 103.66 sec elapsed</span>
-<span class="co"># takes 1.5 min to run</span>
-
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/sequential.html">sequential</a></span><span class="op">)</span>  <span class="co">#return to single core</span></pre></div>
+<div class="section level3">
+<h3 id="run-the-segmentation-model">Run the segmentation model<a class="anchor" aria-label="anchor" href="#run-the-segmentation-model"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define hyperparameter for prior distribution</span></span>
+<span><span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># Set number of iterations for the Gibbs sampler</span></span>
+<span><span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">50000</span></span>
+<span></span>
+<span><span class="co"># Set the number of bins used to discretize each data stream</span></span>
+<span><span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">8</span>,<span class="fl">2</span><span class="op">)</span>  <span class="co">#SL, TA, rest (in the order from left to right in tracks.list2)</span></span>
+<span></span>
+<span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">handlers</a></span><span class="op">(</span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://progressr.futureverse.org/reference/handler_progress.html" class="external-link">handler_progress</a></span><span class="op">(</span>clear <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/multisession.html" class="external-link">multisession</a></span>, workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co">#run all MCMC chains in parallel</span></span>
+<span><span class="co">#refer to future::plan() for more details</span></span>
+<span></span>
+<span><span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment_behavior.html">segment_behavior</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list2</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nbins <span class="op">=</span> <span class="va">nbins</span>,</span>
+<span>                           alpha <span class="op">=</span> <span class="va">alpha</span>, breakpt <span class="op">=</span> <span class="va">breaks</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 52.259 sec elapsed</span></span>
+<span><span class="co"># takes 1.5 min to run</span></span>
+<span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/sequential.html" class="external-link">sequential</a></span><span class="op">)</span>  <span class="co">#return to single core</span></span></code></pre></div>
 <p>Before we proceed further with these estimated breakpoints from the
 model, let’s check that it has converged first by inspecting traceplots
 of the log marginal likelihood and the number of breakpoints.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="co"># Trace-plots for the number of breakpoints per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Trace-plots for the number of breakpoints per ID</span></span>
+<span><span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/traceplot-segment-1.png" width="672"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-
-<span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span></span>
+<span><span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/traceplot-segment-2.png" width="672"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="co">#both plots appear to indicate convergence to posterior</span></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#both plots appear to indicate convergence to posterior</span></span></code></pre></div>
 <p>Everything looks good from the traceplots, so now let’s identify the
 <em>maximum a posteriori</em> (MAP) estimate that we’ll use in the next
 step.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="co">## Determine MAP for selecting breakpoints</span>
-<span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">25000</span><span class="op">)</span>
-<span class="va">MAP.est</span>
-<span class="co">#&gt; [1] 32049 34861 26213</span>
-
-<span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span>
-
-<span class="co"># How many breakpoints estimated per ID?</span>
-<span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; id1 id2 id3 </span>
-<span class="co">#&gt;  37  45  40</span></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Determine MAP for selecting breakpoints</span></span>
+<span><span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">25000</span><span class="op">)</span></span>
+<span><span class="va">MAP.est</span></span>
+<span><span class="co">#&gt; [1] 32049 34861 26213</span></span>
+<span></span>
+<span><span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># How many breakpoints estimated per ID?</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; id1 id2 id3 </span></span>
+<span><span class="co">#&gt;  37  45  40</span></span></code></pre></div>
 <p>Another good visual diagnostic to check how well the model is able to
 identify major breakpoints consistent with a user’s <em>a priori</em>
 knowledge is to plot the breakpoints over the analyzed data streams.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="fu"><a href="../reference/plot_breakpoints.html">plot_breakpoints</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks_disc.list2</span>, as_date <span class="op">=</span> <span class="cn">FALSE</span>, var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span>,<span class="st">"rest"</span><span class="op">)</span>,
-                 var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Step Length (km)"</span>, <span class="st">"Turning Angle (rad)"</span>, <span class="st">"Resting"</span><span class="op">)</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></pre></div>
-<p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/plot-brks-1.png" width="672"><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/plot-brks-2.png" width="672"><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/plot-brks-3.png" width="672"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_breakpoints.html">plot_breakpoints</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks_disc.list2</span>, as_date <span class="op">=</span> <span class="cn">FALSE</span>, var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span>,<span class="st">"rest"</span><span class="op">)</span>,</span>
+<span>                 var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Step Length (km)"</span>, <span class="st">"Turning Angle (rad)"</span>, <span class="st">"Resting"</span><span class="op">)</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/plot-brks-1.png" width="672"><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/plot-brks-2.png" width="672"></p>
 <p>If these plots match up with intuition, then it is safe to move
 forward with the estimated breakpoints. If the number or location of
 these breakpoints deviate from expectations, it may be necessary to run
 the model again with a greater number of iterations or using a different
 method to discretize the data streams.</p>
 </div>
-<div id="assign-track-segments-to-tracks" class="section level3">
-<h3 class="hasAnchor">
-<a href="#assign-track-segments-to-tracks" class="anchor"></a>Assign track segments to tracks</h3>
+<div class="section level3">
+<h3 id="assign-track-segments-to-tracks">Assign track segments to tracks<a class="anchor" aria-label="anchor" href="#assign-track-segments-to-tracks"></a>
+</h3>
 <p>With the modeled breakpoints, users will need to assign track segment
 numbers to each individual. This is performed using the
 <code><a href="../reference/assign_tseg.html">assign_tseg()</a></code> function.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="va">tracks.seg</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks_disc.list2</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks.seg</span><span class="op">)</span>
-<span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt rest</span>
-<span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000 10.695     NA    0.000 3600    2</span>
-<span class="co">#&gt; 2 id1 2020-07-02 12:59:41 10.56492 -1.6654990 14.974  0.227  114.392 3600    2</span>
-<span class="co">#&gt; 3 id1 2020-07-02 13:59:41 25.50174 -0.6096675 11.653  0.987  650.710 3600    2</span>
-<span class="co">#&gt; 4 id1 2020-07-02 14:59:41 31.22014  9.5438464 11.449  0.067 1065.782 3600    2</span>
-<span class="co">#&gt; 5 id1 2020-07-02 15:59:41 36.15821 19.8737009  7.237  0.032 1702.380 3600    2</span>
-<span class="co">#&gt; 6 id1 2020-07-02 16:59:41 39.06810 26.4996352  0.119 -2.804 2228.547 3600    2</span>
-<span class="co">#&gt;   obs time1 SL TA tseg</span>
-<span class="co">#&gt; 1   1     1  5 NA    1</span>
-<span class="co">#&gt; 2   2     2  6  5    1</span>
-<span class="co">#&gt; 3   3     3  6  6    1</span>
-<span class="co">#&gt; 4   4     4  6  5    1</span>
-<span class="co">#&gt; 5   5     5  5  5    1</span>
-<span class="co">#&gt; 6   6     6  3  1    1</span></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tracks.seg</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks_disc.list2</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tracks.seg</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id                date        x          y   step  angle      NSD   dt rest</span></span>
+<span><span class="co">#&gt; 1 id1 2020-07-02 11:59:41  0.00000  0.0000000 10.695     NA    0.000 3600    2</span></span>
+<span><span class="co">#&gt; 2 id1 2020-07-02 12:59:41 10.56492 -1.6654990 14.974  0.227  114.392 3600    2</span></span>
+<span><span class="co">#&gt; 3 id1 2020-07-02 13:59:41 25.50174 -0.6096675 11.653  0.987  650.710 3600    2</span></span>
+<span><span class="co">#&gt; 4 id1 2020-07-02 14:59:41 31.22014  9.5438464 11.449  0.067 1065.782 3600    2</span></span>
+<span><span class="co">#&gt; 5 id1 2020-07-02 15:59:41 36.15821 19.8737009  7.237  0.032 1702.380 3600    2</span></span>
+<span><span class="co">#&gt; 6 id1 2020-07-02 16:59:41 39.06810 26.4996352  0.119 -2.804 2228.547 3600    2</span></span>
+<span><span class="co">#&gt;   obs time1 SL TA tseg</span></span>
+<span><span class="co">#&gt; 1   1     1  5 NA    1</span></span>
+<span><span class="co">#&gt; 2   2     2  6  5    1</span></span>
+<span><span class="co">#&gt; 3   3     3  6  6    1</span></span>
+<span><span class="co">#&gt; 4   4     4  6  5    1</span></span>
+<span><span class="co">#&gt; 5   5     5  5  5    1</span></span>
+<span><span class="co">#&gt; 6   6     6  3  1    1</span></span></code></pre></div>
 </div>
 </div>
-<div id="cluster-the-segments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#cluster-the-segments" class="anchor"></a>Cluster the segments</h2>
+<div class="section level2">
+<h2 id="cluster-the-segments">Cluster the segments<a class="anchor" aria-label="anchor" href="#cluster-the-segments"></a>
+</h2>
 <p>With track segments now denoted from the segmentation model, the next
 step is to cluster these segments together into behavioral states using
 Latent Dirichlet Allocation (LDA) using the
 <code><a href="../reference/cluster_segments.html">cluster_segments()</a></code> function. But first, we need to count
 the number of observations per segment that belong in each of the
 discretized bins.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="co"># Select only id, tseg, SL, TA, and rest columns</span>
-<span class="va">tracks.seg2</span><span class="op">&lt;-</span> <span class="va">tracks.seg</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>,<span class="st">"tseg"</span>,<span class="st">"SL"</span>,<span class="st">"TA"</span>,<span class="st">"rest"</span><span class="op">)</span><span class="op">]</span>
-
-<span class="co"># Summarize observations by track segment</span>
-<span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">8</span>,<span class="fl">2</span><span class="op">)</span>
-<span class="va">obs</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_tsegs.html">summarize_tsegs</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.seg2</span>, nbins <span class="op">=</span> <span class="va">nbins</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span>
-<span class="co">#&gt;    id tseg y1.1 y1.2 y1.3 y1.4 y1.5 y1.6 y2.1 y2.2 y2.3 y2.4 y2.5 y2.6 y2.7</span>
-<span class="co">#&gt; 1 id1    1    4    0    7   13   44   24    7    4    1   26   38    7    0</span>
-<span class="co">#&gt; 2 id1    2   53    0   24    8    6    1   40    7    3    3    3    5    5</span>
-<span class="co">#&gt; 3 id1    3    9    0    6   10   34   27    5    5    4   39   22    4    1</span>
-<span class="co">#&gt; 4 id1    4    0    0    2    4    3    1    1    0    1    1    2    3    0</span>
-<span class="co">#&gt; 5 id1    5   50    0   28    8    6    3   33    9    2    6    4    2    8</span>
-<span class="co">#&gt; 6 id1    6    0    0    0    1    0    0    0    0    1    0    0    0    0</span>
-<span class="co">#&gt;   y2.8 y3.1 y3.2</span>
-<span class="co">#&gt; 1    8    4   88</span>
-<span class="co">#&gt; 2   26   53   39</span>
-<span class="co">#&gt; 3    6    9   77</span>
-<span class="co">#&gt; 4    2    0   10</span>
-<span class="co">#&gt; 5   31   50   45</span>
-<span class="co">#&gt; 6    0    0    1</span></pre></div>
-<div id="run-the-clustering-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-the-clustering-model" class="anchor"></a>Run the clustering model</h3>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-
-<span class="co"># Prepare for Gibbs sampler</span>
-<span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">1000</span>  <span class="co">#number of MCMC iterations for Gibbs sampler</span>
-<span class="va">nburn</span><span class="op">&lt;-</span> <span class="va">ngibbs</span><span class="op">/</span><span class="fl">2</span>  <span class="co">#number of iterations for burn-in</span>
-<span class="va">nmaxclust</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">nbins</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>  <span class="co">#one fewer than max number of bins used for data streams</span>
-<span class="va">ndata.types</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">nbins</span><span class="op">)</span>  <span class="co">#number of data types</span>
-
-<span class="co"># Priors</span>
-<span class="va">gamma1</span><span class="op">&lt;-</span> <span class="fl">0.1</span>
-<span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">0.1</span>
-
-<span class="co"># Run LDA model</span>
-<span class="va">res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/cluster_segments.html">cluster_segments</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">obs</span>, gamma1<span class="op">=</span><span class="va">gamma1</span>, alpha<span class="op">=</span><span class="va">alpha</span>,
-                       ngibbs<span class="op">=</span><span class="va">ngibbs</span>, nmaxclust<span class="op">=</span><span class="va">nmaxclust</span>,
-                       nburn<span class="op">=</span><span class="va">nburn</span>, ndata.types<span class="op">=</span><span class="va">ndata.types</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Select only id, tseg, SL, TA, and rest columns</span></span>
+<span><span class="va">tracks.seg2</span><span class="op">&lt;-</span> <span class="va">tracks.seg</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>,<span class="st">"tseg"</span>,<span class="st">"SL"</span>,<span class="st">"TA"</span>,<span class="st">"rest"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Summarize observations by track segment</span></span>
+<span><span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">8</span>,<span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">obs</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarize_tsegs.html">summarize_tsegs</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.seg2</span>, nbins <span class="op">=</span> <span class="va">nbins</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id tseg y1.1 y1.2 y1.3 y1.4 y1.5 y1.6 y2.1 y2.2 y2.3 y2.4 y2.5 y2.6 y2.7</span></span>
+<span><span class="co">#&gt; 1 id1    1    4    0    7   13   44   24    7    4    1   26   38    7    0</span></span>
+<span><span class="co">#&gt; 2 id1    2   53    0   24    8    6    1   40    7    3    3    3    5    5</span></span>
+<span><span class="co">#&gt; 3 id1    3    9    0    6   10   34   27    5    5    4   39   22    4    1</span></span>
+<span><span class="co">#&gt; 4 id1    4    0    0    2    4    3    1    1    0    1    1    2    3    0</span></span>
+<span><span class="co">#&gt; 5 id1    5   50    0   28    8    6    3   33    9    2    6    4    2    8</span></span>
+<span><span class="co">#&gt; 6 id1    6    0    0    0    1    0    0    0    0    1    0    0    0    0</span></span>
+<span><span class="co">#&gt;   y2.8 y3.1 y3.2</span></span>
+<span><span class="co">#&gt; 1    8    4   88</span></span>
+<span><span class="co">#&gt; 2   26   53   39</span></span>
+<span><span class="co">#&gt; 3    6    9   77</span></span>
+<span><span class="co">#&gt; 4    2    0   10</span></span>
+<span><span class="co">#&gt; 5   31   50   45</span></span>
+<span><span class="co">#&gt; 6    0    0    1</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="run-the-clustering-model">Run the clustering model<a class="anchor" aria-label="anchor" href="#run-the-clustering-model"></a>
+</h3>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Prepare for Gibbs sampler</span></span>
+<span><span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">1000</span>  <span class="co">#number of MCMC iterations for Gibbs sampler</span></span>
+<span><span class="va">nburn</span><span class="op">&lt;-</span> <span class="va">ngibbs</span><span class="op">/</span><span class="fl">2</span>  <span class="co">#number of iterations for burn-in</span></span>
+<span><span class="va">nmaxclust</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">nbins</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>  <span class="co">#one fewer than max number of bins used for data streams</span></span>
+<span><span class="va">ndata.types</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">nbins</span><span class="op">)</span>  <span class="co">#number of data types</span></span>
+<span></span>
+<span><span class="co"># Priors</span></span>
+<span><span class="va">gamma1</span><span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span><span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span></span>
+<span><span class="co"># Run LDA model</span></span>
+<span><span class="va">res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/cluster_segments.html">cluster_segments</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">obs</span>, gamma1<span class="op">=</span><span class="va">gamma1</span>, alpha<span class="op">=</span><span class="va">alpha</span>,</span>
+<span>                       ngibbs<span class="op">=</span><span class="va">ngibbs</span>, nmaxclust<span class="op">=</span><span class="va">nmaxclust</span>,</span>
+<span>                       nburn<span class="op">=</span><span class="va">nburn</span>, ndata.types<span class="op">=</span><span class="va">ndata.types</span><span class="op">)</span></span></code></pre></div>
 <p>Again, let’s check the traceplot of the log likelihood to check if
 the LDA clustering model converged on the posterior distribution.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loglikel</span>, type<span class="op">=</span><span class="st">'l'</span>, xlab <span class="op">=</span> <span class="st">"Iteration"</span>, ylab <span class="op">=</span> <span class="st">"Log Likelihood"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loglikel</span>, type<span class="op">=</span><span class="st">'l'</span>, xlab <span class="op">=</span> <span class="st">"Iteration"</span>, ylab <span class="op">=</span> <span class="st">"Log Likelihood"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/traceplot-cluster-1.png" width="672"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit">
-<span class="co">#LDA appears to have converged</span></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#LDA appears to have converged</span></span></code></pre></div>
 </div>
-<div id="determine-the-number-of-likely-states" class="section level3">
-<h3 class="hasAnchor">
-<a href="#determine-the-number-of-likely-states" class="anchor"></a>Determine the number of likely states</h3>
+<div class="section level3">
+<h3 id="determine-the-number-of-likely-states">Determine the number of likely states<a class="anchor" aria-label="anchor" href="#determine-the-number-of-likely-states"></a>
+</h3>
 <p>To determine the number of likely states estimated by the model,
 we’ll need to inspect the results from the <span class="math inline">\(\theta\)</span> parameter. This is a matrix that
 stores the probability of a segment belonging to a particular behavioral
 state. We will try to select the fewest number of states that account
 for <span class="math inline">\(\ge 90\%\)</span> of all
 observations.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit">
-<span class="co"># Extract proportions of behaviors per track segment</span>
-<span class="va">theta.estim</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_prop.html">extract_prop</a></span><span class="op">(</span>res <span class="op">=</span> <span class="va">res</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span><span class="op">)</span>
-
-<span class="co"># Calculate mean proportions per behavior</span>
-<span class="op">(</span><span class="va">theta.means</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">theta.estim</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.439 0.298 0.254 0.008 0.001 0.000 0.000</span>
-
-<span class="co"># Calculate cumulative sum</span>
-<span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">theta.means</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.439 0.737 0.991 0.999 1.000 1.000 1.000</span>
-<span class="co">#first 3 states comprise 99.1% of all observations</span>
-
-
-<span class="co"># Convert to data frame for ggplot2</span>
-<span class="va">theta.estim_df</span><span class="op">&lt;-</span> <span class="va">theta.estim</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://bartk.gitlab.io/move/reference/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="va">.</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nmaxclust</span>, names_to <span class="op">=</span> <span class="st">"behavior"</span>, values_to <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/modify.html">modify_at</a></span><span class="op">(</span><span class="st">"behavior"</span>, <span class="va">factor</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">theta.estim_df</span><span class="op">$</span><span class="va">behavior</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="va">nmaxclust</span>
-
-<span class="co"># Plot results</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">theta.estim_df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">behavior</span>, <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey35"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>, outlier.shape <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"grey35"</span>, position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span>,
-              alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">"\nBehavior"</span>, y<span class="op">=</span><span class="st">"Proportion of Total Behavior\n"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Extract proportions of behaviors per track segment</span></span>
+<span><span class="va">theta.estim</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_prop.html">extract_prop</a></span><span class="op">(</span>res <span class="op">=</span> <span class="va">res</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate mean proportions per behavior</span></span>
+<span><span class="op">(</span><span class="va">theta.means</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">theta.estim</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.439 0.298 0.254 0.008 0.001 0.000 0.000</span></span>
+<span></span>
+<span><span class="co"># Calculate cumulative sum</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">theta.means</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.439 0.737 0.991 0.999 1.000 1.000 1.000</span></span>
+<span><span class="co">#first 3 states comprise 99.1% of all observations</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Convert to data frame for ggplot2</span></span>
+<span><span class="va">theta.estim_df</span><span class="op">&lt;-</span> <span class="va">theta.estim</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">.</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">nmaxclust</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"behavior"</span>, values_to <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/modify.html" class="external-link">modify_at</a></span><span class="op">(</span><span class="st">"behavior"</span>, <span class="va">factor</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">theta.estim_df</span><span class="op">$</span><span class="va">behavior</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="va">nmaxclust</span></span>
+<span></span>
+<span><span class="co"># Plot results</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">theta.estim_df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">behavior</span>, <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey35"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>, outlier.shape <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">geom_jitter</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"grey35"</span>, position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html" class="external-link">position_jitter</a></span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>              alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span><span class="st">"\nBehavior"</span>, y<span class="op">=</span><span class="st">"Proportion of Total Behavior\n"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/theta-extract-1.png" width="672"></p>
 <p>The inspection of the mean proportions of behavioral states stored in
 the <code>theta.estim</code> object shows that the first 3 states are
 attributed to 99.1% of observations. All of the estimates per segment
 and behavioral state are shown in the above boxplot.</p>
 </div>
-<div id="classify-the-states-as-behaviors" class="section level3">
-<h3 class="hasAnchor">
-<a href="#classify-the-states-as-behaviors" class="anchor"></a>Classify the states as behaviors</h3>
+<div class="section level3">
+<h3 id="classify-the-states-as-behaviors">Classify the states as behaviors<a class="anchor" aria-label="anchor" href="#classify-the-states-as-behaviors"></a>
+</h3>
 <p>Now that it appears that 3 states are likely present in this dataset,
 we need to extract the state-dependent distributions from the <span class="math inline">\(\phi\)</span> matrix using the
 <code><a href="../reference/get_behav_hist.html">get_behav_hist()</a></code> function. By visualizing these
@@ -542,26 +544,26 @@ states based on the shape of the state-dependent distributions. Below,
 only the retained states have distributions shown in color. The
 remaining 4 states are included to demonstrate that they are not
 biologically interpretable by comparison.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit">
-<span class="co"># Extract bin estimates from phi matrix</span>
-<span class="va">behav.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_behav_hist.html">get_behav_hist</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">res</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span>,
-                           var.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Step Length"</span>,<span class="st">"Turning Angle"</span>,<span class="st">"Resting"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Plot histograms of proportion data</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">behav.res</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bin</span>, y <span class="op">=</span> <span class="va">prop</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">behav</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"\nBin"</span>, y <span class="op">=</span> <span class="st">"Proportion\n"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,
-        axis.text.x.bottom <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,
-        strip.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#21908CFF"</span>,<span class="st">"#440154FF"</span>,<span class="st">"#FDE725FF"</span>,
-                               <span class="st">"grey35"</span>,<span class="st">"grey35"</span>,<span class="st">"grey35"</span>,<span class="st">"grey35"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Extract bin estimates from phi matrix</span></span>
+<span><span class="va">behav.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_behav_hist.html">get_behav_hist</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">res</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span>,</span>
+<span>                           var.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Step Length"</span>,<span class="st">"Turning Angle"</span>,<span class="st">"Resting"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot histograms of proportion data</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">behav.res</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bin</span>, y <span class="op">=</span> <span class="va">prop</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">behav</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"\nBin"</span>, y <span class="op">=</span> <span class="st">"Proportion\n"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,</span>
+<span>        axis.text.x.bottom <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,</span>
+<span>        strip.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#21908CFF"</span>,<span class="st">"#440154FF"</span>,<span class="st">"#FDE725FF"</span>,</span>
+<span>                               <span class="st">"grey35"</span>,<span class="st">"grey35"</span>,<span class="st">"grey35"</span>,<span class="st">"grey35"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/phi-extract-1.png" width="672"></p>
 <p>From the above plot, it appears that state 1 has a high number of
 resting observations (bin 1 of Resting), short step lengths (primarily
@@ -575,31 +577,31 @@ state 2 will be called ‘Transit’ and state 3 will be called
 <p>Since each segment is defined as a mixture of the different
 behavioral states, we will need to assign these proportions back to our
 dataset. These proportions can also be visualized over time.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit">
-<span class="co"># Reformat proportion estimates for all track segments</span>
-<span class="va">theta.estim.long</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/expand_behavior.html">expand_behavior</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.seg</span>, theta.estim <span class="op">=</span> <span class="va">theta.estim</span>, obs <span class="op">=</span> <span class="va">obs</span>,
-                                   nbehav <span class="op">=</span> <span class="fl">3</span>, behav.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Resting"</span>, <span class="st">"Transit"</span>, <span class="st">"Exploratory"</span><span class="op">)</span>,
-                                   behav.order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Plot results</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">theta.estim.long</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_area</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">date</span>, y<span class="op">=</span><span class="va">prop</span>, fill <span class="op">=</span> <span class="va">behavior</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.25</span>,
-            position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"\nTime"</span>, y <span class="op">=</span> <span class="st">"Proportion of Behavior\n"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span><span class="st">"Behavior"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,
-        axis.text.x.bottom <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">id</span>, nrow <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reformat proportion estimates for all track segments</span></span>
+<span><span class="va">theta.estim.long</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/expand_behavior.html">expand_behavior</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.seg</span>, theta.estim <span class="op">=</span> <span class="va">theta.estim</span>, obs <span class="op">=</span> <span class="va">obs</span>,</span>
+<span>                                   nbehav <span class="op">=</span> <span class="fl">3</span>, behav.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resting"</span>, <span class="st">"Transit"</span>, <span class="st">"Exploratory"</span><span class="op">)</span>,</span>
+<span>                                   behav.order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot results</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">theta.estim.long</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_area</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">date</span>, y<span class="op">=</span><span class="va">prop</span>, fill <span class="op">=</span> <span class="va">behavior</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>            position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"\nTime"</span>, y <span class="op">=</span> <span class="st">"Proportion of Behavior\n"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span><span class="st">"Behavior"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,</span>
+<span>        axis.text.x.bottom <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">id</span>, nrow <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/theta-estim-long-1.png" width="672"></p>
 </div>
 </div>
-<div id="assign-behavioral-states-to-tracks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#assign-behavioral-states-to-tracks" class="anchor"></a>Assign behavioral states to tracks</h2>
+<div class="section level2">
+<h2 id="assign-behavioral-states-to-tracks">Assign behavioral states to tracks<a class="anchor" aria-label="anchor" href="#assign-behavioral-states-to-tracks"></a>
+</h2>
 <p>The last major step is to now assign the behavioral states back to
 the original tracks. More specifically, the proportion of each
 behavioral state assigned to each track segment will be associated with
@@ -607,111 +609,114 @@ all observations in that particular track segment. When mapping these
 results, users can either plot the dominant behavior per observation or
 potentially the proportion associated with a given behavioral state of
 interest.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit">
-<span class="co"># Merge results with original data</span>
-<span class="va">tracks.out</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_behavior.html">assign_behavior</a></span><span class="op">(</span>dat.orig <span class="op">=</span> <span class="va">tracks</span>,
-                             dat.seg.list <span class="op">=</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span><span class="op">(</span><span class="va">tracks.seg</span>, <span class="st">"id"</span><span class="op">)</span>,
-                             theta.estim.long <span class="op">=</span> <span class="va">theta.estim.long</span>,
-                             behav.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Resting"</span>,<span class="st">"Exploratory"</span>,<span class="st">"Transit"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Map dominant behavior for all IDs</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>, y<span class="op">=</span><span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, size<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">behav</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span><span class="st">"Behavior"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">id</span>, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Merge results with original data</span></span>
+<span><span class="va">tracks.out</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_behavior.html">assign_behavior</a></span><span class="op">(</span>dat.orig <span class="op">=</span> <span class="va">tracks</span>,</span>
+<span>                             dat.seg.list <span class="op">=</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span><span class="op">(</span><span class="va">tracks.seg</span>, <span class="st">"id"</span><span class="op">)</span>,</span>
+<span>                             theta.estim.long <span class="op">=</span> <span class="va">theta.estim.long</span>,</span>
+<span>                             behav.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resting"</span>,<span class="st">"Exploratory"</span>,<span class="st">"Transit"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Map dominant behavior for all IDs</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>, y<span class="op">=</span><span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, linewidth<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">behav</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span><span class="st">"Behavior"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">id</span>, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/assign-states-1.png" width="672"></p>
-<div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="co"># Map of all IDs</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">behav</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_color_viridis_d</a></span><span class="op">(</span><span class="st">"Behavior"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Map of all IDs</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">behav</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>, linewidth<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_color_viridis_d</a></span><span class="op">(</span><span class="st">"Behavior"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/assign-states-2.png" width="672"></p>
-<div class="sourceCode" id="cb26"><pre class="downlit">
-<span class="co"># Proportion resting</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">Resting</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_distiller</a></span><span class="op">(</span><span class="st">"Proportion\nResting"</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Resting"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Proportion resting</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">Resting</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>,</span>
+<span>            linewidth<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_distiller</a></span><span class="op">(</span><span class="st">"Proportion\nResting"</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Resting"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/map-state-props-1.png" width="672"></p>
-<div class="sourceCode" id="cb27"><pre class="downlit">
-<span class="co"># Proportion exploratory</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">Exploratory</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_distiller</a></span><span class="op">(</span><span class="st">"Proportion\nExploratory"</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Exploratory"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Proportion exploratory</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">Exploratory</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>,</span>
+<span>            linewidth<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_distiller</a></span><span class="op">(</span><span class="st">"Proportion\nExploratory"</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Exploratory"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/map-state-props-2.png" width="672"></p>
-<div class="sourceCode" id="cb28"><pre class="downlit">
-<span class="co"># Proportion transit</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">Transit</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_distiller</a></span><span class="op">(</span><span class="st">"Proportion\nTransit"</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Transit"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Proportion transit</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, color <span class="op">=</span> <span class="va">Transit</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span>,</span>
+<span>            linewidth<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.out</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_distiller</a></span><span class="op">(</span><span class="st">"Proportion\nTransit"</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Transit"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pre-specify_brkpts_and_zero-inflated_data_files/figure-html/map-state-props-3.png" width="672"></p>
 </div>
   </div>
@@ -727,11 +732,13 @@ interest.</p>
 
 
       <footer><div class="copyright">
-  <p>Developed by Joshua Cullen, Denis Valle.</p>
+  <p></p>
+<p>Developed by Joshua Cullen, Denis Valle.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -739,6 +746,8 @@ interest.</p>
 
   
 
+
+  
 
   </body>
 </html>

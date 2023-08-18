@@ -83,7 +83,7 @@ head(tracks)
 ```
 
 
-The new tracks data frame has three new columns ('step', 'angle', and 'dt'), which store the data for step lengths, turning angles, and time intervals, respectively. Since this example uses coordinates that are considered to be in a UTM projection, step lengths are reported in meters. Turning angles are reported in radians and time intervals are reported in seconds. Alternatively, these measures can also be calculated using functions from other R packages, such as `adehabitatLT`.
+The new tracks data frame has three new columns ('step', 'angle', and 'dt'), which store the data for step lengths, turning angles, and time intervals, respectively. Since this example uses coordinates that are considered to be in a UTM projection, step lengths are reported in meters. Turning angles are reported in radians and time intervals are reported in seconds. Alternatively, these measures can also be calculated using functions from other R packages, such as `momentuHMM` or `adehabitatLT`.
 
 
 ## Round times and filter observations

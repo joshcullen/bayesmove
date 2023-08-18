@@ -16,7 +16,7 @@ Description: Methods for assessing animal movement from telemetry and biologging
     processing and analysis of data, as well as the visualization of results
     from the models. This framework does not rely on standard parametric density
     functions, which provides flexibility during model fitting. Further details 
-    regarding part of this framework can be found in Cullen et al. (2022) <doi:10.1101/2020.11.05.369702>.
+    regarding part of this framework can be found in Cullen et al. (2022) <doi:10.1111/2041-210X.13745>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -319,7 +319,7 @@ cumsum(theta.means)
 # Convert to data frame for ggplot2
 theta.estim_df<- theta.estim %>%
   as.data.frame() %>%
-  pivot_longer(., cols = 1:nmaxclust, names_to = "behavior", values_to = "prop") %>%
+  pivot_longer(., cols = 1:all_of(nmaxclust), names_to = "behavior", values_to = "prop") %>%
   modify_at("behavior", factor)
 levels(theta.estim_df$behavior)<- 1:nmaxclust
 
@@ -377,7 +377,7 @@ theta.estim.long<- expand_behavior(dat = tracks.seg, theta.estim = theta.estim, 
 
 # Plot results
 ggplot(theta.estim.long) +
-  geom_area(aes(x=date, y=prop, fill = behavior), color = "black", size = 0.25,
+  geom_area(aes(x=date, y=prop, fill = behavior), color = "black", linewidth = 0.25,
             position = "fill") +
   labs(x = "\nTime", y = "Proportion of Behavior\n") +
   scale_fill_viridis_d("Behavior") +
@@ -404,7 +404,7 @@ tracks.out<- assign_behavior(dat.orig = tracks,
 
 # Map dominant behavior for all IDs
 ggplot() +
-  geom_path(data = tracks.out, aes(x=x, y=y), color="gray60", size=0.25) +
+  geom_path(data = tracks.out, aes(x=x, y=y), color="gray60", linewidth=0.25) +
   geom_point(data = tracks.out, aes(x, y, fill=behav), size=1.5, pch=21, alpha=0.7) +
   geom_point(data = tracks.out %>%
                group_by(id) %>%
@@ -425,7 +425,7 @@ ggplot() +
   facet_wrap(~id, scales = "free", ncol = 2)
 # Map of all IDs
 ggplot() +
-  geom_path(data = tracks.out, aes(x, y, color = behav, group = id), size=0.5) +
+  geom_path(data = tracks.out, aes(x, y, color = behav, group = id), linewidth=0.5) +
   geom_point(data = tracks.out %>%
                group_by(id) %>%
                slice(which(row_number() == 1)) %>%
@@ -447,7 +447,8 @@ ggplot() +
 ```{r map-state-props}
 # Proportion resting
 ggplot() +
-  geom_path(data = tracks.out, aes(x, y, color = Resting, group = id), size=0.5, alpha=0.7) +
+  geom_path(data = tracks.out, aes(x, y, color = Resting, group = id),
+            linewidth=0.5, alpha=0.7) +
   geom_point(data = tracks.out %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
@@ -464,7 +465,8 @@ ggplot() +
         legend.title = element_text(size = 14))
 # Proportion exploratory
 ggplot() +
-  geom_path(data = tracks.out, aes(x, y, color = Exploratory, group = id), size=0.5, alpha=0.7) +
+  geom_path(data = tracks.out, aes(x, y, color = Exploratory, group = id),
+            linewidth=0.5, alpha=0.7) +
   geom_point(data = tracks.out %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +
@@ -481,7 +483,8 @@ ggplot() +
         legend.title = element_text(size = 14))
 # Proportion transit
 ggplot() +
-  geom_path(data = tracks.out, aes(x, y, color = Transit, group = id), size=0.5, alpha=0.7) +
+  geom_path(data = tracks.out, aes(x, y, color = Transit, group = id),
+            linewidth=0.5, alpha=0.7) +
   geom_point(data = tracks.out %>%
                slice(which(row_number() == 1)),
              aes(x, y), color = "green", pch = 21, size = 3, stroke = 1.25) +

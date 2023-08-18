@@ -23,15 +23,17 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-151357058-2"></script><script>
+<![endif]--><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Z86M853GE5"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-151357058-2');
-</script>
+  gtag('config', 'G-Z86M853GE5');
+ </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -44,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
       </span>
     </div>
 
@@ -62,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/joshcullen/bayesmove">
+  <a href="https://github.com/joshcullen/bayesmove" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
@@ -77,23 +79,23 @@
 
       
 
-      </header><script src="Segment-the-tracks_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Segment the tracks</h1>
             
-            <h4 class="date">21 June 2022</h4>
+            <h4 data-toc-skip class="date">18 August 2023</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Segment-the-tracks.Rmd"><code>vignettes/Segment-the-tracks.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/HEAD/vignettes/Segment-the-tracks.Rmd" class="external-link"><code>vignettes/Segment-the-tracks.Rmd</code></a></small>
       <div class="hidden name"><code>Segment-the-tracks.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>At this stage, only observations at a single time interval have been
 retained and data streams (i.e., step lengths, turning angles) have been
 discretized to perform segmentation on each animal ID. These data are
@@ -102,106 +104,103 @@ reversible-jump Markov chain Monte Carlo (RJMCMC) algorithm to estimate
 the breakpoints where values substantially change for the data streams.
 To facilitate the parallel computation of this model (for each ID), the
 data must be stored as a list.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.0.5</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'tidyr' was built under R version 4.0.5</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavisVaughan/furrr">furrr</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'future' was built under R version 4.0.5</span>
-
-<span class="co"># Load data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tracks.list</span><span class="op">)</span>
-
-<span class="co"># Check data structure</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">tracks.list</span><span class="op">)</span>
-<span class="co">#&gt; List of 3</span>
-<span class="co">#&gt;  $ id1:'data.frame': 4683 obs. of  11 variables:</span>
-<span class="co">#&gt;   ..$ id   : chr [1:4683] "id1" "id1" "id1" "id1" ...</span>
-<span class="co">#&gt;   ..$ date : POSIXct[1:4683], format: "2020-07-02 12:00:00" "2020-07-02 13:00:00" ...</span>
-<span class="co">#&gt;   ..$ x    : num [1:4683] 0 10.6 25.5 31.2 36.2 ...</span>
-<span class="co">#&gt;   ..$ y    : num [1:4683] 0 -1.67 -0.61 9.54 19.87 ...</span>
-<span class="co">#&gt;   ..$ step : num [1:4683] 10.7 14.97 11.65 11.45 7.24 ...</span>
-<span class="co">#&gt;   ..$ angle: num [1:4683] NA 0.227 0.987 0.067 0.032 ...</span>
-<span class="co">#&gt;   ..$ dt   : num [1:4683] 3600 3600 3600 3600 3600 3600 3600 3600 3600 3600 ...</span>
-<span class="co">#&gt;   ..$ obs  : int [1:4683] 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#&gt;   ..$ time1: int [1:4683] 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#&gt;   ..$ SL   : num [1:4683] 5 5 5 5 4 2 5 2 4 5 ...</span>
-<span class="co">#&gt;   ..$ TA   : int [1:4683] NA 5 6 5 5 1 5 8 5 4 ...</span>
-<span class="co">#&gt;  $ id2:'data.frame': 4697 obs. of  11 variables:</span>
-<span class="co">#&gt;   ..$ id   : chr [1:4697] "id2" "id2" "id2" "id2" ...</span>
-<span class="co">#&gt;   ..$ date : POSIXct[1:4697], format: "2020-07-02 12:00:00" "2020-07-02 13:00:00" ...</span>
-<span class="co">#&gt;   ..$ x    : num [1:4697] 0 -0.00464 0.00375 -0.05953 -0.05953 ...</span>
-<span class="co">#&gt;   ..$ y    : num [1:4697] 0 -0.001097 -0.000623 -0.013634 -0.013634 ...</span>
-<span class="co">#&gt;   ..$ step : num [1:4697] 0.005 0.008 0.065 0 0.892 ...</span>
-<span class="co">#&gt;   ..$ angle: num [1:4697] NA 2.97 -3 2.89 3.11 ...</span>
-<span class="co">#&gt;   ..$ dt   : num [1:4697] 3600 3600 3600 3600 3600 3600 3600 3600 3600 3600 ...</span>
-<span class="co">#&gt;   ..$ obs  : int [1:4697] 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#&gt;   ..$ time1: int [1:4697] 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#&gt;   ..$ SL   : int [1:4697] 1 1 1 1 2 5 3 1 1 1 ...</span>
-<span class="co">#&gt;   ..$ TA   : int [1:4697] NA 8 1 8 8 4 8 8 8 6 ...</span>
-<span class="co">#&gt;  $ id3:'data.frame': 4716 obs. of  11 variables:</span>
-<span class="co">#&gt;   ..$ id   : chr [1:4716] "id3" "id3" "id3" "id3" ...</span>
-<span class="co">#&gt;   ..$ date : POSIXct[1:4716], format: "2020-07-02 12:00:00" "2020-07-02 13:00:00" ...</span>
-<span class="co">#&gt;   ..$ x    : num [1:4716] 0.00 -6.16e-05 1.34e-01 1.34e-01 -2.60 ...</span>
-<span class="co">#&gt;   ..$ y    : num [1:4716] 0.00 -6.58e-05 5.72e-02 5.64e-02 -1.81 ...</span>
-<span class="co">#&gt;   ..$ step : num [1:4716] 0 0.145 0.001 3.321 11.272 ...</span>
-<span class="co">#&gt;   ..$ angle: num [1:4716] NA 2.728 -2.109 -0.842 0.12 ...</span>
-<span class="co">#&gt;   ..$ dt   : num [1:4716] 3600 3600 3600 3600 3600 3600 3600 3600 3600 3600 ...</span>
-<span class="co">#&gt;   ..$ obs  : int [1:4716] 1 2 3 4 6 7 8 9 10 11 ...</span>
-<span class="co">#&gt;   ..$ time1: int [1:4716] 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#&gt;   ..$ SL   : int [1:4716] 1 2 1 3 5 1 1 1 1 1 ...</span>
-<span class="co">#&gt;   ..$ TA   : int [1:4716] NA 8 2 3 5 7 8 8 1 1 ...</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove" class="external-link">bayesmove</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavisVaughan/furrr" class="external-link">furrr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tracks.list</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check data structure</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">tracks.list</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 3</span></span>
+<span><span class="co">#&gt;  $ id1:'data.frame': 4683 obs. of  11 variables:</span></span>
+<span><span class="co">#&gt;   ..$ id   : chr [1:4683] "id1" "id1" "id1" "id1" ...</span></span>
+<span><span class="co">#&gt;   ..$ date : POSIXct[1:4683], format: "2020-07-02 12:00:00" "2020-07-02 13:00:00" ...</span></span>
+<span><span class="co">#&gt;   ..$ x    : num [1:4683] 0 10.6 25.5 31.2 36.2 ...</span></span>
+<span><span class="co">#&gt;   ..$ y    : num [1:4683] 0 -1.67 -0.61 9.54 19.87 ...</span></span>
+<span><span class="co">#&gt;   ..$ step : num [1:4683] 10.7 14.97 11.65 11.45 7.24 ...</span></span>
+<span><span class="co">#&gt;   ..$ angle: num [1:4683] NA 0.227 0.987 0.067 0.032 ...</span></span>
+<span><span class="co">#&gt;   ..$ dt   : num [1:4683] 3600 3600 3600 3600 3600 3600 3600 3600 3600 3600 ...</span></span>
+<span><span class="co">#&gt;   ..$ obs  : int [1:4683] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span><span class="co">#&gt;   ..$ time1: int [1:4683] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span><span class="co">#&gt;   ..$ SL   : num [1:4683] 5 5 5 5 4 2 5 2 4 5 ...</span></span>
+<span><span class="co">#&gt;   ..$ TA   : int [1:4683] NA 5 6 5 5 1 5 8 5 4 ...</span></span>
+<span><span class="co">#&gt;  $ id2:'data.frame': 4697 obs. of  11 variables:</span></span>
+<span><span class="co">#&gt;   ..$ id   : chr [1:4697] "id2" "id2" "id2" "id2" ...</span></span>
+<span><span class="co">#&gt;   ..$ date : POSIXct[1:4697], format: "2020-07-02 12:00:00" "2020-07-02 13:00:00" ...</span></span>
+<span><span class="co">#&gt;   ..$ x    : num [1:4697] 0 -0.00464 0.00375 -0.05953 -0.05953 ...</span></span>
+<span><span class="co">#&gt;   ..$ y    : num [1:4697] 0 -0.001097 -0.000623 -0.013634 -0.013634 ...</span></span>
+<span><span class="co">#&gt;   ..$ step : num [1:4697] 0.005 0.008 0.065 0 0.892 ...</span></span>
+<span><span class="co">#&gt;   ..$ angle: num [1:4697] NA 2.97 -3 2.89 3.11 ...</span></span>
+<span><span class="co">#&gt;   ..$ dt   : num [1:4697] 3600 3600 3600 3600 3600 3600 3600 3600 3600 3600 ...</span></span>
+<span><span class="co">#&gt;   ..$ obs  : int [1:4697] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span><span class="co">#&gt;   ..$ time1: int [1:4697] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span><span class="co">#&gt;   ..$ SL   : int [1:4697] 1 1 1 1 2 5 3 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ TA   : int [1:4697] NA 8 1 8 8 4 8 8 8 6 ...</span></span>
+<span><span class="co">#&gt;  $ id3:'data.frame': 4716 obs. of  11 variables:</span></span>
+<span><span class="co">#&gt;   ..$ id   : chr [1:4716] "id3" "id3" "id3" "id3" ...</span></span>
+<span><span class="co">#&gt;   ..$ date : POSIXct[1:4716], format: "2020-07-02 12:00:00" "2020-07-02 13:00:00" ...</span></span>
+<span><span class="co">#&gt;   ..$ x    : num [1:4716] 0.00 -6.16e-05 1.34e-01 1.34e-01 -2.60 ...</span></span>
+<span><span class="co">#&gt;   ..$ y    : num [1:4716] 0.00 -6.58e-05 5.72e-02 5.64e-02 -1.81 ...</span></span>
+<span><span class="co">#&gt;   ..$ step : num [1:4716] 0 0.145 0.001 3.321 11.272 ...</span></span>
+<span><span class="co">#&gt;   ..$ angle: num [1:4716] NA 2.728 -2.109 -0.842 0.12 ...</span></span>
+<span><span class="co">#&gt;   ..$ dt   : num [1:4716] 3600 3600 3600 3600 3600 3600 3600 3600 3600 3600 ...</span></span>
+<span><span class="co">#&gt;   ..$ obs  : int [1:4716] 1 2 3 4 6 7 8 9 10 11 ...</span></span>
+<span><span class="co">#&gt;   ..$ time1: int [1:4716] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span><span class="co">#&gt;   ..$ SL   : int [1:4716] 1 2 1 3 5 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ TA   : int [1:4716] NA 8 2 3 5 7 8 8 1 1 ...</span></span></code></pre></div>
 <p>Data for each animal ID are stored separately in each element of the
 list, where elements include a data frame of the data, including each
 discretized data stream. Before the model can be run, each of the data
 frames within the list must only contain a column for the id, as well as
 the columns that store the discretized data streams.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># Only retain id and discretized step length (SL) and turning angle (TA) columns</span>
-<span class="va">tracks.list2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">tracks.list</span>,
-                   <span class="va">subset</span>,
-                   select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Only retain id and discretized step length (SL) and turning angle (TA) columns</span></span>
+<span><span class="va">tracks.list2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">tracks.list</span>,</span>
+<span>                   <span class="va">subset</span>,</span>
+<span>                   select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="run-the-segmentation-model" class="section level2">
-<h2 class="hasAnchor">
-<a href="#run-the-segmentation-model" class="anchor"></a>Run the segmentation model</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-
-<span class="co"># Define hyperparameter for prior distribution</span>
-<span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">1</span>
-
-<span class="co"># Set number of iterations for the Gibbs sampler</span>
-<span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">10000</span>
-
-<span class="co"># Set the number of bins used to discretize each data stream</span>
-<span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">8</span><span class="op">)</span>
-
-<span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/progressr/man/handlers.html">handlers</a></span><span class="op">(</span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/progressr/man/handler_progress.html">handler_progress</a></span><span class="op">(</span>clear <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co">#run all MCMC chains in parallel</span>
-                                         <span class="co">#refer to future::plan() for more details</span>
-<span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment_behavior.html">segment_behavior</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list2</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nbins <span class="op">=</span> <span class="va">nbins</span>,
-                           alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span>
-
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/sequential.html">sequential</a></span><span class="op">)</span>  <span class="co">#return to single core</span></pre></div>
+<div class="section level2">
+<h2 id="run-the-segmentation-model">Run the segmentation model<a class="anchor" aria-label="anchor" href="#run-the-segmentation-model"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define hyperparameter for prior distribution</span></span>
+<span><span class="va">alpha</span><span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># Set number of iterations for the Gibbs sampler</span></span>
+<span><span class="va">ngibbs</span><span class="op">&lt;-</span> <span class="fl">10000</span></span>
+<span></span>
+<span><span class="co"># Set the number of bins used to discretize each data stream</span></span>
+<span><span class="va">nbins</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">8</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">handlers</a></span><span class="op">(</span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://progressr.futureverse.org/reference/handler_progress.html" class="external-link">handler_progress</a></span><span class="op">(</span>clear <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co">#run all MCMC chains in parallel</span></span>
+<span>                                         <span class="co">#refer to future::plan() for more details</span></span>
+<span><span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment_behavior.html">segment_behavior</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list2</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nbins <span class="op">=</span> <span class="va">nbins</span>,</span>
+<span>                           alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/sequential.html" class="external-link">sequential</a></span><span class="op">)</span>  <span class="co">#return to single core</span></span></code></pre></div>
 <p>Now that each of the tracks have been segmented, we need to inspect
 the trace-plots for the log marginal likelihood to determine whether the
 model converged or not. Additionally, we can inspect a traceplot of the
 number of estimated breakpoints per iteration of the RJMCMC for each ID.
 Red vertical lines denote the burn-in period for this set of samples,
 which is set to 50% of <code>ngibbs</code> by default.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># Trace-plots for the number of breakpoints per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Trace-plots for the number of breakpoints per ID</span></span>
+<span><span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"nbrks"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Segment-the-tracks_files/figure-html/nbrks-traceplots-1.png" width="672"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span>
-<span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Trace-plots for the log marginal likelihood (LML) per ID</span></span>
+<span><span class="fu"><a href="../reference/traceplot.html">traceplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat.res</span>, type <span class="op">=</span> <span class="st">"LML"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Segment-the-tracks_files/figure-html/LML-traceplots-1.png" width="672"></p>
 <p>It appears that the models have converged based on the traceplots of
 the log marginal likelihoods for all IDs. If this was not the case, the
@@ -210,27 +209,27 @@ model would need to be re-run with a greater number of iterations for
 breakpoints, but the exact number and position of these breakpoints will
 be determined by selecting the <em>maximum a posteriori</em> (MAP)
 estimate for each animal ID. This is performed as follows:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># Determine MAP for selecting breakpoints</span>
-<span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span>
-<span class="va">MAP.est</span>
-<span class="co">#&gt; [1] 9126 9910 8667</span>
-
-<span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span>
-
-<span class="co"># How many breakpoints estimated per ID?</span>
-<span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; id1 id2 id3 </span>
-<span class="co">#&gt;  39  49  38</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Determine MAP for selecting breakpoints</span></span>
+<span><span class="va">MAP.est</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_MAP.html">get_MAP</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">LML</span>, nburn <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span>
+<span><span class="va">MAP.est</span></span>
+<span><span class="co">#&gt; [1] 9126 9910 8667</span></span>
+<span></span>
+<span><span class="va">brkpts</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_breakpts.html">get_breakpts</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">brkpts</span>, MAP.est <span class="op">=</span> <span class="va">MAP.est</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># How many breakpoints estimated per ID?</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">brkpts</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/keep.html" class="external-link">discard</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.na</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; id1 id2 id3 </span></span>
+<span><span class="co">#&gt;  39  49  38</span></span></code></pre></div>
 <p>The object <code>MAP.est</code> is storing the iteration at which the
 MAP estimate occurs for each ID, whereas <code>brkpts</code> is a data
 frame that stores all of the breakpoints per ID. We can plot these
 breakpoints over the discretized data streams to inspect how well this
 appears to match changes in these values.</p>
 </div>
-<div id="breakpoint-visualization" class="section level2">
-<h2 class="hasAnchor">
-<a href="#breakpoint-visualization" class="anchor"></a>Breakpoint visualization</h2>
+<div class="section level2">
+<h2 id="breakpoint-visualization">Breakpoint visualization<a class="anchor" aria-label="anchor" href="#breakpoint-visualization"></a>
+</h2>
 <p>The <code>bayesmove</code> package provides a number of functions to
 visualize results from the model, such as <code><a href="../reference/traceplot.html">traceplot()</a></code>. The
 <code><a href="../reference/plot_breakpoints.html">plot_breakpoints()</a></code> function provides an easy method to
@@ -249,10 +248,10 @@ data streams can be visualized on their original scale (continuous) or
 as bins. An example is provided here using continuous values for step
 lengths and turning angles by observation, but this can be easily
 modified.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co"># Plot breakpoints over the data</span>
-<span class="fu"><a href="../reference/plot_breakpoints.html">plot_breakpoints</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list</span>, as_date <span class="op">=</span> <span class="cn">FALSE</span>, var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span><span class="op">)</span>,
-                 var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Step Length (km)"</span>, <span class="st">"Turning Angle (rad)"</span><span class="op">)</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Plot breakpoints over the data</span></span>
+<span><span class="fu"><a href="../reference/plot_breakpoints.html">plot_breakpoints</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tracks.list</span>, as_date <span class="op">=</span> <span class="cn">FALSE</span>, var_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span><span class="op">)</span>,</span>
+<span>                 var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Step Length (km)"</span>, <span class="st">"Turning Angle (rad)"</span><span class="op">)</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Segment-the-tracks_files/figure-html/heatmaps-1.png" width="672" style="display: block; margin: auto;"><img src="Segment-the-tracks_files/figure-html/heatmaps-2.png" width="672" style="display: block; margin: auto;"><img src="Segment-the-tracks_files/figure-html/heatmaps-3.png" width="672" style="display: block; margin: auto;"></p>
 <p>From these lineplots, it appears that the segmentation model
 estimated the breakpoints quite well to create relatively homogeneous
@@ -268,28 +267,28 @@ define track segments of observations for each individual. These
 segments represent different changes in movement patterns based on the
 variables that were originally selected.</p>
 </div>
-<div id="assign-track-segments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#assign-track-segments" class="anchor"></a>Assign track segments</h2>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="co"># Assign track segments to all observations by ID</span>
-<span class="va">tracks.seg</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.list</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tracks.seg</span><span class="op">)</span>
-<span class="co">#&gt;    id                date        x          y   step  angle   dt obs time1 SL</span>
-<span class="co">#&gt; 1 id1 2020-07-02 12:00:00  0.00000  0.0000000 10.695     NA 3600   1     1  5</span>
-<span class="co">#&gt; 2 id1 2020-07-02 13:00:00 10.56492 -1.6654990 14.974  0.227 3600   2     2  5</span>
-<span class="co">#&gt; 3 id1 2020-07-02 14:00:00 25.50174 -0.6096675 11.653  0.987 3600   3     3  5</span>
-<span class="co">#&gt; 4 id1 2020-07-02 15:00:00 31.22014  9.5438464 11.449  0.067 3600   4     4  5</span>
-<span class="co">#&gt; 5 id1 2020-07-02 16:00:00 36.15821 19.8737009  7.237  0.032 3600   5     5  4</span>
-<span class="co">#&gt; 6 id1 2020-07-02 17:00:00 39.06810 26.4996352  0.119 -2.804 3600   6     6  2</span>
-<span class="co">#&gt;   TA tseg</span>
-<span class="co">#&gt; 1 NA    1</span>
-<span class="co">#&gt; 2  5    1</span>
-<span class="co">#&gt; 3  6    1</span>
-<span class="co">#&gt; 4  5    1</span>
-<span class="co">#&gt; 5  5    1</span>
-<span class="co">#&gt; 6  1    1</span></pre></div>
+<div class="section level2">
+<h2 id="assign-track-segments">Assign track segments<a class="anchor" aria-label="anchor" href="#assign-track-segments"></a>
+</h2>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Assign track segments to all observations by ID</span></span>
+<span><span class="va">tracks.seg</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_tseg.html">assign_tseg</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">tracks.list</span>, brkpts <span class="op">=</span> <span class="va">brkpts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tracks.seg</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    id                date        x          y   step  angle   dt obs time1 SL</span></span>
+<span><span class="co">#&gt; 1 id1 2020-07-02 12:00:00  0.00000  0.0000000 10.695     NA 3600   1     1  5</span></span>
+<span><span class="co">#&gt; 2 id1 2020-07-02 13:00:00 10.56492 -1.6654990 14.974  0.227 3600   2     2  5</span></span>
+<span><span class="co">#&gt; 3 id1 2020-07-02 14:00:00 25.50174 -0.6096675 11.653  0.987 3600   3     3  5</span></span>
+<span><span class="co">#&gt; 4 id1 2020-07-02 15:00:00 31.22014  9.5438464 11.449  0.067 3600   4     4  5</span></span>
+<span><span class="co">#&gt; 5 id1 2020-07-02 16:00:00 36.15821 19.8737009  7.237  0.032 3600   5     5  4</span></span>
+<span><span class="co">#&gt; 6 id1 2020-07-02 17:00:00 39.06810 26.4996352  0.119 -2.804 3600   6     6  2</span></span>
+<span><span class="co">#&gt;   TA tseg</span></span>
+<span><span class="co">#&gt; 1 NA    1</span></span>
+<span><span class="co">#&gt; 2  5    1</span></span>
+<span><span class="co">#&gt; 3  6    1</span></span>
+<span><span class="co">#&gt; 4  5    1</span></span>
+<span><span class="co">#&gt; 5  5    1</span></span>
+<span><span class="co">#&gt; 6  1    1</span></span></code></pre></div>
 <p>These segments will then be clustered in the next stage of this
 Bayesian framework: a mixed-membership Latent Dirichlet Allocation
 model.</p>
@@ -307,11 +306,13 @@ model.</p>
 
 
       <footer><div class="copyright">
-  <p>Developed by Joshua Cullen, Denis Valle.</p>
+  <p></p>
+<p>Developed by Joshua Cullen, Denis Valle.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -319,6 +320,8 @@ model.</p>
 
   
 
+
+  
 
   </body>
 </html>

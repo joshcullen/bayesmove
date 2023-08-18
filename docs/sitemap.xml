@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/404.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Cluster-observations.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Cluster-track-segments.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Exploratory-analysis-in-Shiny.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Pre-specify_brkpts_and_zero-inflated_data.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Prepare-data-for-analysis.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/Segment-the-tracks.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/authors.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/index.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/news/index.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/CumSumInv.html</loc>
@@ -76,6 +109,9 @@
     <loc>http://joshcullen.github.io/bayesmove/reference/get_summary_stats.html</loc>
   </url>
   <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/index.html</loc>
+  </url>
+  <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/insert_NAs.html</loc>
   </url>
   <url>
@@ -89,6 +125,12 @@
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/plot_breakpoints_behav.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/plot_heatmap.html</loc>
+  </url>
+  <url>
+    <loc>http://joshcullen.github.io/bayesmove/reference/plot_heatmap_behav.html</loc>
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/prep_data.html</loc>
@@ -152,23 +194,5 @@
   </url>
   <url>
     <loc>http://joshcullen.github.io/bayesmove/reference/tracks.seg.html</loc>
-  </url>
-  <url>
-    <loc>http://joshcullen.github.io/bayesmove/articles/Cluster-observations.html</loc>
-  </url>
-  <url>
-    <loc>http://joshcullen.github.io/bayesmove/articles/Cluster-track-segments.html</loc>
-  </url>
-  <url>
-    <loc>http://joshcullen.github.io/bayesmove/articles/Exploratory-analysis-in-Shiny.html</loc>
-  </url>
-  <url>
-    <loc>http://joshcullen.github.io/bayesmove/articles/Pre-specify_brkpts_and_zero-inflated_data.html</loc>
-  </url>
-  <url>
-    <loc>http://joshcullen.github.io/bayesmove/articles/Prepare-data-for-analysis.html</loc>
-  </url>
-  <url>
-    <loc>http://joshcullen.github.io/bayesmove/articles/Segment-the-tracks.html</loc>
   </url>
 </urlset>

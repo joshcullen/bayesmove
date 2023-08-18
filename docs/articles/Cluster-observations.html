@@ -23,15 +23,17 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-151357058-2"></script><script>
+<![endif]--><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Z86M853GE5"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-151357058-2');
-</script>
+  gtag('config', 'G-Z86M853GE5');
+ </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -44,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesmove</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
       </span>
     </div>
 
@@ -62,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/joshcullen/bayesmove">
+  <a href="https://github.com/joshcullen/bayesmove" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
@@ -77,23 +79,23 @@
 
       
 
-      </header><script src="Cluster-observations_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Cluster observations</h1>
             
-            <h4 class="date">21 June 2022</h4>
+            <h4 data-toc-skip class="date">18 August 2023</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/master/vignettes/Cluster-observations.Rmd"><code>vignettes/Cluster-observations.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/joshcullen/bayesmove/blob/HEAD/vignettes/Cluster-observations.Rmd" class="external-link"><code>vignettes/Cluster-observations.Rmd</code></a></small>
       <div class="hidden name"><code>Cluster-observations.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>Alternative to the model that first partitions the tracks into
 segments and then clusters these segments into behavioral states,
 observations can be directly clustered into behavioral states using a
@@ -110,91 +112,87 @@ this method provides fast and flexible inference on behavioral states
 from telemetry data, where individuals are pooled together to make
 population-level estimates.</p>
 </div>
-<div id="empirical-example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#empirical-example" class="anchor"></a>Empirical example</h2>
+<div class="section level2">
+<h2 id="empirical-example">Empirical example<a class="anchor" aria-label="anchor" href="#empirical-example"></a>
+</h2>
 <p>This example will demonstrate the steps taken to prepare and analyze
 an empirical telemetry dataset for a single individual fisher <em>Martes
 pennanti</em> (<code>leroy</code>) available in the <code>move</code>
 package (LaPoint et al., 2013; Kranstauber et al., 2020) for the
 estimation of observation-level behavioral states.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove">bayesmove</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bartk.gitlab.io/move/">move</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'raster' was built under R version 4.0.5</span>
-<span class="co">#&gt; Warning: multiple methods tables found for 'distance'</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.0.5</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'tidyr' was built under R version 4.0.5</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
-
-<span class="co"># Load data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span>
-
-<span class="co"># Check data structure</span>
-<span class="va">leroy</span>
-<span class="co">#&gt; class       : Move </span>
-<span class="co">#&gt; features    : 919 </span>
-<span class="co">#&gt; extent      : -73.93067, -73.84366, 42.70898, 42.7687  (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; crs         : +proj=longlat +datum=WGS84 +no_defs </span>
-<span class="co">#&gt; variables   : 17</span>
-<span class="co">#&gt; names       :      timestamp, eobs.battery.voltage, eobs.horizontal.accuracy.estimate, eobs.key.bin.checksum, eobs.speed.accuracy.estimate,    eobs.start.timestamp, eobs.status, eobs.temperature, eobs.type.of.fix, eobs.used.time.to.get.fix, ground.speed, heading, height.above.ellipsoid,      utm.easting,     utm.northing, ... </span>
-<span class="co">#&gt; min values  :     1234354605,                 3596,                              3.07,               3258904,                         0.27, 2009-02-11 12:14:59.000,           A,               13,                3,                         4,         0.01,       0,                 -169.6, 587507.837877134, 4729143.16566605, ... </span>
-<span class="co">#&gt; max values  : 1236158219.998,                 3666,                             97.02,            4291715164,                        33.04, 2009-03-04 09:15:01.000,           A,               35,                3,                       119,        31.71,  359.79,                    349, 594679.382402579, 4735720.47868847, ... </span>
-<span class="co">#&gt; timestamps  : 2009-02-11 12:16:45 ... 2009-03-04 09:16:59 Time difference of 21 days  (start ... end, duration) </span>
-<span class="co">#&gt; sensors     : gps </span>
-<span class="co">#&gt; indiv. data : eobs.fix.battery.voltage, manually.marked.outlier, visible, sensor.type, individual.taxon.canonical.name, tag.local.identifier, individual.local.identifier, study.name, study.timezone </span>
-<span class="co">#&gt; indiv. value: 0 NA true gps Martes pennanti 74 Leroy Urban fisher GPS tracking Eastern Standard Time </span>
-<span class="co">#&gt; unused rec. : 1071 </span>
-<span class="co">#&gt; study name  : Urban fisher GPS tracking </span>
-<span class="co">#&gt; date created: 2020-06-24 09:04:52</span>
-<span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span>; <span class="fu"><a href="https://bartk.gitlab.io/move/reference/lines.html">lines</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshcullen/bayesmove" class="external-link">bayesmove</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bartk.gitlab.io/move/" class="external-link">move</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check data structure</span></span>
+<span><span class="va">leroy</span></span>
+<span><span class="co">#&gt; class       : Move </span></span>
+<span><span class="co">#&gt; features    : 919 </span></span>
+<span><span class="co">#&gt; extent      : -73.93067, -73.84366, 42.70898, 42.7687  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; crs         : +proj=longlat +datum=WGS84 +no_defs </span></span>
+<span><span class="co">#&gt; variables   : 17</span></span>
+<span><span class="co">#&gt; names       :      timestamp, eobs.battery.voltage, eobs.horizontal.accuracy.estimate, eobs.key.bin.checksum, eobs.speed.accuracy.estimate,    eobs.start.timestamp, eobs.status, eobs.temperature, eobs.type.of.fix, eobs.used.time.to.get.fix, ground.speed, heading, height.above.ellipsoid,      utm.easting,     utm.northing, ... </span></span>
+<span><span class="co">#&gt; min values  :     1234354605,                 3596,                              3.07,               3258904,                         0.27, 2009-02-11 12:14:59.000,           A,               13,                3,                         4,         0.01,       0,                 -169.6, 587507.837877134, 4729143.16566605, ... </span></span>
+<span><span class="co">#&gt; max values  : 1236158219.998,                 3666,                             97.02,            4291715164,                        33.04, 2009-03-04 09:15:01.000,           A,               35,                3,                       119,        31.71,  359.79,                    349, 594679.382402579, 4735720.47868847, ... </span></span>
+<span><span class="co">#&gt; timestamps  : 2009-02-11 12:16:45 ... 2009-03-04 09:16:59 Time difference of 21 days  (start ... end, duration) </span></span>
+<span><span class="co">#&gt; sensors     : gps </span></span>
+<span><span class="co">#&gt; indiv. data : eobs.fix.battery.voltage, manually.marked.outlier, visible, sensor.type, individual.taxon.canonical.name, tag.local.identifier, individual.local.identifier, study.name, study.timezone </span></span>
+<span><span class="co">#&gt; indiv. value: 0 NA true gps Martes pennanti 74 Leroy Urban fisher GPS tracking Eastern Standard Time </span></span>
+<span><span class="co">#&gt; unused rec. : 1071 </span></span>
+<span><span class="co">#&gt; study name  : Urban fisher GPS tracking </span></span>
+<span><span class="co">#&gt; date created: 2023-01-20 10:56:43</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/load_data-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># Convert from `Move` object to data frame</span>
-<span class="va">leroy2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"leroy"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">study.local.timestamp</span><span class="op">)</span></pre></div>
-<div id="prepare-the-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#prepare-the-data" class="anchor"></a>Prepare the data</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Convert from `Move` object to data frame</span></span>
+<span><span class="va">leroy2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">leroy</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"leroy"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">study.local.timestamp</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="prepare-the-data">Prepare the data<a class="anchor" aria-label="anchor" href="#prepare-the-data"></a>
+</h3>
 <p>To start off, we are going to calculate step lengths and turning
 angles from the data, as well as time intervals to determine the primary
 time step. Additionally, step length and turning angle distributions
 will be explored to determine how to bin these data streams.
 Observations will be filtered to only retain those recorded at the
 primary time step.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="co"># Calculate step lengths (step), turning angles (angle), and time step (dt) </span>
-<span class="va">leroy2</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/prep_data.html">prep_data</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy2</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"utm.easting"</span>,<span class="st">"utm.northing"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span>
-
-
-<span class="co"># Which dt is most common?</span>
-<span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">leroy2</span><span class="op">$</span><span class="va">dt</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>  <span class="co">#15 min (900 s) is primary dt</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; 901 900 902 896 898 903 907 909 890 904 906 910 892 905 874 894 925 927 865 876 </span>
-<span class="co">#&gt;  27  24  21  20  20  16  15  15  14  14  14  14  13  13  12  12  12  12  11  11</span>
-
-
-<span class="co">#Round times w/in 2 min of 15 min interval</span>
-<span class="va">leroy3</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy2</span>, id <span class="op">=</span> <span class="st">"id"</span>, int <span class="op">=</span> <span class="fl">900</span>, tol <span class="op">=</span> <span class="fl">120</span>, time.zone <span class="op">=</span> <span class="st">"UTC"</span>,
-                          units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">leroy3</span><span class="op">$</span><span class="va">dt</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  900 1828 1773 1802 1831 2710 1705 1708 1728 1739 1741 1748 1756 1759 1762 1777 </span>
-<span class="co">#&gt;  826    3    2    2    2    2    1    1    1    1    1    1    1    1    1    1 </span>
-<span class="co">#&gt; 1780 1781 1788 1793 </span>
-<span class="co">#&gt;    1    1    1    1</span>
-
-
-<span class="co"># Create list from data frame</span>
-<span class="va">leroy.list</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy3</span>, ind <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span>
-
-<span class="co"># Filter observations to keep only those recorded at 15 min (900 s)</span>
-<span class="va">leroy.filt</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_time.html">filter_time</a></span><span class="op">(</span>dat.list <span class="op">=</span> <span class="va">leroy.list</span>, int <span class="op">=</span> <span class="fl">900</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="va">bind_rows</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Calculate step lengths (step), turning angles (angle), and time step (dt) </span></span>
+<span><span class="va">leroy2</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/prep_data.html">prep_data</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy2</span>, coord.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"utm.easting"</span>,<span class="st">"utm.northing"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Which dt is most common?</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">leroy2</span><span class="op">$</span><span class="va">dt</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>  <span class="co">#15 min (900 s) is primary dt</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; 901 900 902 896 898 903 907 909 890 904 906 910 892 905 874 894 925 927 865 876 </span></span>
+<span><span class="co">#&gt;  27  24  21  20  20  16  15  15  14  14  14  14  13  13  12  12  12  12  11  11</span></span>
+<span></span>
+<span></span>
+<span><span class="co">#Round times w/in 2 min of 15 min interval</span></span>
+<span><span class="va">leroy3</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/round_track_time.html">round_track_time</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy2</span>, id <span class="op">=</span> <span class="st">"id"</span>, int <span class="op">=</span> <span class="fl">900</span>, tol <span class="op">=</span> <span class="fl">120</span>, time.zone <span class="op">=</span> <span class="st">"UTC"</span>,</span>
+<span>                          units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">leroy3</span><span class="op">$</span><span class="va">dt</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  900 1828 1773 1802 1831 2710 1705 1708 1728 1739 1741 1748 1756 1759 1762 1777 </span></span>
+<span><span class="co">#&gt;  826    3    2    2    2    2    1    1    1    1    1    1    1    1    1    1 </span></span>
+<span><span class="co">#&gt; 1780 1781 1788 1793 </span></span>
+<span><span class="co">#&gt;    1    1    1    1</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Create list from data frame</span></span>
+<span><span class="va">leroy.list</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/df_to_list.html">df_to_list</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">leroy3</span>, ind <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Filter observations to keep only those recorded at 15 min (900 s)</span></span>
+<span><span class="va">leroy.filt</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_time.html">filter_time</a></span><span class="op">(</span>dat.list <span class="op">=</span> <span class="va">leroy.list</span>, int <span class="op">=</span> <span class="fl">900</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="va">bind_rows</span></span></code></pre></div>
 <p><br><br> Now, let’s bin step lengths and turning angles for analysis
 by the mixture model. Data streams can be binned in a variety of ways
 (i.e., number of bins, binning method), so it is up to the practitioner
@@ -215,135 +213,133 @@ bins. In this vignette, I’ll be using equal bin widths to discretize
 turning angles (bounded by <span class="math inline">\(-\pi\)</span> and
 <span class="math inline">\(\pi\)</span>), but quantiles to discretize
 step lengths (lower bound of 0).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># View distributions of data streams</span>
-<span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">step</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># View distributions of data streams</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">step</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/bin_data-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">angle</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">angle</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/bin_data-2.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-
-<span class="co"># Define bin number and limits for turning angles</span>
-<span class="va">angle.bin.lims</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="op">-</span><span class="va">pi</span>, to<span class="op">=</span><span class="va">pi</span>, by<span class="op">=</span><span class="va">pi</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span>  <span class="co">#8 bins</span>
-
-<span class="co"># Define bin number and limits for step lengths</span>
-<span class="va">dist.bin.lims</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">step</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>  <span class="co">#5 bins</span>
-
-
-<span class="va">leroy.filt2</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/discrete_move_var.html">discrete_move_var</a></span><span class="op">(</span><span class="va">leroy.filt</span>, lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">dist.bin.lims</span>, <span class="va">angle.bin.lims</span><span class="op">)</span>,
-           varIn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span><span class="op">)</span>, varOut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL"</span>,<span class="st">"TA"</span><span class="op">)</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co">##Viz discretization of params</span>
-
-<span class="co">#only retain id and discretized step length (SL) and turning angle (TA) columns</span>
-<span class="va">discr.var</span> <span class="op">&lt;-</span> <span class="va">leroy.filt2</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"var"</span>, values_to <span class="op">=</span> <span class="st">"bin"</span><span class="op">)</span>
-
-<span class="va">param.prop</span><span class="op">&lt;-</span> <span class="va">discr.var</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">var</span>, <span class="va">bin</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop<span class="op">=</span><span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">leroy.filt2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>  <span class="co">#if don't ungroup after grouping, ggforce won't work</span>
-<span class="co">#&gt; `summarise()` has grouped output by 'var'. You can override using the `.groups`</span>
-<span class="co">#&gt; argument.</span>
-
-<span class="va">param.prop</span><span class="op">&lt;-</span> <span class="va">param.prop</span><span class="op">[</span><span class="op">-</span><span class="fl">14</span>,<span class="op">]</span>
-<span class="va">param.prop</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="st">"value"</span><span class="op">]</span><span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">dist.bin.lims</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">dist.bin.lims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>
-<span class="va">param.prop</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">13</span>, <span class="st">"value"</span><span class="op">]</span><span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">angle.bin.lims</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">angle.bin.lims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span>
-
-
-<span class="co">#plot of discretized distrib</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">param.prop</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">var</span> <span class="op">==</span> <span class="st">"SL"</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">value</span>, <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">dist.bin.lims</span><span class="op">)</span><span class="op">-</span><span class="fl">0.025</span><span class="op">)</span>,
-           fill <span class="op">=</span> <span class="st">"lightblue"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Step Length (m)"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>, axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Define bin number and limits for turning angles</span></span>
+<span><span class="va">angle.bin.lims</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="op">-</span><span class="va">pi</span>, to<span class="op">=</span><span class="va">pi</span>, by<span class="op">=</span><span class="va">pi</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span>  <span class="co">#8 bins</span></span>
+<span></span>
+<span><span class="co"># Define bin number and limits for step lengths</span></span>
+<span><span class="va">dist.bin.lims</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">leroy.filt</span><span class="op">$</span><span class="va">step</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>  <span class="co">#5 bins</span></span>
+<span></span>
+<span></span>
+<span><span class="va">leroy.filt2</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/discrete_move_var.html">discrete_move_var</a></span><span class="op">(</span><span class="va">leroy.filt</span>, lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">dist.bin.lims</span>, <span class="va">angle.bin.lims</span><span class="op">)</span>,</span>
+<span>           varIn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"step"</span>,<span class="st">"angle"</span><span class="op">)</span>, varOut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL"</span>,<span class="st">"TA"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">##Viz discretization of params</span></span>
+<span></span>
+<span><span class="co">#only retain id and discretized step length (SL) and turning angle (TA) columns</span></span>
+<span><span class="va">discr.var</span> <span class="op">&lt;-</span> <span class="va">leroy.filt2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"var"</span>, values_to <span class="op">=</span> <span class="st">"bin"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">param.prop</span><span class="op">&lt;-</span> <span class="va">discr.var</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">var</span>, <span class="va">bin</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop<span class="op">=</span><span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">leroy.filt2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>  <span class="co">#if don't ungroup after grouping, ggforce won't work</span></span>
+<span><span class="co">#&gt; `summarise()` has grouped output by 'var'. You can override using the `.groups`</span></span>
+<span><span class="co">#&gt; argument.</span></span>
+<span></span>
+<span><span class="va">param.prop</span><span class="op">&lt;-</span> <span class="va">param.prop</span><span class="op">[</span><span class="op">-</span><span class="fl">14</span>,<span class="op">]</span></span>
+<span><span class="va">param.prop</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="st">"value"</span><span class="op">]</span><span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">dist.bin.lims</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">dist.bin.lims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">param.prop</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">13</span>, <span class="st">"value"</span><span class="op">]</span><span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">angle.bin.lims</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">angle.bin.lims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span></span>
+<span></span>
+<span></span>
+<span><span class="co">#plot of discretized distrib</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">param.prop</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">var</span> <span class="op">==</span> <span class="st">"SL"</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">dist.bin.lims</span><span class="op">)</span><span class="op">-</span><span class="fl">0.025</span><span class="op">)</span>,</span>
+<span>           fill <span class="op">=</span> <span class="st">"lightblue"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Step Length (m)"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/viz_distribs-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">param.prop</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">var</span> <span class="op">==</span> <span class="st">"TA"</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">value</span>, <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">angle.bin.lims</span><span class="op">)</span><span class="op">-</span><span class="fl">0.025</span><span class="op">)</span>,
-           fill <span class="op">=</span> <span class="st">"firebrick4"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Turning Angle (rad)"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>, axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">param.prop</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">var</span> <span class="op">==</span> <span class="st">"TA"</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">value</span>, <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">angle.bin.lims</span><span class="op">)</span><span class="op">-</span><span class="fl">0.025</span><span class="op">)</span>,</span>
+<span>           fill <span class="op">=</span> <span class="st">"firebrick4"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Turning Angle (rad)"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/viz_distribs-2.png" width="672" style="display: block; margin: auto;"></p>
 </div>
-<div id="run-the-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-the-model" class="anchor"></a>Run the model</h3>
+<div class="section level3">
+<h3 id="run-the-model">Run the model<a class="anchor" aria-label="anchor" href="#run-the-model"></a>
+</h3>
 <p>With the data streams in the correct format, we can now run the model
 to cluster observations into behavioral states.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="co"># Only retain discretized step length (SL) and turning angle (TA) columns</span>
-<span class="va">leroy.sub</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">leroy.filt2</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-
-<span class="co"># Define model params</span>
-<span class="va">alpha</span><span class="op">=</span><span class="fl">0.1</span>  <span class="co">#prior</span>
-<span class="va">ngibbs</span><span class="op">=</span><span class="fl">10000</span>  <span class="co">#number of Gibbs sampler iterations</span>
-<span class="va">nburn</span><span class="op">=</span><span class="va">ngibbs</span><span class="op">/</span><span class="fl">2</span>  <span class="co">#number of burn-in iterations</span>
-<span class="va">nmaxclust</span><span class="op">=</span><span class="fl">10</span>  <span class="co">#number of maximum possible states (clusters) present</span>
-
-<span class="co"># Run model</span>
-<span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/cluster_obs.html">cluster_obs</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">leroy.sub</span>, alpha<span class="op">=</span><span class="va">alpha</span>, ngibbs<span class="op">=</span><span class="va">ngibbs</span>, nmaxclust<span class="op">=</span><span class="va">nmaxclust</span>,
-                      nburn<span class="op">=</span><span class="va">nburn</span><span class="op">)</span>
-
-<span class="co"># Inspect traceplot of log-likelihood</span>
-<span class="fu"><a href="https://bartk.gitlab.io/move/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">dat.res</span><span class="op">$</span><span class="va">loglikel</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Only retain discretized step length (SL) and turning angle (TA) columns</span></span>
+<span><span class="va">leroy.sub</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">leroy.filt2</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">SL</span>, <span class="va">TA</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define model params</span></span>
+<span><span class="va">alpha</span><span class="op">=</span><span class="fl">0.1</span>  <span class="co">#prior</span></span>
+<span><span class="va">ngibbs</span><span class="op">=</span><span class="fl">10000</span>  <span class="co">#number of Gibbs sampler iterations</span></span>
+<span><span class="va">nburn</span><span class="op">=</span><span class="va">ngibbs</span><span class="op">/</span><span class="fl">2</span>  <span class="co">#number of burn-in iterations</span></span>
+<span><span class="va">nmaxclust</span><span class="op">=</span><span class="fl">10</span>  <span class="co">#number of maximum possible states (clusters) present</span></span>
+<span></span>
+<span><span class="co"># Run model</span></span>
+<span><span class="va">dat.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/cluster_obs.html">cluster_obs</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">leroy.sub</span>, alpha<span class="op">=</span><span class="va">alpha</span>, ngibbs<span class="op">=</span><span class="va">ngibbs</span>, nmaxclust<span class="op">=</span><span class="va">nmaxclust</span>,</span>
+<span>                      nburn<span class="op">=</span><span class="va">nburn</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Inspect traceplot of log-likelihood</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dat.res</span><span class="op">$</span><span class="va">loglikel</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/run_model-1.png" width="672" style="display: block; margin: auto;"></p>
 <p><br><br> Based on this traceplot of the log-likelihood, it appears
 that the model converged. Now we can move on to inspect the results.</p>
 </div>
-<div id="visualize-the-results" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visualize-the-results" class="anchor"></a>Visualize the results</h3>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="co">## Inspect and Plot results</span>
-<span class="va">post.seq</span><span class="op">&lt;-</span> <span class="op">(</span><span class="va">nburn</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">ngibbs</span>  <span class="co">#posterior samples</span>
-
-<span class="va">theta</span><span class="op">&lt;-</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">theta</span><span class="op">[</span><span class="va">post.seq</span>,<span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>
-<span class="va">theta1</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>
-<span class="va">theta1</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">theta1</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">theta1</span><span class="op">)</span>  <span class="co">#2 states seem optimal; represents &gt; 90% of assigned observations</span>
-<span class="co">#&gt;         1         2         3         4         5         6         7         8 </span>
-<span class="co">#&gt; 0.5802831 0.9107538 0.9613538 0.9810943 0.9901168 0.9960240 0.9981285 0.9990904 </span>
-<span class="co">#&gt;         9        10 </span>
-<span class="co">#&gt; 0.9995524 1.0000000</span></pre></div>
+<div class="section level3">
+<h3 id="visualize-the-results">Visualize the results<a class="anchor" aria-label="anchor" href="#visualize-the-results"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Inspect and Plot results</span></span>
+<span><span class="va">post.seq</span><span class="op">&lt;-</span> <span class="op">(</span><span class="va">nburn</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">ngibbs</span>  <span class="co">#posterior samples</span></span>
+<span></span>
+<span><span class="va">theta</span><span class="op">&lt;-</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">theta</span><span class="op">[</span><span class="va">post.seq</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
+<span><span class="va">theta1</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
+<span><span class="va">theta1</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">theta1</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">theta1</span><span class="op">)</span>  <span class="co">#2 states seem optimal; represents &gt; 90% of assigned observations</span></span>
+<span><span class="co">#&gt;         1         2         3         4         5         6         7         8 </span></span>
+<span><span class="co">#&gt; 0.5802831 0.9107538 0.9613538 0.9810943 0.9901168 0.9960240 0.9981285 0.9990904 </span></span>
+<span><span class="co">#&gt;         9        10 </span></span>
+<span><span class="co">#&gt; 0.9995524 1.0000000</span></span></code></pre></div>
 <p><br> It appears that 2 behavioral states are most likely based on the
 estimates from the <code>theta</code> matrix. To confirm that these
 states represent biologically interpretable movement patterns, we will
 also inspect the state-dependent distributions for all tested
 clusters/states.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="co"># Extract bin estimates for each possible state from the `phi` matrix of the model results</span>
-<span class="va">behav.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_behav_hist.html">get_behav_hist</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span>,
-                           var.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Step Length"</span>,<span class="st">"Turning Angle"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">behav.res</span><span class="op">$</span><span class="va">behav</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">behav.res</span><span class="op">$</span><span class="va">behav</span>, levels <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nmaxclust</span><span class="op">)</span>
-
-<span class="co"># Plot state-dependent distributions </span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">behav.res</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bin</span>, y <span class="op">=</span> <span class="va">prop</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">behav</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"\nBin"</span>, y <span class="op">=</span> <span class="st">"Proportion\n"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,
-        axis.text.x.bottom <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,
-        strip.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>, guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span>
-<span class="co">#&gt; Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please</span>
-<span class="co">#&gt; use `guide = "none"` instead.</span></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Extract bin estimates for each possible state from the `phi` matrix of the model results</span></span>
+<span><span class="va">behav.res</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_behav_hist.html">get_behav_hist</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat.res</span>, nburn <span class="op">=</span> <span class="va">nburn</span>, ngibbs <span class="op">=</span> <span class="va">ngibbs</span>, nmaxclust <span class="op">=</span> <span class="va">nmaxclust</span>,</span>
+<span>                           var.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Step Length"</span>,<span class="st">"Turning Angle"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">behav.res</span><span class="op">$</span><span class="va">behav</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">behav.res</span><span class="op">$</span><span class="va">behav</span>, levels <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nmaxclust</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot state-dependent distributions </span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">behav.res</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bin</span>, y <span class="op">=</span> <span class="va">prop</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">behav</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"\nBin"</span>, y <span class="op">=</span> <span class="st">"Proportion\n"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,</span>
+<span>        axis.text.x.bottom <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span>,</span>
+<span>        strip.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">behav</span> <span class="op">~</span> <span class="va">var</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/plot_distribs-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Based on the resulting distributions, it appears that the first 2
 states make biological sense and can potentially be classified as
@@ -360,9 +356,9 @@ Similarly, observations that were omitted from the analysis (that were
 not recorded at a 15 min time step) will also be labeled
 ‘Unclassified’.</p>
 </div>
-<div id="assigning-behavioral-states-to-observations" class="section level3">
-<h3 class="hasAnchor">
-<a href="#assigning-behavioral-states-to-observations" class="anchor"></a>Assigning behavioral states to observations</h3>
+<div class="section level3">
+<h3 id="assigning-behavioral-states-to-observations">Assigning behavioral states to observations<a class="anchor" aria-label="anchor" href="#assigning-behavioral-states-to-observations"></a>
+</h3>
 <p>There are three different ways we can assign estimates of behavioral
 states per observation: 1) use the MAP estimate, 2) set a threshold as
 the <em>x</em>% of samples from the posterior assigned to a single
@@ -370,90 +366,90 @@ state, 3) assign states based on which was most frequent in the
 posterior (i.e., the mode). While all of these will be extracted below,
 the use of a threshold of posterior samples to assign states is the
 method that is recommended.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="co">## Attribute behaviors to states and extract each of the different estimates</span>
-<span class="co"># Using MAP estimate, threshold of 75% assignments from posterior, and most common state</span>
-<span class="va">z.post</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">dat.res</span><span class="op">$</span><span class="va">z.posterior</span><span class="op">)</span>
-<span class="va">z.post2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">z.post</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="va">thresh</span><span class="op">&lt;-</span> <span class="fl">0.75</span>
-<span class="va">z.post3</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">z.post2</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">thresh</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="va">thresh</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>
-<span class="va">z.post4</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">z.post2</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
-
-
-<span class="co">## Add states to data frame</span>
-<span class="va">leroy.states</span><span class="op">&lt;-</span> <span class="va">leroy.filt2</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>z.map <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">z.MAP</span>,
-         z.post.thresh <span class="op">=</span> <span class="va">z.post3</span>,
-         z.post.max <span class="op">=</span> <span class="va">z.post4</span><span class="op">)</span>
-
-<span class="va">n.states</span><span class="op">&lt;-</span> <span class="fl">2</span>
-<span class="va">leroy.states</span><span class="op">$</span><span class="va">z.map</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">leroy.states</span><span class="op">$</span><span class="va">z.map</span> <span class="op">&gt;</span> <span class="va">n.states</span>, <span class="cn">NA</span>, <span class="va">leroy.states</span><span class="op">$</span><span class="va">z.map</span><span class="op">)</span>
-<span class="va">leroy.states</span><span class="op">$</span><span class="va">z.post.max</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">leroy.states</span><span class="op">$</span><span class="va">z.post.max</span> <span class="op">&gt;</span> <span class="va">n.states</span>, <span class="cn">NA</span>, <span class="va">leroy.states</span><span class="op">$</span><span class="va">z.post.max</span><span class="op">)</span>
-
-
-<span class="co"># Identify previously filtered observations and merge into final data frame</span>
-<span class="va">ind</span><span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">leroy3</span><span class="op">)</span>, <span class="va">leroy.states</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span>
-<span class="va">omit.df</span><span class="op">&lt;-</span> <span class="va">leroy3</span><span class="op">[</span><span class="va">ind</span>,<span class="op">]</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">ind</span>,
-         time1 <span class="op">=</span> <span class="cn">NA</span>,
-         SL <span class="op">=</span> <span class="cn">NA</span>,
-         TA <span class="op">=</span> <span class="cn">NA</span>,
-         z.map <span class="op">=</span> <span class="cn">NA</span>,
-         z.post.thresh <span class="op">=</span> <span class="cn">NA</span>,
-         z.post.max <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-
-
-<span class="va">leroy.states2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">leroy.states</span>, <span class="va">omit.df</span><span class="op">)</span>
-<span class="va">leroy.states2</span><span class="op">&lt;-</span> <span class="va">leroy.states2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">leroy.states2</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span>,<span class="op">]</span>
-
-
-
-<span class="co"># Assign names to states</span>
-<span class="va">leroy.states2</span><span class="op">&lt;-</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'z.map'</span>,<span class="st">'z.post.thresh'</span>,<span class="st">'z.post.max'</span><span class="op">)</span>,
-                <span class="op">~</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span><span class="va">.</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Encamped"</span>,
-                           <span class="va">.</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">~</span> <span class="st">"Transit"</span>,
-                           <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unclassified"</span><span class="op">)</span>
-                <span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'z.map'</span>,<span class="st">'z.post.thresh'</span>,<span class="st">'z.post.max'</span><span class="op">)</span>,
-                <span class="va">factor</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Encamped'</span>,<span class="st">'Exploratory'</span>,<span class="st">'Transit'</span>,<span class="st">'Unclassified'</span><span class="op">)</span>
-                <span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Attribute behaviors to states and extract each of the different estimates</span></span>
+<span><span class="co"># Using MAP estimate, threshold of 75% assignments from posterior, and most common state</span></span>
+<span><span class="va">z.post</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dat.res</span><span class="op">$</span><span class="va">z.posterior</span><span class="op">)</span></span>
+<span><span class="va">z.post2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">z.post</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">thresh</span><span class="op">&lt;-</span> <span class="fl">0.75</span></span>
+<span><span class="va">z.post3</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">z.post2</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">thresh</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="va">thresh</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">z.post4</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">z.post2</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co">## Add states to data frame</span></span>
+<span><span class="va">leroy.states</span><span class="op">&lt;-</span> <span class="va">leroy.filt2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>z.map <span class="op">=</span> <span class="va">dat.res</span><span class="op">$</span><span class="va">z.MAP</span>,</span>
+<span>         z.post.thresh <span class="op">=</span> <span class="va">z.post3</span>,</span>
+<span>         z.post.max <span class="op">=</span> <span class="va">z.post4</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">n.states</span><span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">leroy.states</span><span class="op">$</span><span class="va">z.map</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">leroy.states</span><span class="op">$</span><span class="va">z.map</span> <span class="op">&gt;</span> <span class="va">n.states</span>, <span class="cn">NA</span>, <span class="va">leroy.states</span><span class="op">$</span><span class="va">z.map</span><span class="op">)</span></span>
+<span><span class="va">leroy.states</span><span class="op">$</span><span class="va">z.post.max</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">leroy.states</span><span class="op">$</span><span class="va">z.post.max</span> <span class="op">&gt;</span> <span class="va">n.states</span>, <span class="cn">NA</span>, <span class="va">leroy.states</span><span class="op">$</span><span class="va">z.post.max</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Identify previously filtered observations and merge into final data frame</span></span>
+<span><span class="va">ind</span><span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">leroy3</span><span class="op">)</span>, <span class="va">leroy.states</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span></span>
+<span><span class="va">omit.df</span><span class="op">&lt;-</span> <span class="va">leroy3</span><span class="op">[</span><span class="va">ind</span>,<span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">ind</span>,</span>
+<span>         time1 <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>         SL <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>         TA <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>         z.map <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>         z.post.thresh <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>         z.post.max <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">leroy.states2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">leroy.states</span>, <span class="va">omit.df</span><span class="op">)</span></span>
+<span><span class="va">leroy.states2</span><span class="op">&lt;-</span> <span class="va">leroy.states2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">leroy.states2</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span>,<span class="op">]</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Assign names to states</span></span>
+<span><span class="va">leroy.states2</span><span class="op">&lt;-</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'z.map'</span>,<span class="st">'z.post.thresh'</span>,<span class="st">'z.post.max'</span><span class="op">)</span>,</span>
+<span>                \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Encamped"</span>,</span>
+<span>                               <span class="va">x</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">~</span> <span class="st">"Transit"</span>,</span>
+<span>                               <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unclassified"</span><span class="op">)</span></span>
+<span>                <span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'z.map'</span>,<span class="st">'z.post.thresh'</span>,<span class="st">'z.post.max'</span><span class="op">)</span>,</span>
+<span>                \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">x</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Encamped'</span>,<span class="st">'Exploratory'</span>,<span class="st">'Transit'</span>,<span class="st">'Unclassified'</span><span class="op">)</span><span class="op">)</span></span>
+<span>                <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><br><br> Let’s inspect the number observations assigned to each
 state per method:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-
-<span class="va">leroy.states2</span> <span class="op">%&gt;%</span>   <span class="co"># for estimates based on MAP estimate</span>
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">z.map</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 × 3</span>
-<span class="co">#&gt;   z.map            n  prop</span>
-<span class="co">#&gt;   &lt;fct&gt;        &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Encamped       437 0.476</span>
-<span class="co">#&gt; 2 Transit        340 0.370</span>
-<span class="co">#&gt; 3 Unclassified   142 0.155</span>
-
-<span class="va">leroy.states2</span> <span class="op">%&gt;%</span>   <span class="co"># for estimates based on threshold on posterior</span>
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">z.post.thresh</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 × 3</span>
-<span class="co">#&gt;   z.post.thresh     n  prop</span>
-<span class="co">#&gt;   &lt;fct&gt;         &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Encamped        365 0.397</span>
-<span class="co">#&gt; 2 Transit         165 0.180</span>
-<span class="co">#&gt; 3 Unclassified    389 0.423</span>
-
-<span class="va">leroy.states2</span> <span class="op">%&gt;%</span>   <span class="co"># for estimates based on mode of posterior</span>
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">z.post.max</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 × 3</span>
-<span class="co">#&gt;   z.post.max       n  prop</span>
-<span class="co">#&gt;   &lt;fct&gt;        &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Encamped       541 0.589</span>
-<span class="co">#&gt; 2 Transit        285 0.310</span>
-<span class="co">#&gt; 3 Unclassified    93 0.101</span></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co"># for estimates based on MAP estimate</span></span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">z.map</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   z.map            n  prop</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Encamped       437 0.476</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Transit        340 0.370</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Unclassified   142 0.155</span></span>
+<span></span>
+<span><span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co"># for estimates based on threshold on posterior</span></span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">z.post.thresh</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   z.post.thresh     n  prop</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Encamped        365 0.397</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Transit         165 0.180</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Unclassified    389 0.423</span></span>
+<span></span>
+<span><span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co"># for estimates based on mode of posterior</span></span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">z.post.max</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   z.post.max       n  prop</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Encamped       541 0.589</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Transit        285 0.310</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Unclassified    93 0.101</span></span></code></pre></div>
 <p><br> As was expected, the method that uses a threshold (e.g., 75% of
 samples from posterior) resulted in the greatest proportion of
 Unclassified observations. However, the results from this approach are
@@ -466,72 +462,72 @@ for each of the different approaches to assigning behavioral states.
 Note the greater number of Unclassified observations for the map using
 the “threshold” method, but that the Encamped and Transit states appear
 to be more clearly defined based on spatial patterns of movement.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="co"># Map behavioral states for Leroy (w/ MAP estimates for states)</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, size<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">z.map</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span><span class="st">"Behavior"</span>,
-                    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"grey50"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"MAP estimate"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Map behavioral states for Leroy (w/ MAP estimates for states)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, linewidth<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">z.map</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span><span class="st">"Behavior"</span>,</span>
+<span>                    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"grey50"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"MAP estimate"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="co"># Map behavioral states for Leroy (w/ threshold of posterior samples for states)</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, size<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">z.post.thresh</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span><span class="st">"Behavior"</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"grey50"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Threshold on posterior"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Map behavioral states for Leroy (w/ threshold of posterior samples for states)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, linewidth<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">z.post.thresh</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span><span class="st">"Behavior"</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"grey50"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Threshold on posterior"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="co"># Map behavioral states for Leroy (w/ most common states from posterior)</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, size<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">z.post.max</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span><span class="st">"Behavior"</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"grey50"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Mode of posterior"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,
-        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,
-        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,
-                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Map behavioral states for Leroy (w/ most common states from posterior)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color<span class="op">=</span><span class="st">"gray60"</span>, linewidth<span class="op">=</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, fill<span class="op">=</span><span class="va">z.post.max</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1.5</span>, pch<span class="op">=</span><span class="fl">21</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"green"</span>, pch <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">leroy.states2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="fl">24</span>, size <span class="op">=</span> <span class="fl">3</span>, stroke <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span><span class="st">"Behavior"</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"grey50"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Easting"</span>, y <span class="op">=</span> <span class="st">"Northing"</span>, title <span class="op">=</span> <span class="st">"Mode of posterior"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>label.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>,</span>
+<span>                             title.theme <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Cluster-observations_files/figure-html/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;"></p>
 <p>In these maps, the green circle represents the first location and the
 red triangle represents the final location. As with other models that
@@ -541,17 +537,17 @@ behavior-specific habitat suitability (via RSFs/SSFs) or to calculate
 activity budgets.</p>
 </div>
 </div>
-<div id="references" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <p>Kranstauber B, Smolla M, Scharf AK. (2020). move: Visualizing and
-Analyzing Animal Track Data. R package version 4.0.6. <a href="https://CRAN.R-project.org/package=move" class="uri">https://CRAN.R-project.org/package=move</a>.</p>
+Analyzing Animal Track Data. R package version 4.0.6. <a href="https://CRAN.R-project.org/package=move" class="external-link uri">https://CRAN.R-project.org/package=move</a>.</p>
 <p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Animal behavior,
 cost-based corridor models, and real corridors. <em>Landscape
-Ecology</em>, 28(8), 1615–1630. <a href="http://dx.doi.org/10.1007/s10980-013-9910-0">doi:10.1007/s10980-013-9910-0</a>.</p>
+Ecology</em>, 28(8), 1615–1630. <a href="http://dx.doi.org/10.1007/s10980-013-9910-0" class="external-link">doi:10.1007/s10980-013-9910-0</a>.</p>
 <p>LaPoint S, Gallery P, Wikelski M, Kays R. (2013). Data from: Animal
 behavior, cost-based corridor models, and real corridors. <em>Movebank
-Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g">doi:10.5441/001/1.2tp2j43g</a>.</p>
+Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g" class="external-link">doi:10.5441/001/1.2tp2j43g</a>.</p>
 </div>
   </div>
 
@@ -566,11 +562,13 @@ Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g">doi:10.
 
 
       <footer><div class="copyright">
-  <p>Developed by Joshua Cullen, Denis Valle.</p>
+  <p></p>
+<p>Developed by Joshua Cullen, Denis Valle.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -578,6 +576,8 @@ Data Repository</em>. <a href="http://dx.doi.org/10.5441/001/1.2tp2j43g">doi:10.
 
   
 
+
+  
 
   </body>
 </html>
