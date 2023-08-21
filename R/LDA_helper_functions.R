@@ -188,8 +188,8 @@ get_behav_hist=function(dat, nburn, ngibbs, nmaxclust, var.names) {
 
     behav.list[[i]]<- data.frame(bin = 1:nrow(tmp1), tmp1) %>%
       dplyr::rename_at(dplyr::vars(tidyr::starts_with('X')), ~as.character(1:ncol(tmp1))) %>%
-      tidyr::pivot_longer(-bin, names_to = "behav", values_to = "prop") %>%
-      dplyr::arrange(behav) %>%
+      tidyr::pivot_longer(-"bin", names_to = "behav", values_to = "prop") %>%
+      dplyr::arrange("behav") %>%
       dplyr::mutate(var = var.names[i])
   }
 
@@ -267,7 +267,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
   nobs <- dplyr::left_join(x = nobs,
                            y = dat %>%
                              dplyr::mutate(id = as.character(id)) %>%
-                             dplyr::group_by(id, tseg) %>%
+                             dplyr::group_by(.data$id, .data$tseg) %>%
                              dplyr::tally() %>%
                              dplyr::ungroup(),
                            by = c('id', 'tseg'))
@@ -297,7 +297,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
   ind1<- which(names(theta.estim2) != "id")
   theta.estim2<- theta.estim2 %>%
     dplyr::mutate_at(names(theta.estim2)[ind1], as.numeric) %>%
-    dplyr::select(id, tseg, time1, date, dplyr::everything())
+    dplyr::select("id", "tseg", "time1", "date", dplyr::everything())
 
   #Change into long format
   theta.estim.long<- tidyr::pivot_longer(theta.estim2, cols = -c(1:4),
@@ -305,7 +305,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
   theta.estim.long$behavior<- factor(theta.estim.long$behavior,
                                      levels = behav.names[behav.order])
   theta.estim.long<- theta.estim.long %>%
-    dplyr::arrange(behavior) %>%
+    dplyr::arrange("behavior") %>%
     dplyr::mutate_at("date", lubridate::as_datetime)
 
   theta.estim.long
@@ -381,8 +381,8 @@ assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) 
   for (i in 1:length(dat.seg.list)) {
     sub<- theta.estim.long[theta.estim.long$id == unique(dat.seg.list[[i]]$id),]
     sub<- sub %>%
-      dplyr::arrange(tseg, date, behavior) %>%
-      tidyr::pivot_wider(names_from = behavior, values_from = prop)
+      dplyr::arrange("tseg", "date", "behavior") %>%
+      tidyr::pivot_wider(names_from = "behavior", values_from = "prop")
     sub<- sub %>%
       dplyr::mutate(behav = behav.names[apply(sub[,5:ncol(sub)], 1, which.max)])
 
