@@ -733,11 +733,11 @@ plot_breakpoints_behav=function(data, as_date, var_names, var_labels, brkpts) {
 
   print(
     ggplot(dat.long, aes(x=.data[[x]], y=.data$value, color=.data$var)) +
-      geom_line(na.rm = TRUE, size = 0.25) +
+      geom_line(na.rm = TRUE, linewidth = 0.25) +
       facet_wrap(~.data$var, scales = 'free', nrow = var.len, strip.position = "left") +
-      scale_color_brewer("", palette = "Dark2", guide = FALSE) +
+      scale_color_brewer("", palette = "Dark2", guide = "none") +
       geom_vline(data = breakpt, aes(xintercept = .data$breaks - 0.5),
-                 color = "black", size = 0.7, alpha = 1) +
+                 color = "black", linewidth = 0.7, alpha = 1) +
       labs(x = "\nTime", y = "") +
       ggtitle(paste(unique(data$id))) +
       theme_bw() +
