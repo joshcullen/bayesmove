@@ -328,8 +328,7 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #'   Columns for behavior and proportion estimates should be labeled
 #'   \emph{behavior} and \emph{prop}, respectively. Date (in POSIXct format)
 #'   should also be included as a column labeled \emph{date}.
-#' @param behav.names character. A vector of names to label each state (in
-#'   order).
+#' @param behav.names deprecated. Now taken from the \code{theta.estim.long} object.
 #'
 #' @return A data frame of all animal IDs where columns (with names from
 #'   \code{behav.names}) include proportions of each behavioral state per
@@ -370,21 +369,25 @@ expand_behavior=function(dat, theta.estim, obs, nbehav, behav.names, behav.order
 #'
 #' #Run function
 #' dat.out<- assign_behavior(dat.orig = tracks, dat.seg.list = tracks.list,
-#'                           theta.estim.long = theta.estim.long,
-#'                           behav.names = c("Encamped","ARS","Transit"))
+#'                           theta.estim.long = theta.estim.long)
 #' }
 #'
 #'
 #' @export
-assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) {
+assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names = NULL) {
 
+  if (!is.null(behav.names)) {
+    stop("The 'behav.names' argument has been deprecated. Don't specify this argument")
+  }
   for (i in 1:length(dat.seg.list)) {
     sub<- theta.estim.long[theta.estim.long$id == unique(dat.seg.list[[i]]$id),]
     sub<- sub %>%
       dplyr::arrange("tseg", "date", "behavior") %>%
       tidyr::pivot_wider(names_from = "behavior", values_from = "prop")
+
+    behav.names1 <- unique(theta.estim.long$behavior)
     sub<- sub %>%
-      dplyr::mutate(behav = behav.names[apply(sub[,5:ncol(sub)], 1, which.max)])
+      dplyr::mutate(behav = behav.names1[apply(sub[,5:ncol(sub)], 1, which.max)])
 
 
     dat.seg.list[[i]]<- cbind(dat.seg.list[[i]], sub[,5:ncol(sub)])
@@ -400,11 +403,11 @@ assign_behavior=function(dat.orig, dat.seg.list, theta.estim.long, behav.names) 
 
   #Merge behav estimates w/ original data
   dat1<- purrr::map2(dat.orig.list1, dat.seg.list,
-                     ~dplyr::left_join(.x, .y[,c("obs","tseg", behav.names, "behav")],
+                     ~dplyr::left_join(.x, .y[,c("obs","tseg", as.character(behav.names1), "behav")],
                                        by = "obs")
   ) %>%
     dplyr::bind_rows()
 
-  dat1$behav<- factor(dat1$behav, levels = behav.names)
+  dat1$behav<- factor(dat1$behav, levels = levels(behav.names1))
   dat1
 }

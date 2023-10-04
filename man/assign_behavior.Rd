@@ -4,7 +4,7 @@
 \alias{assign_behavior}
 \title{Assign behavior estimates to observations}
 \usage{
-assign_behavior(dat.orig, dat.seg.list, theta.estim.long, behav.names)
+assign_behavior(dat.orig, dat.seg.list, theta.estim.long, behav.names = NULL)
 }
 \arguments{
 \item{dat.orig}{A data frame that contains all of the original data for all
@@ -24,8 +24,7 @@ Columns for behavior and proportion estimates should be labeled
 \emph{behavior} and \emph{prop}, respectively. Date (in POSIXct format)
 should also be included as a column labeled \emph{date}.}
 
-\item{behav.names}{character. A vector of names to label each state (in
-order).}
+\item{behav.names}{deprecated. Now taken from the \code{theta.estim.long} object.}
 }
 \value{
 A data frame of all animal IDs where columns (with names from
@@ -69,8 +68,7 @@ theta.estim.long<- expand_behavior(dat = tracks.seg, theta.estim = theta.estim, 
 
 #Run function
 dat.out<- assign_behavior(dat.orig = tracks, dat.seg.list = tracks.list,
-                          theta.estim.long = theta.estim.long,
-                          behav.names = c("Encamped","ARS","Transit"))
+                          theta.estim.long = theta.estim.long)
 }
 
 

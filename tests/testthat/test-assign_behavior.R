@@ -33,8 +33,7 @@ test_that("behavior proportions are properly merged with original dataset", {
 
   #Run function
   dat.out<- assign_behavior(dat.orig = dat.orig, dat.seg.list = dat.seg.list,
-                            theta.estim.long = theta.estim.long,
-                            behav.names = c("Encamped","ARS","Transit"))
+                            theta.estim.long = theta.estim.long)
 
   expect_named(dat.out[,ncol(dat.out), drop = F], "behav")
   expect_equal(sum(dat.out[1, 8:10]), 1)
