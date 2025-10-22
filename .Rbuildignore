@@ -13,3 +13,4 @@
 ^CRAN-RELEASE$
 ^vignettes/articles$
 ^revdep$
+^codecov\.yml$

@@ -9,7 +9,7 @@
 status](https://www.r-pkg.org/badges/version/bayesmove)](https://CRAN.R-project.org/package=bayesmove)
 [![R-CMD-check](https://github.com/joshcullen/bayesmove/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/joshcullen/bayesmove/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/joshcullen/bayesmove/branch/master/graph/badge.svg)](https://app.codecov.io/gh/joshcullen/bayesmove?branch=master)
+coverage](https://codecov.io/gh/joshcullen/bayesmove/graph/badge.svg)](https://app.codecov.io/gh/joshcullen/bayesmove)
 [![CRAN monthly
 downloads](https://cranlogs.r-pkg.org/badges/bayesmove)](https://CRAN.R-project.org/package=bayesmove)
 [![CRAN total
