@@ -1,9 +1,9 @@
 
 citHeader("To cite bayesmove in publications, please use:")
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "Identifying latent behavioural states in animal movement with M4, a nonparametric Bayesian method",
-  author       = personList(
+  author       = c(
   as.person("Joshua A Cullen"),
   as.person("Caroline L Poli"),
   as.person("Robert J Fletcher"),
@@ -26,9 +26,9 @@ citEntry(entry = "Article",
 
 
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "Automatic selection of the number of clusters using Bayesian clustering and sparsity-inducing priors",
-  author       = personList(
+  author       = c(
   as.person("Denis Valle"),
   as.person("Yusuf Jameel"),
   as.person("Brenda Betancourt"),

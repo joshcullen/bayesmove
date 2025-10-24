@@ -955,7 +955,7 @@ prep_data=function(dat, coord.names, id) {
 #'   which can be selected from one of "secs", "mins", "hours", "days", or
 #'   "weeks".
 #'
-#' @return A data frame where new rows have been inserted to regularize the \code{date} column. This results in values provided for \code{id}, \code{date}, and {dt} while inserting NAs for all other columns. Additionally, observations with duplicate date-times are removed.
+#' @return A data frame where new rows have been inserted to regularize the \code{date} column. This results in values provided for \code{id}, \code{date}, and \code{dt} while inserting NAs for all other columns. Additionally, observations with duplicate date-times are removed.
 #'
 #' @examples
 #' #load data
