@@ -1,23 +1,21 @@
 ## Test environments
-* local OS X install (and using github actions), R 4.1.1
-* ubuntu-20.04 devel and release (using github actions and R-hub), R 4.1.1
-* windows devel and release (using github actions and win-builder), R 4.1.1
+* local macOS 15.3.2, R 4.4.2
+* macos-15-arm64, R 4.5.1 on GitHub Actions
+* ubuntu-24.04, R 4.4.3, 4.5.1, devel on GitHub Actions
+* windows-2025, R 4.5.1 on GitHub Actions
 
 ## R CMD check results
-0 ERRORS | 0 WARNINGS | 1 NOTE
+0 ERRORS | 0 WARNINGS | 0 NOTES
 
-* Possibly misspelled words in DESCRIPTION:
-  al (19:64)
-  et (19:61)
+Fixed outstanding NOTES listed on CRAN. This is my fourth submission of the 'bayesmove' package to CRAN.
 
-The words listed here are spelled correctly and are also included in the WORDLIST file. This is my third submission of the 'bayesmove' package to CRAN.
+## Summary of updates in v0.2.3
 
-## Summary of updates in v0.2.1
+* Greatly improved speed and efficiency of get_MAP() function.
+* Updated shiny_tracks() function by adding option to color mapped points by a selected variable in a dropdown menu.
+* Fixed issue with expand_behavior() function where wrong sample size was specified for track segments by ID.
+* Updated suggested citations for use of package.
+* Fixed bug with use of assign_behavior().
 
-* Greatly improved speed of segmentation model by adding internal function summarize1 in C++ and updated get_summary_stats().
-* Updated shiny_tracks by improving responsiveness to changes in the time window, adding a data table with options to filter, and the ability to explore the time series and map of multiple IDs at once.
-* Updated traceplot() to automatically determine the number of MCMC iterations and add a line denoting the burn-in period.
-* Updated progress bar in segment_behavior() to prevent it from disappearing.
-
-## Downstream dependencies
-There are currently no downstream dependencies for this package.
+## Revdep check results
+There are currently no reverse dependencies for this package.
