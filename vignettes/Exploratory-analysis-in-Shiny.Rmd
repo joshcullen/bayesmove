@@ -34,6 +34,7 @@ library(rnaturalearth)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(datamods)
 
 # Load data
 data(sese)
