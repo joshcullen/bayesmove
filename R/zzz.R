@@ -13,6 +13,9 @@
 #   invisible()
 # } # End of .onLoad().
 
+# Declare global variables used in `subset()`
+utils::globalVariables("id")
+
 .onUnload <- function(libpath){
   library.dynam.unload("bayesmove", libpath)
   invisible()
