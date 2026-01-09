@@ -1,7 +1,7 @@
 Package: bayesmove
 Type: Package
 Title: Non-Parametric Bayesian Analyses of Animal Movement
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: 
     c(person(given = "Joshua",
              family = "Cullen",
@@ -57,7 +57,7 @@ Suggests:
     DT,
     viridis
 Language: en-US
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 LinkingTo: 
     Rcpp,
     RcppArmadillo

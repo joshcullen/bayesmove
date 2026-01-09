@@ -1,3 +1,6 @@
+# bayesmove 0.2.4 (2025-01-09)
+* Now explicitly sets "id" as global variable to mitigate breaking change by {dplyr}
+
 # bayesmove 0.2.3 (2023-10-04)
 * Removed table and inset map from Shiny app
 * Added dropdown option to color mapped points by a selected variable in Shiny app; not available for mapping lines
